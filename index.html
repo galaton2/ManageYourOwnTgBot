@@ -43,7 +43,15 @@ input:focus,select:focus,textarea:focus{border-color:#f3a38a}textarea{min-height
 </style></head><body><div id="app"></div>
 <script>
 /* Публичный веб-конфиг Firebase: это не секрет. Доступ ограничивают правила Firestore (только чтение sessions/{токен}). */
-const CFG={apiKey:"YOUR_WEB_API_KEY",projectId:"YOUR_PROJECT_ID"};
+const firebaseConfig = {
+  apiKey: "AIzaSyANZINM6R29i3erpEdzs60oHZsDPBXVIOI",
+  authDomain: "manageyourbot.firebaseapp.com",
+  projectId: "manageyourbot",
+  storageBucket: "manageyourbot.firebasestorage.app",
+  messagingSenderId: "919379398898",
+  appId: "1:919379398898:web:55798b0893c24f2309c06b",
+  measurementId: "G-ZRQF3WRGVY"
+};
 const tg=window.Telegram?.WebApp,$=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const SEC=[["about","ℹ️","О нас"],["catalog","🛍","Каталог"],["faq","❓","FAQ"],["contacts","☎️","Контакты"],["links","🔗","Ссылки"],["schedule","🕘","Режим"],["location","📍","Адрес"],["rules","📋","Правила"],["delivery","🚚","Доставка"],["payment","💳","Оплата"],["promotions","🔥","Акции"],["reviews","⭐","Отзывы"],["portfolio","🖼","Портфолио"],["team","👥","Команда"],["booking","📅","Запись"],["news","📰","Новости"]];
