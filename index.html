@@ -2,47 +2,72 @@
 <html lang="ru"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <title>Bot Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&family=Space+Mono&display=swap" rel="stylesheet">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-:root{color-scheme:dark;--bg:#111;--fg:#f3ece2;--mut:#8d8a85;--line:#ffffff17;--r:clamp(22px,6vw,30px);
+:root{color-scheme:dark;--y:#e6ff3d;--l:#a9a8f8;--o:#ff6a2b;--bg:#0a0a0a;--ln:#ffffff2e;
 --st:max(env(safe-area-inset-top,0px),calc(var(--tg-safe-area-inset-top,0px) + var(--tg-content-safe-area-inset-top,0px)));
 --sb:max(env(safe-area-inset-bottom,0px),var(--tg-safe-area-inset-bottom,0px))}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.4 -apple-system,"SF Pro Display",Inter,system-ui,sans-serif;min-height:100dvh}
-.mono,.tile span,h3,.pill,.go,.sub,label{font-family:ui-monospace,"JetBrains Mono","SF Mono",Menlo,monospace;text-transform:uppercase;letter-spacing:.04em}
-#app{max-width:760px;margin:auto;padding:calc(var(--st) + 14px) clamp(12px,4vw,24px) calc(var(--sb) + 110px)}
-h1{font-size:clamp(30px,9vw,46px);font-weight:400;text-align:center;margin:6px 0 20px}
-h2{font-size:22px;font-weight:500;margin:0}h3{font-size:12px;color:var(--mut);font-weight:400;margin:26px 4px 10px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,150px),1fr));gap:12px}
-.tile{position:relative;aspect-ratio:1/1.12;border:0;border-radius:var(--r);overflow:hidden;background:#171717;color:var(--fg);cursor:pointer;padding:0;transition:transform .15s}
-.tile:active{transform:scale(.97)}
-.tile i{position:absolute;inset:0;background:var(--g);filter:saturate(1.05)}
-.tile::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0000 18%,#0d0d0dcc 62%,#0d0d0d 92%);box-shadow:inset 0 0 0 1px #ffffff14;border-radius:inherit}
-.tile span{position:absolute;z-index:2;left:8px;right:8px;bottom:16px;text-align:center;font-size:12px;color:#d9d3ca;word-break:break-word}
-.tile b{position:absolute;z-index:2;left:0;right:0;top:34%;text-align:center;font:500 clamp(26px,8vw,38px) ui-monospace,Menlo,monospace;color:#2a2018;mix-blend-mode:normal}
-.tile u{position:absolute;z-index:3;top:10px;right:12px;text-decoration:none;font-size:15px;opacity:.7;padding:6px}
-.c0{--g:linear-gradient(#ffe9c9,#f4d5a8)}.c1{--g:linear-gradient(#ff9a82,#e8705f)}.c2{--g:linear-gradient(#9296ea,#7479cf)}.c3{--g:linear-gradient(#f4a09a,#c8587a)}.c4{--g:linear-gradient(#ffc27a,#ff6f91)}
-.off{--g:linear-gradient(#7d7d7d,#4a4a4a)}.off b{color:#fff}
-.wide{grid-column:1/-1;aspect-ratio:auto;height:92px}
-.pills{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:none}.pills::-webkit-scrollbar{display:none}
-.pill{flex:none;border:1px solid #ffffff2e;background:#ffffff08;color:var(--fg);border-radius:18px;padding:13px 20px;font-size:12px;cursor:pointer}
-.pill:nth-child(1){border-color:#f3a38a}.pill:nth-child(2){border-color:#b78cf0}.pill:nth-child(3){border-color:#6bd0c0}.pill:nth-child(4){border-color:#ffc27a}
-.top{display:flex;align-items:center;gap:12px;margin-bottom:6px}
-.ic{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:#ffffff0a;color:var(--fg);font-size:22px;cursor:pointer}
-.row{display:flex;align-items:center;gap:10px;padding:13px 16px;border:1px solid var(--line);border-radius:18px;margin-bottom:8px;background:#ffffff06}
-.row p{margin:0;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.row small{color:var(--mut)}
-.form{display:grid;gap:8px;grid-template-columns:1fr 1fr}.form .full{grid-column:1/-1}
-input,select,textarea{width:100%;background:#ffffff0a;border:1px solid var(--line);border-radius:14px;color:var(--fg);padding:13px 14px;font:inherit;outline:0}
-input:focus,select:focus,textarea:focus{border-color:#f3a38a}textarea{min-height:42dvh;resize:vertical}
-.bar{position:fixed;left:0;right:0;bottom:0;padding:14px clamp(12px,4vw,24px) calc(var(--sb) + 14px);background:linear-gradient(#1100,#111 38%);display:flex;gap:10px;max-width:760px;margin:auto}
-.go,.sub{height:54px;border-radius:20px;border:0;font-size:13px;cursor:pointer;color:#241a14}
-.go{flex:1;background:linear-gradient(90deg,#ff9a82,#ffc27a 55%,#ff6f91)}.sub{padding:0 22px;background:#ffffff14;color:var(--fg)}
-.sheet{position:fixed;inset:0;z-index:20;background:#000c;backdrop-filter:blur(12px);display:flex;flex-direction:column;gap:12px;padding:calc(var(--st) + 14px) 16px calc(var(--sb) + 16px);max-width:760px;margin:auto}
-.note{color:var(--mut);font-size:13px;text-align:center;margin:0 0 14px}
-@media(min-width:900px){body{background:radial-gradient(900px 500px at 50% -10%,#2a1f1a,#111 70%)}}
-</style></head><body><div id="app"></div>
+html,body{margin:0;height:100%;background:var(--bg);color:#fff;font:14px/1.35 "Space Grotesk",system-ui,sans-serif;overflow:hidden;overscroll-behavior:none}
+button,input,select,textarea{font:inherit;color:inherit}
+.m,.chip,label,.pill,.main,.ghost,.legend{font-family:"Space Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.05em;font-size:11px}
+#app{display:flex;flex-direction:column;height:100dvh}
+header{display:flex;align-items:center;gap:8px;padding:calc(var(--st) + 10px) 12px 10px;border-bottom:1px solid var(--ln)}
+.logo{flex:none;width:30px;height:30px;border-radius:8px;background:var(--y);color:#000;display:grid;place-items:center;font-weight:700;font-style:normal}
+.tabs{display:flex;gap:6px;overflow-x:auto;flex:1;min-width:0;scrollbar-width:none}
+.pill{flex:none;border:1px solid var(--l);color:var(--l);background:none;border-radius:99px;padding:8px 14px;cursor:pointer;white-space:nowrap}
+.pill.on{background:var(--o);border-color:var(--o);color:#000}
+.main{border:0;border-radius:99px;background:var(--y);color:#000;padding:10px 16px;cursor:pointer;font-weight:700}
+.ghost{border:1px solid var(--ln);background:none;border-radius:99px;padding:9px 14px;cursor:pointer}
+.err{color:var(--o);border:1px solid var(--o);border-radius:99px;padding:8px 12px;white-space:nowrap}
+main{flex:1;min-height:0;display:flex}
+#dock{flex:none;width:92px;border-right:1px solid var(--ln);padding:12px 10px;display:flex;flex-direction:column;gap:10px;background:#0d0d0d;z-index:5}
+.chip{touch-action:none;user-select:none;cursor:grab;border:1px solid var(--ln);border-radius:12px;padding:10px 6px;text-align:center;line-height:1.2}
+.chip b{display:block;font-size:20px;font-weight:400}
+.chip[data-t=screen]{background:var(--l);color:#000;border-color:var(--l)}.chip[data-t=btn]{border-color:#fff}.chip[data-t=url]{border-color:var(--y);color:var(--y)}
+.gc{position:fixed;z-index:99;pointer-events:none;transform:translate(-50%,-50%) rotate(-4deg);width:92px;opacity:.92}
+#cv{position:relative;flex:1;overflow:hidden;touch-action:none;background-image:radial-gradient(#ffffff26 1px,transparent 1.5px);background-size:24px 24px}
+#world{position:absolute;left:0;top:0;transform-origin:0 0}
+svg{position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;pointer-events:none}
+.w{fill:none;stroke:var(--l);stroke-width:2}.w.tmp{stroke:var(--y);stroke-dasharray:6 5}.w.bad{stroke:var(--o);stroke-dasharray:4 4}
+.node{position:absolute;width:230px;border-radius:14px;background:#101010;border:1px solid var(--l);user-select:none}
+.node.start{border-color:var(--y)}.node.sel{box-shadow:0 0 0 2px var(--y),0 10px 40px #0008}
+.hd{height:34px;display:flex;align-items:center;gap:6px;padding:0 10px;border-radius:13px 13px 0 0;background:var(--l);color:#000;font-weight:600;cursor:grab;position:relative}
+.start .hd{background:var(--y)}.hd span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ph{font-style:normal;font-size:13px;opacity:.45;cursor:pointer}.ph.has{opacity:1}
+.in{position:absolute;left:-8px;top:10px;width:14px;height:14px;border-radius:50%;background:#000;border:2px solid var(--l)}.start .in{display:none}
+.tx{height:46px;overflow:hidden;padding:8px 12px;color:#bdbdbd;font-size:12.5px;cursor:pointer}
+.rows{min-height:32px;padding-bottom:10px}
+.row{height:32px;padding:3px 10px;position:relative;cursor:pointer}
+.row span{display:flex;align-items:center;justify-content:space-between;height:26px;border:1px solid #fff6;border-radius:13px;padding:0 12px;font-size:12.5px;overflow:hidden;white-space:nowrap}
+.row.url span{border-color:var(--y);color:var(--y)}.row.bad span{border-color:var(--o);color:var(--o)}
+.out{position:absolute;right:-8px;top:9px;width:14px;height:14px;border-radius:50%;background:var(--l);border:2px solid #000;cursor:crosshair;touch-action:none}.row.url .out{display:none}
+.empty{color:#666;font-size:12px;padding:7px 14px}
+.zoom{position:absolute;right:12px;bottom:calc(var(--sb) + 12px);display:flex;flex-direction:column;gap:6px;z-index:4}
+.zoom button{width:38px;height:38px;border-radius:50%;border:1px solid var(--ln);background:#111;cursor:pointer;font-size:17px}
+.legend{position:absolute;left:12px;top:12px;display:flex;gap:12px;color:#aaa;pointer-events:none;flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.sheet{position:fixed;inset:0;z-index:50;background:#000b;display:flex;align-items:flex-end;justify-content:center}
+.card{width:100%;max-width:520px;background:#111;border:1px solid var(--ln);border-radius:22px 22px 0 0;padding:16px 16px calc(var(--sb) + 16px);display:grid;gap:8px;max-height:92dvh;overflow:auto}
+label{color:#999;margin-top:4px}
+input,select,textarea{width:100%;background:#0a0a0a;border:1px solid var(--ln);border-radius:12px;padding:11px 12px;outline:0}
+input:focus,select:focus,textarea:focus{border-color:var(--y)}textarea{min-height:110px;resize:vertical}
+.acts{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}.acts .main{flex:1}
+.toast{position:fixed;left:50%;bottom:calc(var(--sb) + 100px);transform:translateX(-50%);background:var(--y);color:#000;border-radius:99px;padding:10px 16px;z-index:99;max-width:90vw;text-align:center}
+@media(min-width:700px){.sheet{align-items:center}.card{border-radius:22px}}
+@media(max-width:699px){main{flex-direction:column-reverse}#dock{width:auto;flex-direction:row;border-right:0;border-top:1px solid var(--ln);padding:10px 12px calc(var(--sb) + 10px)}.chip{flex:1}.zoom{bottom:12px}.legend,#fs{display:none}header{gap:6px}.main{padding:10px 12px}}
+</style></head><body>
+<div id="app">
+<header><i class="logo">o</i><nav class="tabs" id="tabs"></nav><span class="err" id="err" hidden></span><button class="ghost" id="code">код</button><button class="ghost" id="fs">⛶</button><button class="main" id="send">отправить боту</button></header>
+<main>
+<aside id="dock"><div class="chip" data-t="screen"><b>▭</b>экран</div><div class="chip" data-t="btn"><b>◉</b>кнопка</div><div class="chip" data-t="url"><b>↗</b>ссылка</div></aside>
+<div id="cv"><div class="legend"><span><i style="background:var(--y)"></i>старт</span><span><i style="background:var(--l)"></i>экран</span><span><i style="border:1px solid #fff"></i>кнопка</span><span><i style="background:var(--o)"></i>ошибка</span></div>
+<div id="world"><svg id="svg"></svg><div id="nodes"></div></div>
+<div class="zoom"><button data-z="1">+</button><button data-z="-1">−</button><button data-z="f">⌖</button><button data-z="r">↺</button></div></div>
+</main></div>
 <script>
-/* Публичный веб-конфиг Firebase: это не секрет. Доступ ограничивают правила Firestore (только чтение sessions/{токен}). */
+/* Публичный веб-конфиг Firebase (не секрет). Права ограничены правилами Firestore: только чтение sessions/{токен}. */
 const firebaseConfig = {
   apiKey: "AIzaSyANZINM6R29i3erpEdzs60oHZsDPBXVIOI",
   authDomain: "manageyourbot.firebaseapp.com",
@@ -54,63 +79,107 @@ const firebaseConfig = {
 };
 const tg=window.Telegram?.WebApp,$=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const SEC=[["about","ℹ️","О нас"],["catalog","🛍","Каталог"],["faq","❓","FAQ"],["contacts","☎️","Контакты"],["links","🔗","Ссылки"],["schedule","🕘","Режим"],["location","📍","Адрес"],["rules","📋","Правила"],["delivery","🚚","Доставка"],["payment","💳","Оплата"],["promotions","🔥","Акции"],["reviews","⭐","Отзывы"],["portfolio","🖼","Портфолио"],["team","👥","Команда"],["booking","📅","Запись"],["news","📰","Новости"]];
-const TPL={cafe:{n:"Кафе",on:["about","catalog","delivery","payment","schedule","location","contacts"],t:{welcome:"Добро пожаловать! Свежий кофе и десерты каждый день ☕",catalog:"Кофе — от 180 ₽\nДесерты — от 220 ₽",schedule:"Ежедневно 08:00–22:00"}},
-salon:{n:"Салон",on:["about","catalog","booking","portfolio","reviews","schedule","contacts"],t:{welcome:"Красота без очередей ✨ Запишитесь онлайн",booking:"Выберите услугу и напишите нам — подберём время.",catalog:"Стрижка — от 1500 ₽\nМаникюр — от 1800 ₽"}},
-shop:{n:"Магазин",on:["about","catalog","delivery","payment","promotions","reviews","contacts"],t:{welcome:"Добро пожаловать в магазин! Смотрите каталог и акции 🛍",delivery:"Курьером по городу — 1–2 дня.\nПочтой — 3–7 дней.",promotions:"Скидка 10% на первый заказ."}},
-course:{n:"Курс",on:["about","catalog","faq","team","reviews","news","contacts"],t:{welcome:"Учитесь в удобном темпе 🎓 Программа, спикеры и отзывы — в меню.",faq:"Как проходит обучение? — Онлайн, в записи и вживую."}}};
-const DEMO={limit:5,bots:[{id:"demo",username:"demo_bot",name:"Demo",subs:128,enabled:{about:1,contacts:1,faq:1},sections:{},buttons:[]}]};
-let sess,demo=false,cur,cfg,view="home";
+const SEC=[["about","О нас"],["catalog","Каталог"],["faq","FAQ"],["contacts","Контакты"],["links","Ссылки"],["schedule","Режим работы"],["location","Адрес"],["rules","Правила"],["delivery","Доставка"],["payment","Оплата"],["promotions","Акции"],["reviews","Отзывы"],["portfolio","Портфолио"],["team","Команда"],["booking","Запись"],["news","Новости"]];
+const W=230,HDR=34,TXT=46,ROW=32,MAXB=12,MAXN=40,uid=()=>Math.random().toString(36).slice(2,9).padEnd(5,"x");
+const DEMO={limit:5,bots:[{id:"demo",username:"demo_bot",enabled:{about:1,contacts:1,faq:1},sections:{welcome:"Привет! Добро пожаловать.",about:"Расскажите о проекте.",contacts:"Телефон, email, соцсети.",faq:"Частые вопросы."},buttons:[],photos:[]}]};
+const DEFS='<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#a9a8f8"/></marker></defs>';
+let sess,demo=false,bot,flow,view={x:30,y:30,k:1},mode=null,st=null;const P=new Map();
+const cv=$("#cv"),world=$("#world"),svg=$("#svg"),nodesEl=$("#nodes");
+const node=id=>flow.nodes.find(n=>n.id==id),btn=(n,b)=>node(n).btns.find(x=>x.id==b),nh=n=>HDR+TXT+Math.max(1,n.btns.length)*ROW+10;
+const out=(n,i)=>({x:n.x+W,y:n.y+HDR+TXT+i*ROW+ROW/2}),inp=n=>({x:n.x,y:n.y+17});
+const bad=b=>b.kind=="url"?!/^https:\/\/\S{3,}$/.test(b.value||""):!(b.to&&node(b.to));
+const errCount=()=>flow.nodes.reduce((a,n)=>a+n.btns.filter(bad).length,0);
+function toast(t){const e=document.createElement("div");e.className="toast";e.textContent=t;document.body.append(e);setTimeout(()=>e.remove(),2800)}
 const b64=u=>{let s="";u.forEach(c=>s+=String.fromCharCode(c));return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")};
-async function enc(o){const st=new Blob([JSON.stringify(o)]).stream().pipeThrough(new CompressionStream("deflate-raw"));return "BB1."+b64(new Uint8Array(await new Response(st).arrayBuffer()))}
+async function enc(o){const s=new Blob([JSON.stringify(o)]).stream().pipeThrough(new CompressionStream("deflate-raw"));return"BB1."+b64(new Uint8Array(await new Response(s).arrayBuffer()))}
 async function load(){const s=new URLSearchParams(location.search).get("s");
  try{if(!s||CFG.projectId.startsWith("YOUR"))throw 0;
   const r=await fetch(`https://firestore.googleapis.com/v1/projects/${CFG.projectId}/databases/(default)/documents/sessions/${encodeURIComponent(s)}?key=${CFG.apiKey}`);
-  if(!r.ok)throw 0;sess=JSON.parse((await r.json()).fields.json.stringValue)}catch{sess=DEMO;demo=true}render()}
-const tile=(c,label,big,attr="",extra="")=>`<button class="tile ${c}" ${attr}><i></i>${big!=null?`<b>${esc(big)}</b>`:""}${extra}<span>${esc(label)}</span></button>`;
-function home(){const b=sess.bots,subs=b.reduce((a,x)=>a+(x.subs||0),0);
- return `<h1>Overview</h1>${demo?'<p class=note>Демо-режим: откройте конструктор командой /builder в боте</p>':""}<div class=grid>
- ${tile("c0","боты",`${b.length}/${sess.limit}`)}${tile("c1","подписчики",subs)}
- ${b.map((x,i)=>tile("c"+((i+2)%5),"@"+x.username,null,`data-bot="${esc(x.id)}"`)).join("")}
- ${tile("off","+ добавить бота",null,'id=add')}</div>`}
-function editor(){const sc=cfg.sections,cu=cur.sections||{};
- return `<div class=top><button class=ic id=back>‹</button><h2>@${esc(cur.username)}</h2></div>
- <h3>сценарии</h3><div class=pills>${Object.entries(TPL).map(([k,v])=>`<button class=pill data-tpl=${k}>${v.n}</button>`).join("")}</div>
- <h3>разделы · нажмите — вкл/выкл, ✎ — текст</h3><div class=grid>
- ${tile("c4 wide","приветствие",null,'data-e=welcome')}
- ${SEC.map(([k,ic,n],i)=>tile("c"+(i%5)+(cfg.enabled[k]?"":" off"),ic+" "+n,null,`data-t=${k}`,`<u data-e=${k}>✎</u>`)).join("")}</div>
- <h3>свои кнопки (${cfg.buttons.length}/12)</h3>
- ${cfg.buttons.map((b,i)=>`<div class=row><p>${esc(b.label)} <small>· ${esc(b.kind)}</small></p><button class=ic data-del=${i}>×</button></div>`).join("")}
- <div class=form><input id=bl placeholder="Название" maxlength=32><select id=bk><option value=url>Ссылка</option><option value=text>Текст</option></select>
- <input id=bv class=full placeholder="https://… или текст ответа"><button class="sub full" id=badd>+ кнопка</button></div>
- <div class=bar><button class=go id=send>отправить боту</button><button class=sub id=copy>код</button></div>`}
-function render(){$("#app").innerHTML=view=="home"?home():editor();if(tg){view=="home"?tg.BackButton.hide():tg.BackButton.show()}}
-function openBot(id){cur=sess.bots.find(x=>x.id==id);cfg={enabled:{},sections:{},buttons:(cur.buttons||[]).map(b=>({...b}))};SEC.forEach(([k])=>cfg.enabled[k]=!!(cur.enabled||{})[k]);view="edit";render()}
-function sheet(key){const name=key=="welcome"?"приветствие":SEC.find(s=>s[0]==key)[2];
- const d=document.createElement("div");d.className="sheet";d.innerHTML=`<h3 style="margin:0">${name}</h3><textarea maxlength=3500></textarea><div class=bar style="position:static;padding:0"><button class=go>сохранить</button><button class=sub>отмена</button></div>`;
- const ta=d.querySelector("textarea");ta.value=cfg.sections[key]??(cur.sections||{})[key]??"";document.body.append(d);
- d.querySelector(".go").onclick=()=>{cfg.sections[key]=ta.value;d.remove()};d.querySelector(".sub").onclick=()=>d.remove()}
-function code(c,msg){const d=document.createElement("div");d.className="sheet";d.innerHTML=`<p class=note>${msg}</p><textarea readonly></textarea><div class=bar style="position:static;padding:0"><button class=go>копировать</button><button class=sub>закрыть</button></div>`;
- d.querySelector("textarea").value=c;document.body.append(d);
- d.querySelector(".go").onclick=async e=>{try{await navigator.clipboard.writeText(c);e.target.textContent="скопировано ✓"}catch{d.querySelector("textarea").select()}};d.querySelector(".sub").onclick=()=>d.remove()}
-const pack=()=>enc({v:1,bot:cur.id,enabled:cfg.enabled,sections:cfg.sections,buttons:cfg.buttons});
-document.addEventListener("click",async e=>{const t=e.target.closest("[data-e],[data-t],[data-bot],[data-tpl],[data-del],button");if(!t)return;const D=t.dataset;
- if(D.e){e.stopPropagation();return sheet(D.e)}
- if(D.bot)return openBot(D.bot);
- if(D.t){cfg.enabled[D.t]=!cfg.enabled[D.t];return render()}
- if(D.tpl){const p=TPL[D.tpl];SEC.forEach(([k])=>cfg.enabled[k]=p.on.includes(k));Object.assign(cfg.sections,p.t);return render()}
- if(D.del){cfg.buttons.splice(+D.del,1);return render()}
- if(t.id=="add"){tg?.close();return}
- if(t.id=="back"){view="home";return render()}
- if(t.id=="badd"){const l=$("#bl").value.trim(),k=$("#bk").value,v=$("#bv").value.trim();
-  if(!l||!v||cfg.buttons.length>=12)return;if(k=="url"&&!/^https:\/\/\S+$/.test(v))return tg?.showAlert?.("Ссылка должна начинаться с https://");
-  cfg.buttons.push({label:l,kind:k,value:v});return render()}
- if(t.id=="copy")return code(await pack(),"Отправьте этот код боту обычным сообщением.");
- if(t.id=="send"){const c=await pack();
-  if(new Blob([c]).size>4000)return code(c,"Конфиг больше 4 КБ — скопируйте код и отправьте боту сообщением.");
-  if(tg?.initData&&!demo){try{return tg.sendData(c)}catch{}}code(c,"Отправьте этот код боту обычным сообщением.")}});
-if(tg){tg.ready();tg.expand();tg.disableVerticalSwipes?.();tg.setHeaderColor?.("#111111");tg.setBackgroundColor?.("#111111");
- try{if(tg.isVersionAtLeast?.("8.0")&&!tg.isFullscreen)tg.requestFullscreen()}catch{}
- tg.BackButton.onClick(()=>{view="home";render()})}
+  if(!r.ok)throw 0;sess=JSON.parse((await r.json()).fields.json.stringValue)}catch{sess=DEMO;demo=true;toast("Демо-режим: откройте через /builder")}
+ if(sess.bots.length)openBot(sess.bots[0]);else{$("#tabs").innerHTML='<span class="m">нет ботов — создайте в чате</span>';flow={nodes:[]}}}
+function legacy(b){const s=b.sections||{},en=b.enabled||{},st={id:"start",type:"start",title:"Старт",text:s.welcome||"Привет! Добро пожаловать.",x:60,y:60,btns:[]},ns=[st];let y=30;
+ const add=(label,text)=>{if(st.btns.length>=MAXB)return;const id=uid();ns.push({id,type:"screen",title:label,text:text||"…",x:380,y,btns:[]});y+=170;st.btns.push({id:uid(),label,kind:"go",to:id})};
+ SEC.forEach(([k,n])=>{if(en[k])add(n,s[k])});
+ (b.buttons||[]).forEach(x=>{if(x.kind=="url"){if(st.btns.length<MAXB)st.btns.push({id:uid(),label:x.label,kind:"url",value:x.value})}else add(x.label,x.value)});
+ return{nodes:ns}}
+function openBot(b){bot=b;let f=null;try{f=JSON.parse(localStorage.getItem("bb:"+b.id))}catch{}
+ flow=f&&f.nodes?f:(b.flow&&b.flow.nodes?JSON.parse(JSON.stringify(b.flow)):legacy(b));
+ $("#tabs").innerHTML=sess.bots.map((x,i)=>`<button class="pill ${x===b?"on":""}" data-bi="${i}">@${esc(x.username)}</button>`).join("");fit();render()}
+const save=()=>{try{localStorage.setItem("bb:"+bot.id,JSON.stringify(flow))}catch{}};
+const curve=(a,b,c)=>`<path class="${c}" d="M${a.x} ${a.y}C${a.x+70} ${a.y} ${b.x-70} ${b.y} ${b.x} ${b.y}" marker-end="url(#ar)"/>`;
+function wires(tmp){let h=DEFS;
+ flow.nodes.forEach(n=>n.btns.forEach((b,i)=>{if(b.kind=="url")return;const a=out(n,i),t=b.to&&node(b.to);h+=t?curve(a,inp(t),"w"):`<path class="w bad" d="M${a.x} ${a.y}h28"/>`}));
+ if(tmp&&tmp.p){const n=node(tmp.nid);h+=curve(out(n,n.btns.findIndex(b=>b.id==tmp.bid)),tmp.p,"w tmp")}
+ svg.innerHTML=h}
+function render(){nodesEl.innerHTML=flow.nodes.map(n=>{const has=(bot.photos||[]).includes(n.type=="start"?"welcome":"n_"+n.id);
+ return`<div class="node ${n.type}" data-id="${n.id}" style="left:${n.x}px;top:${n.y}px"><div class="hd"><b class="in"></b><span>${n.type=="start"?"▶ ":""}${esc(n.title)}</span><i class="ph ${has?"has":""}">📷</i></div><div class="tx">${esc(n.text)}</div><div class="rows">${n.btns.map(b=>`<div class="row ${b.kind=="url"?"url":""} ${bad(b)?"bad":""}" data-b="${b.id}"><span>${esc(b.label)}<small>${b.kind=="url"?"↗":""}</small></span><u class="out"></u></div>`).join("")||'<div class="empty">+ бросьте сюда кнопку</div>'}</div></div>`}).join("");
+ wires();const e=errCount();$("#err").hidden=!e;$("#err").textContent="ошибок: "+e;save()}
+function apply(){world.style.transform=`translate(${view.x}px,${view.y}px) scale(${view.k})`;cv.style.backgroundSize=`${24*view.k}px ${24*view.k}px`;cv.style.backgroundPosition=`${view.x}px ${view.y}px`}
+const w2=e=>{const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left-view.x)/view.k,y:(e.clientY-r.top-view.y)/view.k}};
+function zoom(nk,cx,cy){nk=Math.min(1.6,Math.max(.3,nk));const r=cv.getBoundingClientRect();cx??=r.width/2;cy??=r.height/2;view.x=cx-(cx-view.x)*nk/view.k;view.y=cy-(cy-view.y)*nk/view.k;view.k=nk;apply()}
+function fit(){const r=cv.getBoundingClientRect(),ns=flow.nodes;if(!ns.length||!r.width)return apply();
+ const x0=Math.min(...ns.map(n=>n.x)),y0=Math.min(...ns.map(n=>n.y)),x1=Math.max(...ns.map(n=>n.x+W)),y1=Math.max(...ns.map(n=>n.y+nh(n)));
+ view.k=Math.max(.3,Math.min(1,(r.width-60)/(x1-x0),(r.height-60)/(y1-y0)));view.x=(r.width-(x1-x0)*view.k)/2-x0*view.k;view.y=Math.max(20,(r.height-(y1-y0)*view.k)/2)-y0*view.k;apply()}
+function sheet(h,onSave,onDel){const d=document.createElement("div");d.className="sheet";
+ d.innerHTML=`<div class="card">${h}<div class="acts">${onSave?'<button class="main" data-ok>сохранить</button>':""}${onDel?'<button class="ghost" data-del>удалить</button>':""}<button class="ghost" data-x>закрыть</button></div></div>`;document.body.append(d);
+ d.onclick=e=>{const t=e.target;if(t.hasAttribute("data-ok")){onSave(d);d.remove();render()}else if(t.hasAttribute("data-del")){onDel();d.remove();render()}else if(t.hasAttribute("data-x")||t==d)d.remove()};return d}
+function editNode(n){const d=sheet('<label>Название экрана</label><input id="a" maxlength="40"><label>Текст экрана</label><textarea id="b" maxlength="3500"></textarea>',
+ d=>{n.title=d.querySelector("#a").value.trim().slice(0,40)||"Экран";n.text=d.querySelector("#b").value.trim()||"…"},
+ n.type=="start"?null:()=>{flow.nodes=flow.nodes.filter(x=>x!=n);flow.nodes.forEach(m=>m.btns.forEach(b=>{if(b.to==n.id)b.to=""}))});
+ d.querySelector("#a").value=n.title;d.querySelector("#b").value=n.text}
+function editBtn(n,b){const d=sheet('<label>Текст кнопки</label><input id="a" maxlength="32"><label>Тип</label><select id="k"><option value="go">Открывает экран (проведите провод)</option><option value="url">Ссылка</option></select><div id="u"><label>Ссылка https://</label><input id="v"></div><button class="ghost" id="un">отвязать провод</button>',
+ d=>{b.label=d.querySelector("#a").value.trim().slice(0,32)||"Кнопка";b.kind=d.querySelector("#k").value;if(b.kind=="url"){b.value=d.querySelector("#v").value.trim();delete b.to}else{b.to=b.to||"";delete b.value}},
+ ()=>{n.btns=n.btns.filter(x=>x!=b)});
+ const k=d.querySelector("#k"),u=d.querySelector("#u"),t=()=>u.hidden=k.value!="url";d.querySelector("#a").value=b.label;k.value=b.kind;d.querySelector("#v").value=b.value||"";k.onchange=t;t();
+ d.querySelector("#un").onclick=()=>{b.to="";d.remove();render()}}
+function tap(t){const nd=t.closest(".node");if(!nd)return;const n=node(nd.dataset.id);
+ if(t.closest(".ph"))return toast("Фото загружается через бота: кнопка «📷 Фото» в чате (после отправки схемы)");
+ const row=t.closest(".row");row?editBtn(n,btn(n.id,row.dataset.b)):editNode(n)}
+const dist=()=>{const[a,b]=[...P.values()];return Math.hypot(a.x-b.x,a.y-b.y)||1};
+cv.addEventListener("pointerdown",e=>{cv.setPointerCapture(e.pointerId);P.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(P.size==2){mode="pinch";st={d:dist(),k:view.k};return}
+ const t=e.target,nd=t.closest(".node");st={sx:e.clientX,sy:e.clientY,moved:false,t};
+ if(t.closest(".out")){mode="wire";st.nid=nd.dataset.id;st.bid=t.closest(".row").dataset.b}
+ else if(nd&&t.closest(".hd")){mode="drag";st.n=node(nd.dataset.id);st.ox=st.n.x;st.oy=st.n.y;document.querySelectorAll(".node").forEach(x=>x.classList.toggle("sel",x===nd))}
+ else if(nd)mode="tap";else if(t.closest(".zoom"))mode=null;else{mode="pan";st.vx=view.x;st.vy=view.y}});
+cv.addEventListener("pointermove",e=>{if(!P.has(e.pointerId))return;P.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(mode=="pinch"&&P.size==2){const[a,b]=[...P.values()],r=cv.getBoundingClientRect();zoom(st.k*dist()/st.d,(a.x+b.x)/2-r.left,(a.y+b.y)/2-r.top);return}
+ if(!st||!mode)return;const dx=e.clientX-st.sx,dy=e.clientY-st.sy;if(Math.hypot(dx,dy)>6)st.moved=true;if(!st.moved)return;
+ if(mode=="pan"){view.x=st.vx+dx;view.y=st.vy+dy;apply()}
+ else if(mode=="drag"){st.n.x=Math.round(st.ox+dx/view.k);st.n.y=Math.round(st.oy+dy/view.k);const el=nodesEl.querySelector(`[data-id="${st.n.id}"]`);el.style.left=st.n.x+"px";el.style.top=st.n.y+"px";wires()}
+ else if(mode=="wire"){st.p=w2(e);wires(st)}});
+function up(e){P.delete(e.pointerId);if(mode=="pinch"){if(P.size<2){mode=null;st=null}return}if(!st)return;const ok=e.type=="pointerup";
+ if(mode=="wire"&&st.moved&&ok){const el=document.elementFromPoint(e.clientX,e.clientY)?.closest(".node"),b=btn(st.nid,st.bid);
+  if(el&&el.dataset.id!=st.nid){b.to=el.dataset.id;b.kind="go";delete b.value}
+  else if(!el&&flow.nodes.length<MAXN){const p=w2(e),id=uid();flow.nodes.push({id,type:"screen",title:"Экран",text:"Текст экрана",x:Math.round(p.x+10),y:Math.round(p.y-17),btns:[]});b.to=id;b.kind="go";delete b.value}
+  render()}
+ else if(mode=="wire")wires();
+ else if(mode=="drag"&&st.moved)save();
+ else if((mode=="tap"||mode=="drag")&&!st.moved&&ok)tap(st.t);
+ mode=null;st=null}
+cv.addEventListener("pointerup",up);cv.addEventListener("pointercancel",up);
+cv.addEventListener("wheel",e=>{e.preventDefault();const r=cv.getBoundingClientRect();zoom(view.k*(e.deltaY<0?1.1:.9),e.clientX-r.left,e.clientY-r.top)},{passive:false});
+function drop(t,e){const el=document.elementFromPoint(e.clientX,e.clientY);if(!el||!el.closest("#cv")||el.closest(".zoom"))return;const nd=el.closest(".node");
+ if(t=="screen"){if(flow.nodes.length>=MAXN)return toast("Максимум "+MAXN+" экранов");const p=w2(e);flow.nodes.push({id:uid(),type:"screen",title:"Экран",text:"Текст экрана",x:Math.round(p.x-W/2),y:Math.round(p.y-17),btns:[]})}
+ else if(!nd)return toast("Бросьте кнопку на экран");
+ else{const n=node(nd.dataset.id);if(n.btns.length>=MAXB)return toast("Максимум "+MAXB+" кнопок на экране");n.btns.push(t=="url"?{id:uid(),label:"Ссылка",kind:"url",value:"https://"}:{id:uid(),label:"Кнопка",kind:"go",to:""})}
+ render()}
+document.querySelectorAll(".chip").forEach(c=>c.addEventListener("pointerdown",e=>{e.preventDefault();const g=c.cloneNode(true);g.classList.add("gc");document.body.append(g);
+ const mv=v=>{g.style.left=v.clientX+"px";g.style.top=v.clientY+"px"};mv(e);
+ const fin=v=>{removeEventListener("pointermove",mv);removeEventListener("pointerup",fin);removeEventListener("pointercancel",fin);g.remove();if(v.type=="pointerup")drop(c.dataset.t,v)};
+ addEventListener("pointermove",mv);addEventListener("pointerup",fin);addEventListener("pointercancel",fin)}));
+document.addEventListener("click",e=>{const t=e.target.closest("[data-bi],[data-z]");if(!t)return;
+ if(t.dataset.bi!=null)return openBot(sess.bots[+t.dataset.bi]);const z=t.dataset.z;
+ if(z=="1")zoom(view.k*1.2);else if(z=="-1")zoom(view.k/1.2);else if(z=="f")fit();else{try{localStorage.removeItem("bb:"+bot.id)}catch{}openBot(bot);toast("Схема сброшена к версии бота")}});
+const pack=()=>enc({v:2,bot:bot.id,nodes:flow.nodes});
+function codeSheet(c,msg){const d=sheet(`<label>${msg||"Отправьте этот код боту обычным сообщением"}</label><textarea readonly id="c"></textarea><button class="main" id="cp">копировать</button>`);
+ const ta=d.querySelector("#c");ta.value=c;d.querySelector("#cp").onclick=async x=>{try{await navigator.clipboard.writeText(c);x.target.textContent="скопировано ✓"}catch{ta.select()}}}
+$("#code").onclick=async()=>codeSheet(await pack());
+$("#send").onclick=async()=>{const n=errCount();if(n)return toast("Исправьте ошибки: "+n+" (оранжевые кнопки)");const c=await pack();
+ if(new Blob([c]).size>4000)return codeSheet(c,"Схема больше 4 КБ: отправьте код боту сообщением (до 4096 символов) или упростите схему");
+ if(tg?.initData&&!demo){try{return tg.sendData(c)}catch{}}codeSheet(c)};
+$("#fs").onclick=()=>{try{if(tg){tg.isFullscreen?tg.exitFullscreen():tg.requestFullscreen()}else document.documentElement.requestFullscreen?.()}catch{}};
+addEventListener("resize",apply);
+if(tg){tg.ready();tg.expand();tg.disableVerticalSwipes?.();tg.setHeaderColor?.("#0a0a0a");tg.setBackgroundColor?.("#0a0a0a");try{if(tg.isVersionAtLeast?.("8.0")&&!tg.isFullscreen)tg.requestFullscreen()}catch{}}
 load();
 </script></body></html>
