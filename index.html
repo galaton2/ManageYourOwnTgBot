@@ -212,7 +212,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--y)}textarea{min-heigh
 "use strict";
 /* ============ Публичный веб-конфиг Firebase (не секрет). Мини-апп ТОЛЬКО ЧИТАЕТ sessions/{токен}; пишет в Firestore только бот. ============ */
 const firebaseConfig={apiKey:"AIzaSyANZINM6R29i3erpEdzs60oHZsDPBXVIOI",authDomain:"manageyourbot.firebaseapp.com",projectId:"manageyourbot",storageBucket:"manageyourbot.firebasestorage.app",messagingSenderId:"919379398898",appId:"1:919379398898:web:55798b0893c24f2309c06b",measurementId:"G-ZRQF3WRGVY"};
-const VERSION="2.1";
+const VERSION="2.2";
 const tg=window.Telegram?.WebApp;
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -251,8 +251,8 @@ function pendingList(){const a=[];if(!S.bot)return a;if(S.del)return["Удале
  if(S.post.trim())a.push("Рассылка");return a}
 const masterName=()=>S.sess.master||lsGet("bb3:master")||"";
 function openMaster(){const m=masterName();
- if(m)return openTg("https://t.me/"+m);
- try{if(tg){toast("Закройте мини-апп и отправьте токен основному боту");setTimeout(()=>tg.close(),900);return}}catch{}
+ if(m)return openTg("https://t.me/"+m+"?start=app");
+ try{if(tg){toast("Закройте мини-апп и нажмите «🎛 Открыть конструктор» в основном боте");setTimeout(()=>tg.close(),900);return}}catch{}
  toast("Откройте основного бота-конструктора в Telegram",1)}
 
 /* ============ Данные: Firestore (только чтение) ============ */
@@ -282,7 +282,7 @@ async function boot(){
  const token=new URLSearchParams(location.search).get("s");
  S.demoOn=!!lsGet("bb3:demo");
  if(!token){S.nosess=true;S.sess={bots:[],limit:5}}
- else{S.token=token;try{S.sess=await fetchSess(token);S.live=Date.now();if(S.sess.master)lsSet("bb3:master",S.sess.master)}catch{S.expired=true;S.sess={bots:[]}}}
+ else{S.token=token;try{S.sess=await fetchSess(token);S.live=Date.now();if(S.sess.master)lsSet("bb3:master",S.sess.master)}catch(e){S.expired=true;S.err=String(e&&e.message||e);S.sess={bots:[]}}}
  const last=lsGet("bb3:last");openBot((S.sess.bots.find(b=>b.id==last)||S.sess.bots[0])?.id);
  renderTab();ui()}
 function openBot(id){
@@ -359,8 +359,8 @@ function wires(tmp){let h=DEFS;
  svg.innerHTML=h}
 /* пустое состояние: нет ботов / нет сессии */
 function emptyCard(){
- const t=S.nosess?{i:"🔌",h:"Откройте через бота",p:"Мини-апп открыт напрямую. Откройте основного бота и нажмите «🎛 Открыть конструктор» (или отправьте /builder).",b:"Открыть бота"}
- :S.expired?{i:"⏳",h:"Сессия недоступна",p:"Сессия истекла или не найдена. Отправьте основному боту /builder и откройте конструктор заново.",b:"Открыть бота"}
+ const t=S.nosess?{i:"🔌",h:"Откройте через бота",p:"Страница открылась без ключа доступа к вашим данным. Закройте её, откройте основного бота и нажмите «🎛 Открыть конструктор».",b:"🎛 Открыть конструктор"}
+ :S.expired?{i:"⏳",h:"Сессия недоступна",p:"Сессия истекла или не найдена. Откройте основного бота и нажмите «🎛 Открыть конструктор» — данные обновятся.",b:"🎛 Открыть конструктор"}
  :{i:"🤖",h:"Пока нет ботов",p:"1. Создайте бота у @BotFather (/newbot)\n2. Пришлите токен основному боту\n3. Снова нажмите «🎛 Открыть конструктор» — бот появится здесь",b:"Добавить через бота"};
  return`<div class="cd hero"><div class="big">${t.i}</div><h3>${t.h}</h3><div class="note">${esc(t.p)}</div><button class="main" data-act="addbot">${t.b}</button></div>`}
 function emptyHtml(){return`<div class="wrap">${emptyCard()}</div>`}
@@ -506,7 +506,7 @@ function photoInfo(n){
  const d=sheet(`${head("📷 Фото экрана")}<p>Экран: <b>${esc(n.title)}</b><br>Сейчас: <b>${has?"фото загружено ✅":"фото нет"}</b></p>
  <p class="note">Из соображений безопасности мини-апп ничего не загружает. Фото отправляется боту в чате — откроется нужный экран.</p>
  ${onServer?"":'<div class="banner" style="margin:0 0 10px">Экран новый: сначала отправьте схему боту.</div>'}
- <div class="acts2"><button class="main" id="go" ${onServer&&masterName()?"":"disabled"}>Открыть бота</button><button class="ghost" data-x>Закрыть</button></div>`);
+ <div class="acts2"><button class="main" id="go" ${onServer&&masterName()?"":"disabled"}>Загрузить фото в чате</button><button class="ghost" data-x>Закрыть</button></div>`);
  $("#go",d).onclick=()=>openTg(`https://t.me/${masterName()}?start=ph_${S.bot.id}_${n.id}`)}
 function openTemplates(){
  const cards=TPL.map(t=>{const ns=buildTpl(t),bt=ns.reduce((a,n)=>a+n.btns.length,0);
@@ -524,7 +524,7 @@ function openBots(){
  const list=bs.length?bs.map(b=>`<div class="bot-row ${b.id==S.bot?.id?"cur":""}" data-id="${b.id}"><span class="av">${esc((b.username||"?")[0].toUpperCase())}</span><span class="bn">@${esc(b.username)}<small>${nf(b.subs)} подписчиков · ${b.running?"работает":"остановлен"}</small></span>${spark(b.stats.days.slice(-14).map(r=>r.dau),"#a9a8f8",70,26)}${b.id==S.bot?.id?'<b class="chk">✓</b>':'<i class="dot '+(b.running?"on":"")+'"></i>'}</div>`).join("")
   :emptyCard();
  const add=`<div class="cd" style="margin-top:10px"><h3>＋ Добавить бота ${bs.length?`<small class="mu">${bs.length} / ${lim}</small>`:""}</h3><div class="note">1. Создайте бота у @BotFather (/newbot)\n2. Пришлите его токен основному боту\n3. Откройте конструктор снова — бот появится в списке\n\nТокен нельзя передавать через мини-апп — только через чат.</div>
-  <button class="main" id="nb" style="width:100%;margin-top:12px">Открыть основного бота</button></div>`;
+  <button class="main" id="nb" style="width:100%;margin-top:12px">Перейти в чат конструктора</button></div>`;
  const d=sheet(`${head("Ваши боты")}${bs.length?`<div class="cd" style="padding:6px 10px">${list}</div>`:""}${bs.length?"":`<div style="margin-bottom:4px">${list}</div>`}${bs.length?add:""}`);
  d.addEventListener("click",e=>{const r=e.target.closest(".bot-row");if(r){if(r.dataset.id!=S.bot?.id){if(pendingList().length)toast("Черновик сохранён на этом устройстве");openBot(r.dataset.id)}closeSheet(d);return}
   if(e.target.closest("#nb")||e.target.closest('[data-act="addbot"]')){closeSheet(d);openMaster()}})}
@@ -670,7 +670,7 @@ function renderBot(){
  el.innerHTML=`<div class="wrap">
  ${S.del?`<div class="cd" style="border-color:var(--r)"><h3>🗑 Удаление запланировано</h3><div class="note">Бот будет удалён после подтверждения в чате.</div><button class="ghost" data-act="undel" style="margin-top:10px;width:100%">Отменить удаление</button></div>`:""}
  <div class="cd"><div class="prof"><span class="av" style="width:52px;height:52px;font-size:22px">${esc((b.username||"?")[0].toUpperCase())}</span><div style="flex:1;min-width:0"><b style="font-size:17px">${esc(b.name||b.username)}</b><div class="mu" style="text-transform:none">@${esc(b.username)} · создан ${esc(b.created||"—")}</div><span class="badge ${b.running?"y":""}">${b.running?"● работает":"○ остановлен"}</span><span class="badge l">${nf(b.subs)} подписчиков</span></div></div>
-  <div class="acts2" style="margin-top:12px"><button class="ghost" data-act="openbot">Открыть бота</button><button class="ghost" data-act="copylink">Скопировать ссылку</button></div></div>
+  <div style="margin-top:12px"><button class="ghost" data-act="copylink" style="width:100%">Скопировать ссылку на бота</button></div></div>
  <div class="cd"><h3>Управление <small class="mu">применится после отправки</small></h3>
   <div class="line"><div>Бот запущен<small>${act?"принимает сообщения":"остановлен, не отвечает"}</small></div><label class="sw" style="margin:0"><input type="checkbox" id="sw-active" ${act?"checked":""}><i></i></label></div>
   <div class="line"><div>Обратная связь<small>кнопка «Связаться» на старте и /support</small></div><label class="sw" style="margin:0"><input type="checkbox" id="sw-support" ${sup?"checked":""}><i></i></label></div>
@@ -690,7 +690,7 @@ function renderMe(){
  const el=$("#v-me"),u=tg?.initDataUnsafe?.user||{first_name:"Пользователь",id:S.sess.uid},name=[u.first_name,u.last_name].filter(Boolean).join(" ")||"Пользователь",bs=S.sess.bots||[];
  const left=S.sess.exp?new Date(S.sess.exp)-Date.now():null,totalSubs=bs.reduce((a,b)=>a+b.subs,0),totalViews=bs.reduce((a,b)=>a+sum(b.stats.days.slice(-30),"views"),0);
  const nodesTot=bs.reduce((a,b)=>a+b.flow.nodes.length,0),lim=S.sess.limit||5;
- const status=S.nosess?"не подключена":S.expired?"недоступна":"активна · данные читаются из Firestore";
+ const status=S.nosess?"не подключена":S.expired?"недоступна"+(S.err?" ("+esc(S.err)+")":""):"активна";
  el.innerHTML=`<div class="wrap">
  <div class="cd"><div class="prof"><span class="av">${u.photo_url?`<img src="${esc(u.photo_url)}" alt="">`:esc((name||"?")[0].toUpperCase())}</span><div style="flex:1;min-width:0"><b style="font-size:19px">${esc(name)}</b><div class="mu" style="text-transform:none">${u.username?"@"+esc(u.username)+" · ":""}${u.id?"ID "+esc(u.id):""}</div><div>${S.sess.admin?'<span class="badge y">админ</span>':'<span class="badge l">владелец</span>'}${u.is_premium?'<span class="badge">⭐ premium</span>':""}${u.language_code?`<span class="badge">${esc(u.language_code)}</span>`:""}</div></div></div>
   ${S.sess.since?`<div class="mu" style="margin-top:10px">С нами с ${new Date(S.sess.since).toLocaleDateString("ru-RU")}</div>`:""}</div>
@@ -701,7 +701,7 @@ function renderMe(){
   <button class="ghost" data-act="addbot" style="margin-top:10px;width:100%">＋ Добавить бота через чат</button></div>
  ${S.sess.platform?`<div class="cd"><h3>🛡 Платформа</h3><div class="row2" style="gap:8px">${[["Пользователи",S.sess.platform.users],["Боты",S.sess.platform.bots],["Запущено",S.sess.platform.running],["Подписки",S.sess.platform.subs]].map(x=>`<div class="pit"><span class="mu">${x[0]}</span><b>${nf(x[1])}</b></div>`).join("")}</div></div>`:""}
  <div class="cd"><h3>Сессия</h3><div class="line"><div>Статус<small>${status}</small></div><span class="badge ${S.expired||S.nosess?"":"y"}">${S.nosess?"off":S.expired?"off":"live"}</span></div>
-  <div class="line"><div>Осталось<small>после — отправьте боту /builder</small></div><b id="left">${left==null?"—":fmtLeft(left)}</b></div></div>
+  <div class="line"><div>Осталось<small>после — откройте конструктор в боте заново</small></div><b id="left">${left==null?"—":fmtLeft(left)}</b></div></div>
  <div class="cd"><h3>Настройки интерфейса <small class="mu">только на этом устройстве</small></h3>
   ${[["haptic","Вибро-отклик","короткие тактильные сигналы"],["snap","Привязка к сетке","экраны выравниваются по 10 px"],["anim","Анимации","графики, переходы, счётчики"]].map(x=>`<div class="line"><div>${x[1]}<small>${x[2]}</small></div><label class="sw" style="margin:0"><input type="checkbox" data-pref="${x[0]}" ${PREF[x[0]]?"checked":""}><i></i></label></div>`).join("")}
   <button class="ghost" data-act="cleardrafts" style="margin-top:10px;width:100%">Очистить локальные черновики</button></div>
@@ -709,7 +709,7 @@ function renderMe(){
   <div class="step"><b>1</b><div>Вы собираете схему и настройки здесь — мини-апп <b>только читает</b> данные и ничего не пишет на сервер.</div></div>
   <div class="step"><b>2</b><div>Кнопка «Отправить боту» передаёт изменения боту в чате; бот проверяет и применяет их.</div></div>
   <div class="step"><b>3</b><div>Фото экранов загружаются только через бота (значок 📷 на экране).</div></div></div>
- <div class="mu" style="text-align:center;padding:6px">Bot Builder ${VERSION} · Firestore read-only</div></div>`}
+ <div class="mu" style="text-align:center;padding:6px">Bot Builder ${VERSION}</div></div>`}
 const fmtLeft=ms=>{if(ms<=0)return"истекла";const s=Math.floor(ms/1000),m=Math.floor(s/60);return m>=60?Math.floor(m/60)+" ч "+m%60+" мин":m+":"+String(s%60).padStart(2,"0")}
 
 /* ============ Шапка, вкладки, UI ============ */
@@ -724,8 +724,8 @@ function ui(){
  const e=errCount();$("#err").hidden=!e;$("#err").textContent="ошибок: "+e;
  const cc=!!p.length;if(S.cc!==cc){S.cc=cc;try{cc?tg?.enableClosingConfirmation?.():tg?.disableClosingConfirmation?.()}catch{}}
  const left=S.sess.exp?new Date(S.sess.exp)-Date.now():null,ex=$("#exp");
- if(S.expired||(left!=null&&left<=0)){ex.hidden=false;ex.textContent="Сессия истекла. Отправьте боту /builder и откройте конструктор заново. Изменения всё ещё можно отправить."}
- else if(left!=null&&left<5*60000){ex.hidden=false;ex.textContent="Сессия закончится через "+fmtLeft(left)+". Отправьте изменения или откройте /builder снова."}else ex.hidden=true}
+ if(S.expired||(left!=null&&left<=0)){ex.hidden=false;ex.textContent="Сессия истекла. Откройте основного бота и нажмите «🎛 Открыть конструктор». Изменения всё ещё можно отправить."}
+ else if(left!=null&&left<5*60000){ex.hidden=false;ex.textContent="Сессия закончится через "+fmtLeft(left)+". Отправьте изменения или откройте конструктор в боте заново."}else ex.hidden=true}
 
 document.addEventListener("click",e=>{const a=e.target.closest("[data-act]");if(!a)return;const v=a.dataset.v;
  switch(a.dataset.act){
@@ -734,7 +734,6 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-act]");if(
   case"cmp":S.cmp=!S.cmp;renderStats();break;
   case"pickbot":openBot(a.dataset.id);break;
   case"addbot":openMaster();break;
-  case"openbot":openTg("https://t.me/"+S.bot.username);break;
   case"copylink":navigator.clipboard?.writeText("https://t.me/"+S.bot.username).then(()=>toast("Ссылка скопирована"),()=>toast("Не удалось скопировать",1));break;
   case"clrpost":S.post="";saveDraftSoon();renderBot();ui();break;
   case"undel":S.del=false;saveDraftSoon();renderBot();ui();break;
