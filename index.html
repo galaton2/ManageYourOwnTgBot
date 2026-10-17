@@ -15,10 +15,12 @@ button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 .m,.mu{font-family:"Space Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;font-size:10.5px}
 .mu{color:var(--mu)}
+.note{color:var(--mu);font-size:13px;line-height:1.6;white-space:pre-line}
 #app{display:flex;flex-direction:column;height:100dvh}
 #top{display:flex;align-items:center;gap:8px;padding:calc(var(--st) + 8px) 12px 8px}
 .logo{flex:none;width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--y),var(--l));color:#000;display:grid;place-items:center;font-weight:700;font-style:normal;box-shadow:0 4px 18px #e6ff3d33}
-.botbtn{display:flex;align-items:center;gap:8px;flex:1;min-width:0;background:var(--c1);border:1px solid var(--ln);border-radius:99px;padding:5px 12px 5px 5px;text-align:left}
+.botbtn{display:flex;align-items:center;gap:8px;flex:1;min-width:0;background:var(--c1);border:1px solid var(--ln);border-radius:99px;padding:5px 12px 5px 5px;text-align:left;transition:border-color .15s}
+.botbtn:active{border-color:var(--y)}
 .av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--l),var(--y));color:#000;display:grid;place-items:center;font-weight:700;font-size:12px;flex:none;overflow:hidden}
 .av img{width:100%;height:100%;object-fit:cover}
 .bn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
@@ -27,6 +29,7 @@ button{cursor:pointer}
 .pillerr{flex:none;color:var(--o);border:1px solid var(--o);border-radius:99px;padding:6px 10px;white-space:nowrap;font-family:"Space Mono",monospace;font-size:10.5px}
 .ic{flex:none;width:34px;height:34px;border-radius:50%;border:1px solid var(--ln);background:var(--c1)}
 .banner{margin:0 12px 6px;padding:9px 12px;border-radius:12px;background:#ff6a2b22;border:1px solid var(--o);color:#ffc8ae;font-size:12.5px}
+.banner.info{background:#a9a8f822;border-color:var(--l);color:#dcdcff}
 #views{flex:1;min-height:0;position:relative}
 .view{position:absolute;inset:0;display:none}.view.on{display:block;animation:vin .22s ease}
 @keyframes vin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -46,6 +49,7 @@ button{cursor:pointer}
 .cd{background:linear-gradient(180deg,#14141a,#101013);border:1px solid var(--ln);border-radius:20px;padding:14px}
 .cd h3{margin:0 0 10px;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .cd h3 small{font-weight:400}
+.demo-c{padding:4px 14px;border-color:#a9a8f855}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .seg{display:flex;gap:4px;background:#0a0a0c;border:1px solid var(--ln);border-radius:99px;padding:3px}
 .seg button{flex:1;border:0;background:none;border-radius:99px;padding:7px 10px;color:var(--mu);font-family:"Space Mono",monospace;font-size:11px;white-space:nowrap}
@@ -88,6 +92,7 @@ button{cursor:pointer}
 .plist{display:grid;gap:8px}.pit{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#0b0b0e;border:1px solid var(--ln);border-radius:14px;padding:10px 12px}
 .empty{color:#777;font-size:12.5px;padding:8px 4px}
 .hero{text-align:center;padding:30px 16px;display:grid;gap:10px;justify-items:center}.hero .big{font-size:42px}
+.hero h3{justify-content:center;margin:0}
 /* switches */
 .sw{position:relative;display:inline-block;width:46px;height:28px;flex:none}.sw input{opacity:0;position:absolute;inset:0;width:100%;height:100%;margin:0;z-index:2}
 .sw i{position:absolute;inset:0;border-radius:99px;background:#2a2a32;transition:.2s}.sw i::after{content:"";position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s}
@@ -96,21 +101,24 @@ button{cursor:pointer}
 .line small{display:block;color:var(--mu);font-size:12px}
 /* inputs */
 label{display:flex;justify-content:space-between;color:var(--mu);margin:10px 0 5px;font-family:"Space Mono",monospace;text-transform:uppercase;letter-spacing:.06em;font-size:10.5px}
-input[type=text],input:not([type]),select,textarea{width:100%;background:#0a0a0c;border:1px solid var(--ln);border-radius:14px;padding:11px 12px;outline:0}
+input[type=text],input[type=url],input:not([type]),select,textarea{width:100%;background:#0a0a0c;border:1px solid var(--ln);border-radius:14px;padding:11px 12px;outline:0;font-size:16px;-webkit-user-select:text;user-select:text;-webkit-appearance:none;appearance:none}
+select{background-image:linear-gradient(45deg,transparent 50%,#8d8d99 50%),linear-gradient(135deg,#8d8d99 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
 input:focus,select:focus,textarea:focus{border-color:var(--y)}textarea{min-height:110px;resize:vertical}
 /* profile */
 .prof{display:flex;gap:14px;align-items:center}.prof .av{width:64px;height:64px;font-size:26px;border:2px solid var(--y)}
 .badge{display:inline-block;border-radius:99px;padding:3px 9px;font:10px "Space Mono",monospace;text-transform:uppercase;background:#ffffff14;margin:2px 4px 0 0}.badge.y{background:var(--y);color:#000}.badge.l{background:var(--l);color:#000}
 .meter{height:8px;border-radius:99px;background:#ffffff12;overflow:hidden;margin-top:6px}.meter i{display:block;height:100%;background:linear-gradient(90deg,var(--l),var(--y));border-radius:99px}
 .step{display:flex;gap:12px;padding:8px 0}.step b{flex:none;width:26px;height:26px;border-radius:50%;background:var(--y);color:#000;display:grid;place-items:center;font-size:12px}
-.bot-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #ffffff10;cursor:pointer}.bot-row:last-child{border-bottom:0}
+.bot-row{display:flex;align-items:center;gap:10px;padding:10px 6px;border-bottom:1px solid #ffffff10;cursor:pointer;border-radius:12px}.bot-row:last-child{border-bottom:0}
+.bot-row.cur{background:#e6ff3d12}
 .bot-row .bn small{display:block;color:var(--mu);font-weight:400;font-size:12px}
+.chk{flex:none;color:var(--y);font-weight:700}
 /* canvas */
 #cv{position:absolute;inset:0;overflow:hidden;touch-action:none;background-image:radial-gradient(#ffffff26 1px,transparent 1.5px);background-size:24px 24px}
 #world{position:absolute;left:0;top:0;transform-origin:0 0}
 #svg{position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;pointer-events:none}
 .w{fill:none;stroke:var(--l);stroke-width:2}.w.tmp{stroke:var(--y);stroke-dasharray:6 5}.w.bad{stroke:var(--o);stroke-dasharray:4 4}
-.node{position:absolute;width:230px;border-radius:16px;background:#101012;border:1px solid var(--l);user-select:none;transition:box-shadow .2s}
+.node{position:absolute;width:230px;border-radius:16px;background:#101012;border:1px solid var(--l);-webkit-user-select:none;user-select:none;transition:box-shadow .2s}
 .node.start{border-color:var(--y)}.node.sel{box-shadow:0 0 0 2px var(--y),0 12px 40px #000a}
 .hd{height:34px;display:flex;align-items:center;gap:6px;padding:0 10px;border-radius:15px 15px 0 0;background:var(--l);color:#000;font-weight:600;cursor:grab;position:relative}
 .start .hd{background:var(--y)}.hd span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -129,26 +137,31 @@ input:focus,select:focus,textarea:focus{border-color:var(--y)}textarea{min-heigh
 .tools button,.zoom button{flex:none;width:34px;height:34px;border-radius:50%;border:0;background:none;font-size:16px}
 .tools button.on{background:var(--o);color:#000}.tools button:disabled{opacity:.3}
 .tools i{width:1px;background:var(--ln);margin:6px 2px;flex:none}
-#dock{position:absolute;left:10px;bottom:calc(10px);display:flex;gap:8px;z-index:4;background:#0c0c0fe6;border:1px solid var(--ln);border-radius:20px;padding:8px;backdrop-filter:blur(10px)}
-.chip{touch-action:none;user-select:none;cursor:grab;border:1px solid var(--ln);border-radius:12px;padding:7px 8px;width:62px;text-align:center;line-height:1.15;font-family:"Space Mono",monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.04em}
+#dock{position:absolute;left:10px;bottom:10px;display:flex;gap:8px;z-index:4;background:#0c0c0fe6;border:1px solid var(--ln);border-radius:20px;padding:8px;backdrop-filter:blur(10px)}
+.chip{touch-action:none;-webkit-user-select:none;user-select:none;cursor:grab;border:1px solid var(--ln);border-radius:12px;padding:7px 8px;width:62px;text-align:center;line-height:1.15;font-family:"Space Mono",monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.04em}
 .chip b{display:block;font-size:18px;font-weight:400}
 .chip[data-t=screen]{background:var(--l);color:#000;border-color:var(--l)}.chip[data-t=btn]{border-color:#fff}.chip[data-t=url]{border-color:var(--y);color:var(--y)}
 .gc{position:fixed;z-index:99;pointer-events:none;transform:translate(-50%,-50%) rotate(-4deg);opacity:.92}
+#v-flow.off .tools,#v-flow.off #dock,#v-flow.off .zoom{opacity:.3;pointer-events:none}
+.eflow{position:absolute;inset:0;display:grid;place-items:center;z-index:3;padding:20px;pointer-events:none}
+.eflow .cd{pointer-events:auto;max-width:360px;width:100%;background:#101013f2;backdrop-filter:blur(10px)}
 /* sheets */
 #layer{position:fixed;inset:0;pointer-events:none;z-index:50}
-.sheet{position:fixed;inset:0;pointer-events:auto;background:#000a;display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .18s}
+.sheet{position:fixed;inset:0;pointer-events:auto;background:#000a;display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .18s;padding-bottom:var(--kb,0px)}
 .sheet.in{opacity:1}
-.sh{width:100%;max-width:560px;background:#111114;border:1px solid var(--ln);border-radius:26px 26px 0 0;padding:8px 16px calc(var(--sb) + 18px);max-height:92dvh;overflow:auto;transform:translateY(30px);transition:transform .22s cubic-bezier(.2,.9,.3,1)}
-.sheet.in .sh{transform:none}.sh.full{height:92dvh}
+.sh{width:100%;max-width:560px;background:#111114;border:1px solid var(--ln);border-radius:26px 26px 0 0;padding:8px 16px calc(var(--sb) + 18px);max-height:calc(92dvh - var(--kb,0px));overflow:auto;-webkit-overflow-scrolling:touch;transform:translateY(30px);transition:transform .22s cubic-bezier(.2,.9,.3,1)}
+.sheet.in .sh{transform:none}.sh.full{height:calc(92dvh - var(--kb,0px))}
 .grab{display:block;width:40px;height:4px;border-radius:4px;background:#ffffff33;margin:4px auto 10px}
 .shh{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}.shh h3{margin:0;font-size:17px}
 .x{width:32px;height:32px;border-radius:50%;border:1px solid var(--ln);background:none}
 .fmt{display:flex;gap:6px;margin-bottom:6px}.fmt button{width:38px;height:32px;border-radius:10px;border:1px solid var(--ln);background:#0a0a0c;font-weight:700}
-.bl{display:grid;gap:6px}.br{display:flex;align-items:center;gap:8px;background:#0a0a0c;border:1px solid var(--ln);border-radius:14px;padding:6px 8px}.br.bad{border-color:var(--o)}
-.br .bt{flex:1;min-width:0;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.br small{display:block;color:var(--mu);overflow:hidden;text-overflow:ellipsis}
+.bl{display:grid;gap:6px}.br{display:flex;align-items:center;gap:6px;background:#0a0a0c;border:1px solid var(--ln);border-radius:14px;padding:6px 8px}.br.bad{border-color:var(--o)}
+.br .bm{flex:1;min-width:0}
+.br .bli{padding:7px 10px;border-radius:10px;font-size:15px;background:#111114}
+.br small{display:block;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;padding-left:2px}
 .br .bi{width:26px;height:26px;border-radius:50%;background:#ffffff14;display:grid;place-items:center;flex:none}
-.br button{width:30px;height:30px;border-radius:10px;border:1px solid var(--ln);background:none}.br button:disabled{opacity:.25}
-.tpl{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:#0a0a0c;border:1px solid var(--ln);border-radius:16px;padding:12px;margin-bottom:8px}.tpl b{font-size:24px}.tpl small{display:block;color:var(--mu)}
+.br button{flex:none;width:30px;height:30px;border-radius:10px;border:1px solid var(--ln);background:none}.br button:disabled{opacity:.25}
+.tplc{margin-bottom:10px}
 .codebox{font:11px "Space Mono",monospace;min-height:80px}
 .toast{position:fixed;left:50%;bottom:calc(var(--sb) + 150px);transform:translateX(-50%);background:var(--y);color:#000;border-radius:99px;padding:10px 16px;z-index:99;max-width:90vw;text-align:center;font-weight:600;animation:pop .2s}.toast.err{background:var(--o)}
 /* preview */
@@ -164,6 +177,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--y)}textarea{min-heigh
 .kbb:active{filter:brightness(1.3)}
 @media(min-width:700px){.sheet{align-items:center}.sh,.pv{border-radius:26px}.sh.full,.pv{height:86dvh}}
 @media(max-width:699px){#dock .chip{width:56px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body>
 <div id="app">
 <header id="top">
@@ -176,7 +190,8 @@ input:focus,select:focus,textarea:focus{border-color:var(--y)}textarea{min-heigh
 <div id="views">
  <section class="view on" id="v-flow">
   <div id="cv"><div id="world"><svg id="svg"></svg><div id="nodes"></div></div></div>
-  <div class="tools"><button id="undo" title="Отменить">↶</button><button id="redo" title="Повторить">↷</button><i></i><button id="fit" title="Показать всё">⌖</button><button id="lay" title="Расставить автоматически">▤</button><button id="heat" title="Тепловая карта">🔥</button><i></i><button id="tpl" title="Шаблоны">✦</button><button id="pvb" title="Предпросмотр">▶</button></div>
+  <div class="eflow" id="eflow" hidden></div>
+  <div class="tools"><button id="undo" title="Отменить">↶</button><button id="redo" title="Повторить">↷</button><i></i><button id="fit" title="Показать всё">⌖</button><button id="lay" title="Расставить автоматически">▤</button><button id="heat" title="Тепловая карта">🔥</button><i></i><button id="tpl" title="Шаблон">✦</button><button id="pvb" title="Предпросмотр">▶</button></div>
   <div class="zoom"><button data-z="1">+</button><button data-z="-1">−</button></div>
   <div id="dock"><div class="chip" data-t="screen"><b>▭</b>экран</div><div class="chip" data-t="btn"><b>◉</b>кнопка</div><div class="chip" data-t="url"><b>↗</b>ссылка</div></div>
  </section>
@@ -197,7 +212,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--y)}textarea{min-heigh
 "use strict";
 /* ============ Публичный веб-конфиг Firebase (не секрет). Мини-апп ТОЛЬКО ЧИТАЕТ sessions/{токен}; пишет в Firestore только бот. ============ */
 const firebaseConfig={apiKey:"AIzaSyANZINM6R29i3erpEdzs60oHZsDPBXVIOI",authDomain:"manageyourbot.firebaseapp.com",projectId:"manageyourbot",storageBucket:"manageyourbot.firebasestorage.app",messagingSenderId:"919379398898",appId:"1:919379398898:web:55798b0893c24f2309c06b",measurementId:"G-ZRQF3WRGVY"};
-const VERSION="2.0";
+const VERSION="2.1";
 const tg=window.Telegram?.WebApp;
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -218,7 +233,7 @@ async function enc(o){const j=JSON.stringify(o);
 
 /* ============ Состояние и модель ============ */
 const W=230,HDR=34,TXT=46,ROW=32,MAXB=12,MAXN=40;
-const S={tab:"flow",range:14,metric:"dau",cmp:false,view:{x:30,y:30,k:1},hist:[],fut:[],set:{},post:"",del:false,sel:null,heat:false,heatMap:{},draw:[],fitted:false,sess:{bots:[]},bot:null,flow:null,base:[],baseSig:"",demo:false,token:null,expired:false,live:0};
+const S={tab:"flow",range:14,metric:"dau",cmp:false,view:{x:30,y:30,k:1},hist:[],fut:[],set:{},post:"",del:false,sel:null,heat:false,heatMap:{},draw:[],fitted:false,sess:{bots:[]},bot:null,flow:null,base:[],baseSig:"",token:null,expired:false,nosess:false,live:0,demoOn:false,cc:null};
 const node=id=>S.flow.nodes.find(n=>n.id==id);
 const nh=n=>HDR+TXT+Math.max(1,n.btns.length)*ROW+10;
 const uid=(list=S.flow?.nodes||[])=>{let i;do{i=Math.random().toString(36).slice(2,7).padEnd(5,"x")}while(list.some(n=>n.id==i||(n.btns||[]).some(b=>b.id==i)));return i};
@@ -234,12 +249,19 @@ const avg=(a,k)=>a.length?sum(a,k)/a.length:0;
 function pendingList(){const a=[];if(!S.bot)return a;if(S.del)return["Удаление бота"];if(flowDirty())a.push("Схема");
  const k=Object.keys(S.set);if(k.length)a.push("Настройки: "+k.map(x=>({support:"обратная связь",active:"запуск/остановка",fallback:"ответ по умолчанию"}[x])).join(", "));
  if(S.post.trim())a.push("Рассылка");return a}
+const masterName=()=>S.sess.master||lsGet("bb3:master")||"";
+function openMaster(){const m=masterName();
+ if(m)return openTg("https://t.me/"+m);
+ try{if(tg){toast("Закройте мини-апп и отправьте токен основному боту");setTimeout(()=>tg.close(),900);return}}catch{}
+ toast("Откройте основного бота-конструктора в Telegram",1)}
 
-/* ============ Данные: Firestore (чтение) / демо ============ */
+/* ============ Данные: Firestore (только чтение) ============ */
 async function fetchSess(token){
  const r=await fetch(`https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/sessions/${encodeURIComponent(token)}?key=${firebaseConfig.apiKey}`,{cache:"no-store"});
  if(!r.ok)throw new Error("http "+r.status);
  const d=await r.json(),j=JSON.parse(d.fields.json.stringValue);j.exp=j.exp||d.fields.exp?.timestampValue;return j}
+
+/* ============ Демо-статистика (только для вкладки «Статистика») ============ */
 const mulberry=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
 function demoStats(nodes,seed,scale){
  const r=mulberry(seed),days=[],today=new Date();today.setUTCHours(0,0,0,0);
@@ -250,60 +272,80 @@ function demoStats(nodes,seed,scale){
   days.push({d:d.toISOString().slice(0,10),new:nw,dau,views,support:r()<.3?Math.round(r()*3):0,unsub:r()<.4?Math.round(r()*2):0,n,h})}
  const total=Math.round(sum(days,"new")*1.4+300*scale),act=Math.round(total*.86),un=Math.round(total*.09);
  return{days,aud:{total,active:act,unsub:un,blocked:total-act-un},ret:{d1:{base:Math.round(total*.8),ok:Math.round(total*.34)},d7:{base:Math.round(total*.6),ok:Math.round(total*.13)}},posts:[{at:new Date(+today-3*864e5).toISOString(),sent:Math.round(act*.97),failed:Math.round(act*.03)},{at:new Date(+today-12*864e5).toISOString(),sent:Math.round(act*.9),failed:Math.round(act*.06)}]}}
-function demoData(){
- const mk=(k,name,seed,sc)=>{const t=TPL.find(x=>x.k==k),nodes=buildTpl(t),st=demoStats(nodes,seed,sc);
-  return{id:"demo"+seed,username:name,name:name.replace(/_/g," "),active:true,running:true,support:true,fallback:"Используйте кнопки меню или команду /menu.",created:"2026-08-14",subs:st.aud.active,flow:{start:"start",nodes},rev:1,photos:["welcome"],stats:st}};
- return{v:3,limit:5,uid:1,admin:false,master:"BotBuilderBot",since:"2026-08-01T10:00:00+00:00",exp:new Date(Date.now()+55*60000).toISOString(),platform:null,bots:[mk("shop","demo_shop_bot",7,1.2),mk("service","demo_studio_bot",21,.6)]}}
+function statSrc(){
+ if(S.demoOn){const nodes=S.bot?S.bot.flow.nodes:buildTpl(TPL[0]),st=demoStats(nodes,7,1.2);
+  return{username:S.bot?S.bot.username:"demo_bot",subs:st.aud.active,nodes,stats:st,demo:true}}
+ const b=S.bot;if(!b)return null;
+ return{username:b.username,subs:b.subs,nodes:b.flow.nodes,stats:b.stats,demo:false}}
 
 async function boot(){
  const token=new URLSearchParams(location.search).get("s");
- try{if(!token)throw 0;S.sess=await fetchSess(token);S.token=token;S.live=Date.now()}
- catch{if(token){S.token=token;S.expired=true;S.sess={bots:[],exp:null}}else{S.demo=true;S.sess=demoData()}}
+ S.demoOn=!!lsGet("bb3:demo");
+ if(!token){S.nosess=true;S.sess={bots:[],limit:5}}
+ else{S.token=token;try{S.sess=await fetchSess(token);S.live=Date.now();if(S.sess.master)lsSet("bb3:master",S.sess.master)}catch{S.expired=true;S.sess={bots:[]}}}
  const last=lsGet("bb3:last");openBot((S.sess.bots.find(b=>b.id==last)||S.sess.bots[0])?.id);
- if(S.demo)toast("Демо-режим: откройте через /builder в боте");
  renderTab();ui()}
 function openBot(id){
  const b=S.sess.bots.find(x=>x.id==id);S.bot=b||null;S.sel=null;S.hist=[];S.fut=[];S.set={};S.post="";S.del=false;S.fitted=false;
- if(!b){S.flow=null;renderTop();return}
+ if(!b){S.flow=null;S.base=[];S.baseSig="";renderTop();renderTab();ui();return}
  S.base=b.flow.nodes.map(cn);S.baseSig=JSON.stringify(S.base);S.flow={start:b.flow.start,nodes:clone(S.base)};
  const d=lsGet("bb3:"+b.id);
  if(d&&d.base==b.rev){if(d.nodes)S.flow.nodes=d.nodes.map(cn);S.set=d.set||{};S.post=d.post||""}else if(d)lsDel("bb3:"+b.id);
  lsSet("bb3:last",b.id);calcHeat();renderTop();renderTab();ui()}
 async function refresh(){
- if(!S.token||S.demo||document.hidden)return;
- try{const j=await fetchSess(S.token),cur=S.bot?.id,oldRev=S.bot?.rev;S.sess=j;S.expired=false;S.live=Date.now();S.bot=j.bots.find(x=>x.id==cur)||j.bots[0]||null;
-  if(S.bot&&oldRev!=S.bot.rev){if(!pendingList().length)openBot(S.bot.id);else{S.base=S.bot.flow.nodes.map(cn);S.baseSig=JSON.stringify(S.base);toast("Схема на сервере обновилась")}}
+ if(!S.token||document.hidden)return;
+ try{const j=await fetchSess(S.token),cur=S.bot?.id,oldRev=S.bot?.rev;S.sess=j;S.expired=false;S.live=Date.now();if(j.master)lsSet("bb3:master",j.master);
+  const had=!!S.bot;S.bot=j.bots.find(x=>x.id==cur)||j.bots[0]||null;
+  if(S.bot&&(!had||oldRev!=S.bot.rev||S.bot.id!=cur)){if(!pendingList().length||!had)openBot(S.bot.id);else{S.base=S.bot.flow.nodes.map(cn);S.baseSig=JSON.stringify(S.base);toast("Схема на сервере обновилась")}}
   else if(S.bot){calcHeat()}
+  else if(had){openBot(null)}
   renderTop();if(S.tab=="stats")renderStats();if(S.tab=="bot")renderBot();if(S.tab=="me")renderMe();ui()}
  catch{if(S.sess.exp&&new Date(S.sess.exp)<Date.now())S.expired=true;ui()}}
 function calcHeat(){const rows=(S.bot?.stats?.days||[]).slice(-30),m={};rows.forEach(r=>{for(const k in r.n||{})m[k]=(m[k]||0)+r.n[k]});S.heatMap=m}
 
-/* ============ История и сохранение черновика (только локально на устройстве) ============ */
+/* ============ История и черновик (только локально на устройстве) ============ */
 const snapF=()=>JSON.stringify(S.flow.nodes);
 function mutate(fn){S.hist.push(snapF());if(S.hist.length>80)S.hist.shift();S.fut=[];fn();afterChange()}
 let dTimer;function saveDraftSoon(){clearTimeout(dTimer);dTimer=setTimeout(saveDraft,300)}
 function saveDraft(){if(!S.bot)return;if(!pendingList().length||S.del){lsDel("bb3:"+S.bot.id);return}
  lsSet("bb3:"+S.bot.id,{base:S.bot.rev,nodes:flowDirty()?S.flow.nodes:null,set:S.set,post:S.post})}
 function afterChange(){renderFlow();saveDraftSoon();ui()}
-function undo(){if(!S.hist.length)return;S.fut.push(snapF());S.flow.nodes=JSON.parse(S.hist.pop());afterChange();hap()}
-function redo(){if(!S.fut.length)return;S.hist.push(snapF());S.flow.nodes=JSON.parse(S.fut.pop());afterChange();hap()}
+function undo(){if(!S.flow||!S.hist.length)return;S.fut.push(snapF());S.flow.nodes=JSON.parse(S.hist.pop());afterChange();hap()}
+function redo(){if(!S.flow||!S.fut.length)return;S.hist.push(snapF());S.flow.nodes=JSON.parse(S.fut.pop());afterChange();hap()}
 function setVal(k,v){if(v===S.bot[k])delete S.set[k];else S.set[k]=v;saveDraftSoon();ui()}
 
-/* ============ Раскладка и шаблоны ============ */
+/* ============ Раскладка и шаблон ============ */
 function layout(nodes,start){
  const by=Object.fromEntries(nodes.map(n=>[n.id,n])),depth={[start]:0},q=[start];
  while(q.length){const id=q.shift();(by[id]?.btns||[]).forEach(b=>{if(b.kind=="go"&&b.to&&by[b.to]&&!(b.to in depth)){depth[b.to]=depth[id]+1;q.push(b.to)}})}
  const md=Math.max(0,...Object.values(depth));nodes.forEach(n=>{if(!(n.id in depth))depth[n.id]=md+1});
  const ys={};nodes.slice().sort((a,b)=>depth[a.id]-depth[b.id]).forEach(n=>{const d=depth[n.id];ys[d]=ys[d]||40;n.x=60+d*300;n.y=ys[d];ys[d]+=nh(n)+28})}
+/* элемент: [название, текст, [вложенные экраны], [[подпись, https-ссылка], …]] */
 const TPL=[
- {k:"card",ico:"👤",name:"Визитка",desc:"О нас, услуги, портфолио, контакты",w:"Привет! 👋 Здесь можно узнать обо мне и связаться.",items:[["ℹ️ О нас","**Коротко о нас.**\nРасскажите, чем вы занимаетесь и чем отличаетесь."],["🧰 Услуги","Перечислите услуги и цены:\n• Услуга 1 — от 1000 ₽\n• Услуга 2 — от 2500 ₽"],["🖼 Портфолио","Покажите примеры работ. Фото к экрану добавляется через бота."],["☎️ Контакты","Телефон: +7 …\nПочта: …\n[Сайт](https://example.com)"]]},
- {k:"shop",ico:"🛍",name:"Магазин",desc:"Каталог, доставка, оплата, акции, отзывы",w:"Добро пожаловать в наш магазин! 🛍\nВыберите раздел:",items:[["🛍 Каталог","Выберите категорию:",[["👕 Новинки","Свежие поступления. Добавьте товары и цены."],["🔥 Хиты","Самые популярные товары."]]],["🚚 Доставка","Способы, стоимость и сроки доставки."],["💳 Оплата","Карты, наличные, рассрочка — опишите способы оплаты."],["🎁 Акции","Действующие акции и промокоды: `SALE10`"],["⭐ Отзывы","Отзывы довольных клиентов."],["☎️ Контакты","Телефон, почта и [Instagram](https://instagram.com)."]]},
- {k:"service",ico:"📅",name:"Услуги и запись",desc:"Прайс, запись, часы работы, адрес, FAQ",w:"Здравствуйте! Запишитесь онлайн или узнайте подробности.",items:[["💈 Услуги и цены","Прайс-лист:\n• Услуга 1 — 1500 ₽\n• Услуга 2 — 3000 ₽"],["📅 Запись","Как записаться: напишите нам или выберите время по [ссылке](https://example.com)."],["🕘 Часы работы","Пн–Пт 10:00–20:00\nСб–Вс 11:00–18:00"],["📍 Адрес","г. Город, ул. Улица, 1. Как добраться — опишите."],["❓ FAQ","Ответы на частые вопросы."]]},
- {k:"community",ico:"👥",name:"Сообщество",desc:"О нас, правила, новости, ссылки, FAQ",w:"Привет! Это бот нашего сообщества 👋",items:[["ℹ️ О сообществе","Чем живёт сообщество и кому оно подойдёт."],["📋 Правила","1. Уважайте друг друга\n2. Без спама\n3. Без рекламы"],["📰 Новости","Последние новости и анонсы."],["🔗 Ссылки","Канал, чат и сайт."],["❓ FAQ","Частые вопросы новичков."]]},
- {k:"blank",ico:"▫️",name:"Пустой",desc:"Только стартовый экран",w:"Привет! Добро пожаловать.",items:[]}];
+ {k:"main",ico:"📦",name:"Главный шаблон",desc:"Готовая схема целиком: каталог, доставка, оплата, акции, запись, отзывы, FAQ, контакты. Остаётся только заменить тексты.",
+  w:"Привет! 👋 Добро пожаловать.\nВыберите нужный раздел ниже:",
+  items:[
+   ["🛍 Каталог","**Каталог.**\nВыберите категорию:",[
+     ["👕 Новинки","**Новинки.**\nСвежие поступления:\n• Товар 1 — 1 990 ₽\n• Товар 2 — 2 490 ₽"],
+     ["🔥 Хиты продаж","**Хиты продаж.**\nТо, что берут чаще всего:\n• Товар 3 — 1 290 ₽\n• Товар 4 — 3 100 ₽"],
+     ["🏷 Распродажа","**Распродажа.**\nСкидки до 50% на избранные позиции."]]],
+   ["🚚 Доставка","**Доставка.**\n• Курьер — 1–2 дня, от 300 ₽\n• Самовывоз — бесплатно\n• Бесплатно при заказе от 5 000 ₽"],
+   ["💳 Оплата","**Оплата.**\n• Банковской картой онлайн\n• Наличными при получении\n• Рассрочка без переплат"],
+   ["🎁 Акции","**Акции и бонусы.**\nПромокод на первый заказ: `WELCOME10`"],
+   ["📅 Запись","**Запись.**\nНапишите удобное время или выберите его по ссылке.",[],[["📅 Выбрать время","https://example.com"]]],
+   ["⭐ Отзывы","**Отзывы клиентов.**\n«Всё быстро и аккуратно!» — Анна\n«Рекомендую!» — Игорь"],
+   ["❓ FAQ","**Частые вопросы.**\nВыберите вопрос:",[
+     ["📦 Как сделать заказ?","Выберите товар в каталоге и напишите нам — оформим заказ вместе."],
+     ["↩️ Можно ли вернуть товар?","Да, в течение 14 дней, если товар не использовался."]]],
+   ["ℹ️ О нас","**О нас.**\nРасскажите, чем вы занимаетесь и чем отличаетесь от других."],
+   ["📍 Адрес и часы","**Адрес.**\nг. Город, ул. Улица, 1\n\n**Часы работы.**\nПн–Пт 10:00–20:00\nСб–Вс 11:00–18:00"],
+   ["☎️ Контакты","**Контакты.**\nТелефон: +7 000 000-00-00\nПочта: hello@example.com",[],[["🌐 Сайт","https://example.com"],["✈️ Telegram","https://t.me/example"]]]
+  ]}];
 function buildTpl(t){
  const nodes=[{id:"start",title:"Старт",text:t.w,x:0,y:0,cols:2,btns:[]}];
- const add=(parent,it)=>{const[title,text,kids=[]]=it,id=uid(nodes),me={id,title:title.slice(0,40),text,x:0,y:0,cols:1,btns:[]};nodes.push(me);parent.btns.push({id:uid(nodes),label:title.slice(0,32),kind:"go",to:id});kids.forEach(k=>add(me,k))};
+ const add=(parent,it)=>{const[title,text,kids=[],urls=[]]=it,id=uid(nodes),me={id,title:title.slice(0,40),text,x:0,y:0,cols:1,btns:[]};
+  nodes.push(me);parent.btns.push({id:uid(nodes),label:title.slice(0,32),kind:"go",to:id});
+  kids.forEach(k=>add(me,k));urls.forEach(([l,u])=>me.btns.push({id:uid(nodes),label:l.slice(0,32),kind:"url",value:u}))};
  t.items.forEach(it=>add(nodes[0],it));layout(nodes,"start");return nodes}
 
 /* ============ Холст ============ */
@@ -315,8 +357,17 @@ function wires(tmp){let h=DEFS;
  S.flow.nodes.forEach(n=>n.btns.forEach((b,i)=>{if(b.kind=="url")return;const a=out(n,i),t=b.to&&node(b.to);h+=t?curve(a,inp(t),"w"):`<path class="w bad" d="M${a.x} ${a.y}h28"/>`}));
  if(tmp&&tmp.p){const n=node(tmp.nid);h+=curve(out(n,n.btns.findIndex(b=>b.id==tmp.bid)),tmp.p,"w tmp")}
  svg.innerHTML=h}
+/* пустое состояние: нет ботов / нет сессии */
+function emptyCard(){
+ const t=S.nosess?{i:"🔌",h:"Откройте через бота",p:"Мини-апп открыт напрямую. Откройте основного бота и нажмите «🎛 Открыть конструктор» (или отправьте /builder).",b:"Открыть бота"}
+ :S.expired?{i:"⏳",h:"Сессия недоступна",p:"Сессия истекла или не найдена. Отправьте основному боту /builder и откройте конструктор заново.",b:"Открыть бота"}
+ :{i:"🤖",h:"Пока нет ботов",p:"1. Создайте бота у @BotFather (/newbot)\n2. Пришлите токен основному боту\n3. Снова нажмите «🎛 Открыть конструктор» — бот появится здесь",b:"Добавить через бота"};
+ return`<div class="cd hero"><div class="big">${t.i}</div><h3>${t.h}</h3><div class="note">${esc(t.p)}</div><button class="main" data-act="addbot">${t.b}</button></div>`}
+function emptyHtml(){return`<div class="wrap">${emptyCard()}</div>`}
+function renderEmptyFlow(){const e=$("#eflow"),off=!S.bot;e.hidden=!off;$("#v-flow").classList.toggle("off",off);if(off)e.innerHTML=emptyCard()}
 function renderFlow(){
- if(!S.flow){nodesEl.innerHTML="";svg.innerHTML="";return}
+ renderEmptyFlow();
+ if(!S.flow){nodesEl.innerHTML="";svg.innerHTML="";$("#undo").disabled=true;$("#redo").disabled=true;return}
  const mx=Math.max(1,...Object.values(S.heatMap));
  nodesEl.innerHTML=S.flow.nodes.map(n=>{const start=n.id==S.flow.start,v=S.heat?(S.heatMap[n.id]||0):null,r=v!=null?v/mx:0;
   const hs=v!=null?`;border-color:var(--o);box-shadow:0 0 ${Math.round(r*34)}px rgba(255,106,43,${(.12+.6*r).toFixed(2)})`:"";
@@ -334,7 +385,7 @@ const snapG=v=>PREF.snap?Math.round(v/10)*10:Math.round(v);
 function tap(t){const nd=t.closest(".node");if(!nd)return;const n=node(nd.dataset.id);S.sel=n.id;markSel();hap();
  if(t.closest(".ph"))return photoInfo(n);
  const row=t.closest(".row");row?openBtn(n.id,row.dataset.b):openNode(n.id)}
-cv.addEventListener("pointerdown",e=>{cv.setPointerCapture(e.pointerId);P.set(e.pointerId,{x:e.clientX,y:e.clientY});
+cv.addEventListener("pointerdown",e=>{if(!S.flow)return;cv.setPointerCapture(e.pointerId);P.set(e.pointerId,{x:e.clientX,y:e.clientY});
  if(P.size==2){mode="pinch";st={d:dist(),k:S.view.k};return}
  const t=e.target,nd=t.closest(".node");st={sx:e.clientX,sy:e.clientY,moved:false,t};
  if(t.closest(".out")){mode="wire";st.nid=nd.dataset.id;st.bid=t.closest(".row").dataset.b;st.pre=snapF()}
@@ -347,9 +398,9 @@ cv.addEventListener("pointermove",e=>{if(!P.has(e.pointerId))return;P.set(e.poin
  else if(mode=="drag"){st.n.x=snapG(st.ox+dx/S.view.k);st.n.y=snapG(st.oy+dy/S.view.k);const el=nodesEl.querySelector(`[data-id="${st.n.id}"]`);el.style.left=st.n.x+"px";el.style.top=st.n.y+"px";wires()}
  else if(mode=="wire"){st.p=w2(e);wires(st)}});
 function pointerEnd(e){P.delete(e.pointerId);if(mode=="pinch"){if(P.size<2){mode=null;st=null}return}if(!st)return;const ok=e.type=="pointerup";
- if(mode=="wire"&&st.moved&&ok){const el=document.elementFromPoint(e.clientX,e.clientY)?.closest(".node"),n=node(st.nid),b=n.btns.find(x=>x.id==st.bid);
+ if(mode=="wire"&&st.moved&&ok){const under=document.elementFromPoint(e.clientX,e.clientY),inCv=!!under?.closest("#cv"),el=under?.closest(".node"),n=node(st.nid),b=n.btns.find(x=>x.id==st.bid);
   const nid=el&&el.dataset.id!=st.nid?el.dataset.id:null;
-  if(nid||(!el&&S.flow.nodes.length<MAXN)){S.hist.push(st.pre);S.fut=[];
+  if(nid||(inCv&&!el&&S.flow.nodes.length<MAXN)){S.hist.push(st.pre);S.fut=[];
    if(nid){b.to=nid}else{const p=w2(e),id=uid();S.flow.nodes.push({id,title:"Экран",text:"Текст экрана",x:snapG(p.x+10),y:snapG(p.y-17),cols:1,btns:[]});b.to=id}
    b.kind="go";delete b.value;afterChange();hap()}else wires()}
  else if(mode=="wire"&&!st.moved&&ok)tap(st.t);
@@ -362,12 +413,13 @@ cv.addEventListener("wheel",e=>{e.preventDefault();const r=cv.getBoundingClientR
 function addScreenAt(x,y){if(S.flow.nodes.length>=MAXN)return toast("Максимум "+MAXN+" экранов",1);const id=uid();mutate(()=>S.flow.nodes.push({id,title:"Экран",text:"Текст экрана",x:snapG(x),y:snapG(y),cols:1,btns:[]}));S.sel=id;markSel();hap();return id}
 function addBtn(nid,kind){const n=node(nid);if(n.btns.length>=MAXB)return toast("Максимум "+MAXB+" кнопок на экране",1);const b=kind=="url"?{id:uid(),label:"Ссылка",kind:"url",value:"https://"}:{id:uid(),label:"Кнопка",kind:"go",to:""};mutate(()=>n.btns.push(b));return b.id}
 function drop(t,e,tapOnly){
+ if(!S.flow)return toast("Сначала добавьте бота");
  if(tapOnly){const r=cv.getBoundingClientRect();
   if(t=="screen")return addScreenAt((r.width/2-S.view.x)/S.view.k-W/2,(r.height/2-S.view.y)/S.view.k-60);
   if(!S.sel||!node(S.sel))return toast("Выберите экран или бросьте кнопку на него");const id=addBtn(S.sel,t);return id&&openBtn(S.sel,id)}
  const el=document.elementFromPoint(e.clientX,e.clientY);if(!el||!el.closest("#cv"))return;const nd=el.closest(".node");
  if(t=="screen"){const p=w2(e);addScreenAt(p.x-W/2,p.y-17)}
- else if(!nd)toast("Бросьте кнопку на экран");else{S.sel=nd.dataset.id;addBtn(nd.dataset.id,t)}}
+ else if(!nd)toast("Бросьте кнопку на экран");else{S.sel=nd.dataset.id;const id=addBtn(nd.dataset.id,t);if(id)openBtn(nd.dataset.id,id)}}
 $$(".chip").forEach(c=>c.addEventListener("pointerdown",e=>{e.preventDefault();const g=c.cloneNode(true);g.classList.add("gc");document.body.append(g);let moved=false;const x0=e.clientX,y0=e.clientY;
  const mv=v=>{if(Math.hypot(v.clientX-x0,v.clientY-y0)>8)moved=true;g.style.left=v.clientX+"px";g.style.top=v.clientY+"px";g.style.display=moved?"":"none"};mv(e);
  const fin=v=>{removeEventListener("pointermove",mv);removeEventListener("pointerup",fin);removeEventListener("pointercancel",fin);g.remove();if(v.type=="pointerup")drop(c.dataset.t,v,!moved)};
@@ -376,17 +428,26 @@ $$(".chip").forEach(c=>c.addEventListener("pointerdown",e=>{e.preventDefault();c
 /* ============ Листы (sheets) ============ */
 const layerEl=$("#layer"),stack=[];
 function bb(){try{stack.length?tg?.BackButton?.show():tg?.BackButton?.hide()}catch{}}
-function sheet(inner,{cls="",full=false,raw=false}={}){const d=document.createElement("div");d.className="sheet "+cls;
+function sheet(inner,{cls="",full=false,raw=false}={}){const d=document.createElement("div");d.className="sheet "+cls;d._t=Date.now();
  d.innerHTML=raw?inner:`<div class="sh ${full?"full":""}"><i class="grab"></i>${inner}</div>`;layerEl.append(d);stack.push(d);bb();
- d.addEventListener("click",e=>{if(e.target===d||e.target.closest("[data-x]"))closeSheet(d)});requestAnimationFrame(()=>d.classList.add("in"));return d}
+ /* защита от «фантомного» клика сразу после открытия: он закрывал лист и мешал вводу */
+ d.addEventListener("click",e=>{if(e.target===d){if(Date.now()-d._t<450)return;return closeSheet(d)}if(e.target.closest("[data-x]"))closeSheet(d)});
+ requestAnimationFrame(()=>d.classList.add("in"));return d}
 function closeSheet(d){const i=stack.indexOf(d);if(i<0)return;stack.splice(i,1);try{d._close?.()}catch(e){console.error(e)}d.classList.remove("in");setTimeout(()=>d.remove(),200);bb()}
 try{tg?.BackButton?.onClick(()=>stack.length&&closeSheet(stack[stack.length-1]))}catch{}
 const head=(t)=>`<div class="shh"><h3>${t}</h3><button class="x" data-x>✕</button></div>`;
+/* экранная клавиатура: поднимаем лист и прокручиваем к полю */
+(function(){const vv=window.visualViewport;
+ const kb=()=>{const h=vv?Math.max(0,Math.round(innerHeight-vv.height-vv.offsetTop)):0;layerEl.style.setProperty("--kb",(h>80?h:0)+"px")};
+ vv?.addEventListener("resize",kb);vv?.addEventListener("scroll",kb);
+ layerEl.addEventListener("focusin",e=>{const t=e.target;if(!/INPUT|TEXTAREA|SELECT/.test(t.tagName))return;setTimeout(()=>{kb();try{t.scrollIntoView({block:"center",behavior:"smooth"})}catch{}},320)});
+ layerEl.addEventListener("focusout",()=>setTimeout(kb,120))})();
+const enterBlur=e=>{if(e.key=="Enter"&&e.target.tagName=="INPUT"){e.preventDefault();e.target.blur()}};
 
 function openNode(id){
  const n0=node(id);if(!n0)return;const start=id==S.flow.start;
  const d=sheet(`${head(start?"▶ Стартовый экран":"Экран")}
- <label>Название в схеме</label><input id="nt" maxlength="40">
+ <label>Название в схеме</label><input id="nt" type="text" maxlength="40" autocomplete="off" enterkeyhint="done">
  <label>Текст сообщения <span id="cnt"></span></label>
  <div class="fmt"><button data-f="b">B</button><button data-f="i"><i>I</i></button><button data-f="c">‹›</button><button data-f="link">🔗</button></div>
  <textarea id="nx" maxlength="3500"></textarea>
@@ -398,16 +459,20 @@ function openNode(id){
  const t=$("#nt",d),x=$("#nx",d);let cols=n0.cols;t.value=n0.title;x.value=n0.text;
  const cnt=()=>$("#cnt",d).textContent=x.value.length+" / 3500",setCols=()=>$$("#nc button",d).forEach(b=>b.classList.toggle("on",+b.dataset.c==cols));
  const list=()=>{const m=node(id);if(!m)return;$("#bc",d).textContent=m.btns.length+" / "+MAXB;
-  $("#bl",d).innerHTML=m.btns.map((b,i)=>`<div class="br ${bad(b)?"bad":""}" data-i="${i}"><span class="bi">${b.kind=="url"?"↗":"◉"}</span><span class="bt" data-e>${esc(b.label)}<small>${b.kind=="url"?esc(b.value):(node(b.to)?"→ "+esc(node(b.to).title):"не подключена")}</small></span><button data-up ${i==0?"disabled":""}>↑</button><button data-dn ${i==m.btns.length-1?"disabled":""}>↓</button></div>`).join("")||'<div class="empty">Кнопок пока нет</div>'};
+  $("#bl",d).innerHTML=m.btns.map((b,i)=>`<div class="br ${bad(b)?"bad":""}" data-i="${i}"><span class="bi">${b.kind=="url"?"↗":"◉"}</span><div class="bm"><input class="bli" type="text" maxlength="32" autocomplete="off" enterkeyhint="done" placeholder="Название кнопки" value="${esc(b.label)}"><small>${b.kind=="url"?esc(b.value):(node(b.to)?"→ "+esc(node(b.to).title):"не подключена")}</small></div><button data-up ${i==0?"disabled":""}>↑</button><button data-dn ${i==m.btns.length-1?"disabled":""}>↓</button><button data-ed title="Настроить">⚙</button></div>`).join("")||'<div class="empty">Кнопок пока нет</div>'};
  cnt();setCols();list();x.oninput=cnt;
  $("#nc",d).onclick=e=>{const b=e.target.closest("[data-c]");if(b){cols=+b.dataset.c;setCols()}};
  $(".fmt",d).onclick=e=>{const b=e.target.closest("[data-f]");if(!b)return;const f=b.dataset.f,s=x.selectionStart,en=x.selectionEnd,v=x.value,sel=v.slice(s,en);let ins;
   if(f=="link")ins="["+(sel||"текст")+"](https://)";else{const m={b:"**",i:"__",c:"`"}[f];ins=m+(sel||"текст")+m}
   x.value=v.slice(0,s)+ins+v.slice(en);x.focus();x.selectionStart=s;x.selectionEnd=s+ins.length;cnt()};
- $("#bl",d).onclick=e=>{const r=e.target.closest(".br");if(!r)return;const m=node(id),i=+r.dataset.i;
-  if(e.target.closest("[data-e]"))openBtn(id,m.btns[i].id,list);
+ const bl=$("#bl",d);
+ bl.onclick=e=>{const r=e.target.closest(".br");if(!r)return;const m=node(id),i=+r.dataset.i;
+  if(e.target.closest("[data-ed]"))openBtn(id,m.btns[i].id,list);
   else if(e.target.closest("[data-up]")){mutate(()=>{[m.btns[i-1],m.btns[i]]=[m.btns[i],m.btns[i-1]]});list()}
   else if(e.target.closest("[data-dn]")){mutate(()=>{[m.btns[i+1],m.btns[i]]=[m.btns[i],m.btns[i+1]]});list()}};
+ /* название кнопки редактируется прямо в списке */
+ bl.onchange=e=>{const inp=e.target.closest(".bli");if(!inp)return;const m=node(id),b=m.btns[+inp.closest(".br").dataset.i],v=inp.value.trim().slice(0,32)||"Кнопка";inp.value=v;if(b&&v!=b.label)mutate(()=>{b.label=v})};
+ bl.onkeydown=enterBlur;t.onkeydown=enterBlur;
  $("#ab",d).onclick=()=>{const b=addBtn(id,"go");if(b){list();openBtn(id,b,list)}};
  $("#au",d).onclick=()=>{const b=addBtn(id,"url");if(b){list();openBtn(id,b,list)}};
  $("#ph",d).onclick=()=>photoInfo(node(id));
@@ -418,43 +483,59 @@ function openNode(id){
  d._close=()=>{const m=node(id);if(!m)return;const title=t.value.trim().slice(0,40)||"Экран",text=x.value.trim()||"…";if(title!=m.title||text!=m.text||cols!=m.cols)mutate(()=>{m.title=title;m.text=text;m.cols=cols})}}
 function openBtn(nid,bid,after){
  const n=node(nid),b=n?.btns.find(x=>x.id==bid);if(!b)return;
- const d=sheet(`${head("Кнопка")}<label>Текст кнопки</label><input id="a" maxlength="32">
+ const d=sheet(`${head("Кнопка")}<label>Текст кнопки</label><input id="a" type="text" maxlength="32" autocomplete="off" autocapitalize="sentences" enterkeyhint="done" placeholder="Например: 🛍 Каталог">
  <label>Тип</label><div class="seg" id="k"><button data-k="go">Открывает экран</button><button data-k="url">Ссылка</button></div>
  <div id="g"><label>Куда ведёт</label><select id="t"></select></div>
- <div id="u"><label>Ссылка (https:// или tg://)</label><input id="v" inputmode="url"></div>
+ <div id="u"><label>Ссылка (https:// или tg://)</label><input id="v" type="text" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" enterkeyhint="done" placeholder="https://"></div>
  <div class="acts2" style="margin-top:14px"><button class="ghost danger" id="del">🗑 Удалить</button><button class="main" data-x>Готово</button></div>`);
- let kind=b.kind;$("#a",d).value=b.label;$("#v",d).value=b.value||"";
- $("#t",d).innerHTML='<option value="">— не выбрано —</option>'+S.flow.nodes.map(m=>`<option value="${m.id}">${esc(m.title)}${m.id==S.flow.start?" (старт)":""}</option>`).join("")+(S.flow.nodes.length<MAXN?'<option value="__new">＋ Создать новый экран</option>':"");
- $("#t",d).value=b.to||"";
+ const A=$("#a",d),V=$("#v",d),T=$("#t",d);let kind=b.kind;A.value=b.label;V.value=b.value||"";
+ T.innerHTML='<option value="">— не выбрано —</option>'+S.flow.nodes.map(m=>`<option value="${m.id}">${esc(m.title)}${m.id==S.flow.start?" (старт)":""}</option>`).join("")+(S.flow.nodes.length<MAXN?'<option value="__new">＋ Создать новый экран</option>':"");
+ T.value=b.to||"";
+ const snap=JSON.stringify([b.label,b.kind,b.to||"",b.value||""]);
  const sync=()=>{$$("#k button",d).forEach(x=>x.classList.toggle("on",x.dataset.k==kind));$("#g",d).hidden=kind!="go";$("#u",d).hidden=kind!="url"};sync();
  $("#k",d).onclick=e=>{const x=e.target.closest("[data-k]");if(x){kind=x.dataset.k;sync()}};
+ A.onkeydown=enterBlur;V.onkeydown=enterBlur;
  $("#del",d).onclick=()=>{d._close=null;mutate(()=>{n.btns=n.btns.filter(x=>x!=b)});closeSheet(d);after?.()};
- d._close=()=>{const label=$("#a",d).value.trim().slice(0,32)||"Кнопка";let to=$("#t",d).value,val=$("#v",d).value.trim();
-  mutate(()=>{b.label=label;b.kind=kind;if(kind=="url"){b.value=val;delete b.to}else{if(to=="__new"){const id=uid();S.flow.nodes.push({id,title:"Экран",text:"Текст экрана",x:snapG(n.x+W+70),y:snapG(n.y),cols:1,btns:[]});to=id}b.to=to;delete b.value}});after?.()}}
+ d._close=()=>{const label=A.value.trim().slice(0,32)||"Кнопка";let to=T.value,val=V.value.trim();
+  if(kind=="url"&&val){if(/^http:\/\//i.test(val))val="https://"+val.slice(7);else if(!/^(https:\/\/|tg:\/\/)/i.test(val))val="https://"+val}
+  if(to!="__new"&&JSON.stringify([label,kind,kind=="go"?to:"",kind=="url"?val:""])==snap){after?.();return}
+  mutate(()=>{b.label=label;b.kind=kind;if(kind=="url"){b.value=val;delete b.to}else{if(to=="__new"){const id=uid();S.flow.nodes.push({id,title:"Экран",text:"Текст экрана",x:snapG(n.x+W+70),y:snapG(n.y),cols:1,btns:[]});to=id}b.to=to;delete b.value}});after?.()};
+ setTimeout(()=>{try{A.focus();A.select()}catch{}},300)}
 function photoInfo(n){
  const has=hasPhoto(n),onServer=S.bot?.flow.nodes.some(x=>x.id==n.id);
  const d=sheet(`${head("📷 Фото экрана")}<p>Экран: <b>${esc(n.title)}</b><br>Сейчас: <b>${has?"фото загружено ✅":"фото нет"}</b></p>
- <p class="mu" style="line-height:1.6;text-transform:none">Из соображений безопасности мини-апп ничего не загружает. Фото отправляется боту в чате — откроется нужный экран.</p>
+ <p class="note">Из соображений безопасности мини-апп ничего не загружает. Фото отправляется боту в чате — откроется нужный экран.</p>
  ${onServer?"":'<div class="banner" style="margin:0 0 10px">Экран новый: сначала отправьте схему боту.</div>'}
- <div class="acts2"><button class="main" id="go" ${onServer&&!S.demo?"":"disabled"}>Открыть бота</button><button class="ghost" data-x>Закрыть</button></div>`);
- $("#go",d).onclick=()=>openTg(`https://t.me/${S.sess.master}?start=ph_${S.bot.id}_${n.id}`)}
+ <div class="acts2"><button class="main" id="go" ${onServer&&masterName()?"":"disabled"}>Открыть бота</button><button class="ghost" data-x>Закрыть</button></div>`);
+ $("#go",d).onclick=()=>openTg(`https://t.me/${masterName()}?start=ph_${S.bot.id}_${n.id}`)}
 function openTemplates(){
- const d=sheet(`${head("✦ Шаблоны")}<p class="mu" style="text-transform:none">Текущая схема будет заменена — это можно отменить кнопкой ↶.</p>${TPL.map(t=>`<button class="tpl" data-k="${t.k}"><b>${t.ico}</b><span>${t.name}<small>${t.desc}</small></span></button>`).join("")}`);
- d.onclick=e=>{const b=e.target.closest(".tpl");if(!b)return;const t=TPL.find(x=>x.k==b.dataset.k);mutate(()=>{S.flow.nodes=buildTpl(t)});S.sel=null;S.fitted=false;closeSheet(d);fit();hap("ok")}}
+ const cards=TPL.map(t=>{const ns=buildTpl(t),bt=ns.reduce((a,n)=>a+n.btns.length,0);
+  return`<div class="cd tplc"><div style="display:flex;gap:12px;align-items:center"><b style="font-size:32px">${t.ico}</b><div><b style="font-size:16px">${esc(t.name)}</b><div class="note">${esc(t.desc)}</div></div></div>
+  <div style="margin:10px 0 4px"><span class="badge y">${ns.length} экранов</span><span class="badge l">${bt} кнопок</span><span class="badge">всё уже собрано</span></div>
+  <div class="chips" style="margin:8px 0 12px">${t.items.map(i=>`<span class="chp">${esc(i[0])}</span>`).join("")}</div>
+  <button class="main" data-ap="${t.k}" style="width:100%">Применить шаблон</button></div>`}).join("");
+ const d=sheet(`${head("✦ Шаблон")}<p class="note">Готовая схема целиком — не нужно собирать с нуля. Текущая схема будет заменена; это можно отменить кнопкой ↶.</p>${cards}`);
+ let arm=0;
+ d.addEventListener("click",e=>{const b=e.target.closest("[data-ap]");if(!b||!S.flow)return;const t=TPL.find(x=>x.k==b.dataset.ap);
+  if(S.flow.nodes.length>1&&!arm){arm=1;b.textContent="Заменить текущую схему?";setTimeout(()=>{arm=0;b.textContent="Применить шаблон"},3000);return}
+  mutate(()=>{S.flow.nodes=buildTpl(t);S.flow.start="start"});S.sel=null;S.fitted=false;closeSheet(d);fit();hap("ok");toast("Шаблон применён")})}
 function openBots(){
- const bs=S.sess.bots;
- const d=sheet(`${head("Ваши боты")}${bs.map(b=>`<div class="bot-row" data-id="${b.id}"><span class="av">${esc((b.username||"?")[0].toUpperCase())}</span><span class="bn">@${esc(b.username)}<small>${nf(b.subs)} подписчиков · ${b.running?"работает":"остановлен"}</small></span>${spark(b.stats.days.slice(-14).map(r=>r.dau),"#a9a8f8",70,26)}<i class="dot ${b.running?"on":""}"></i></div>`).join("")||'<div class="empty">Ботов пока нет</div>'}
- <div class="cd" style="margin-top:10px"><b>${bs.length} / ${S.sess.limit||5}</b> <span class="mu">ботов</span><br><span class="mu" style="text-transform:none">Новый бот создаётся в чате: получите токен у @BotFather и пришлите его основному боту — токен нельзя передавать через мини-апп.</span></div>
- <div class="acts2" style="margin-top:10px"><button class="main" id="nb">Создать бота в чате</button></div>`);
- d.onclick=e=>{const r=e.target.closest(".bot-row");if(r){openBot(r.dataset.id);closeSheet(d);return}if(e.target.closest("#nb")){try{tg?.close()}catch{}}}}
+ const bs=S.sess.bots||[],lim=S.sess.limit||5;
+ const list=bs.length?bs.map(b=>`<div class="bot-row ${b.id==S.bot?.id?"cur":""}" data-id="${b.id}"><span class="av">${esc((b.username||"?")[0].toUpperCase())}</span><span class="bn">@${esc(b.username)}<small>${nf(b.subs)} подписчиков · ${b.running?"работает":"остановлен"}</small></span>${spark(b.stats.days.slice(-14).map(r=>r.dau),"#a9a8f8",70,26)}${b.id==S.bot?.id?'<b class="chk">✓</b>':'<i class="dot '+(b.running?"on":"")+'"></i>'}</div>`).join("")
+  :emptyCard();
+ const add=`<div class="cd" style="margin-top:10px"><h3>＋ Добавить бота ${bs.length?`<small class="mu">${bs.length} / ${lim}</small>`:""}</h3><div class="note">1. Создайте бота у @BotFather (/newbot)\n2. Пришлите его токен основному боту\n3. Откройте конструктор снова — бот появится в списке\n\nТокен нельзя передавать через мини-апп — только через чат.</div>
+  <button class="main" id="nb" style="width:100%;margin-top:12px">Открыть основного бота</button></div>`;
+ const d=sheet(`${head("Ваши боты")}${bs.length?`<div class="cd" style="padding:6px 10px">${list}</div>`:""}${bs.length?"":`<div style="margin-bottom:4px">${list}</div>`}${bs.length?add:""}`);
+ d.addEventListener("click",e=>{const r=e.target.closest(".bot-row");if(r){if(r.dataset.id!=S.bot?.id){if(pendingList().length)toast("Черновик сохранён на этом устройстве");openBot(r.dataset.id)}closeSheet(d);return}
+  if(e.target.closest("#nb")||e.target.closest('[data-act="addbot"]')){closeSheet(d);openMaster()}})}
 function openReview(){
  const p=pendingList(),e=errCount();
  const d=sheet(`${head("Отправить боту")}<div class="cd" style="margin-bottom:10px">${p.map(x=>`<div class="line"><span>${esc(x)}</span><span class="dl up">✓</span></div>`).join("")||'<div class="empty">Изменений нет</div>'}</div>
  ${e?`<div class="banner" style="margin:0 0 10px">Исправьте ошибки в кнопках: ${e} (оранжевые)</div>`:""}
- <p class="mu" style="text-transform:none;line-height:1.5">Мини-апп закроется и передаст изменения боту. ${S.post.trim()||S.del?"Рассылку и удаление бот попросит подтвердить.":"Бот применит их сразу и пришлёт новую кнопку конструктора."}</p>
- <div class="acts2"><button class="ghost" id="rs">Сбросить</button><button class="ghost" id="cd">Код</button><button class="main" id="sn" ${e||!p.length?"disabled":""}>Отправить</button></div>`);
+ <p class="note">Мини-апп закроется и передаст изменения боту. ${S.post.trim()||S.del?"Рассылку и удаление бот попросит подтвердить.":"Бот применит их сразу и пришлёт новую кнопку конструктора."}</p>
+ <div class="acts2"><button class="ghost" id="rs">Сбросить</button><button class="ghost" id="cdb">Код</button><button class="main" id="sn" ${e||!p.length?"disabled":""}>Отправить</button></div>`);
  $("#sn",d).onclick=()=>{closeSheet(d);sendNow()};
- $("#cd",d).onclick=async()=>{closeSheet(d);codeSheet(await buildCode())};
+ $("#cdb",d).onclick=async()=>{closeSheet(d);codeSheet(await buildCode())};
  $("#rs",d).onclick=()=>{resetAll();closeSheet(d);toast("Изменения сброшены")}}
 function resetAll(){S.flow.nodes=clone(S.base);S.set={};S.post="";S.del=false;S.hist=[];S.fut=[];lsDel("bb3:"+S.bot.id);renderTab();ui()}
 async function buildCode(){
@@ -465,14 +546,14 @@ async function sendNow(){
  if(!S.bot)return;if(errCount()){go("flow");return toast("Исправьте ошибки в кнопках: "+errCount(),1)}
  if(!pendingList().length)return toast("Нечего отправлять");
  const code=await buildCode(),inTg=!!(tg&&(tg.initData||(tg.platform&&tg.platform!="unknown")));
- if(inTg&&!S.demo&&code.length<=3900){try{hap("ok");tg.sendData(code);setTimeout(()=>{toast("Окно не закрылось? Скопируйте код и отправьте боту");codeSheet(code)},1800);return}catch{}}
+ if(inTg&&code.length<=3900){try{hap("ok");tg.sendData(code);setTimeout(()=>{toast("Окно не закрылось? Скопируйте код и отправьте боту");codeSheet(code)},1800);return}catch{}}
  codeSheet(code)}
 function codeSheet(code){
  let parts=[code];if(code.length>3900){const body=code.slice(4),id=Math.random().toString(36).slice(2,8).padEnd(6,"x"),n=Math.ceil(body.length/3400);
   if(n>40)return toast("Схема слишком большая — упростите её",1);parts=Array.from({length:n},(_,i)=>`BB2.${id}.${i+1}.${n}.`+body.slice(i*3400,(i+1)*3400))}
- const d=sheet(`${head("Код для бота")}<p class="mu" style="text-transform:none;line-height:1.5">${parts.length>1?`Схема большая: отправьте боту ${parts.length} сообщений по порядку (части 1…${parts.length}).`:"Отправьте этот код боту обычным сообщением."}</p>
+ const d=sheet(`${head("Код для бота")}<p class="note">${parts.length>1?`Схема большая: отправьте боту ${parts.length} сообщений по порядку (части 1…${parts.length}).`:"Отправьте этот код боту обычным сообщением."}</p>
  ${parts.map((p,i)=>`<label>${parts.length>1?"Часть "+(i+1)+" из "+parts.length:"Код"}</label><textarea class="codebox" readonly>${esc(p)}</textarea><button class="ghost" data-cp="${i}" style="width:100%;margin-top:6px">копировать</button>`).join("")}`,{full:true});
- d.onclick=async e=>{const b=e.target.closest("[data-cp]");if(!b)return;try{await navigator.clipboard.writeText(parts[+b.dataset.cp]);b.textContent="скопировано ✓";hap("ok")}catch{$$("textarea",d)[+b.dataset.cp].select()}}}
+ d.addEventListener("click",async e=>{const b=e.target.closest("[data-cp]");if(!b)return;try{await navigator.clipboard.writeText(parts[+b.dataset.cp]);b.textContent="скопировано ✓";hap("ok")}catch{$$("textarea",d)[+b.dataset.cp].select()}})}
 
 /* ============ Предпросмотр бота ============ */
 function fmtHtml(t){
@@ -481,7 +562,7 @@ function fmtHtml(t){
 function openPreview(from){
  const d=sheet(`<div class="pv"><div class="pvh"><span class="av">${esc((S.bot?.username||"B")[0].toUpperCase())}</span><div style="flex:1"><b>${esc(S.bot?.name||"Бот")}</b><div class="mu" style="text-transform:none">бот · предпросмотр</div></div><button class="ic" id="rst" title="Сначала">⟲</button><button class="x" data-x>✕</button></div><div class="pvb" id="pb"></div></div>`,{raw:true});
  const body=$("#pb",d);let cur=from||S.flow.start;
- const show=(id,first)=>{const n=node(id);if(!n){toast("Экран не найден",1);return}cur=id;
+ const show=(id)=>{const n=node(id);if(!n){toast("Экран не найден",1);return}cur=id;
   const start=id==S.flow.start,rows=[],btns=n.btns.map(b=>`<button class="kbb" data-${b.kind=="url"?"u":"g"}="${esc(b.kind=="url"?b.value:b.to)}">${esc(b.label)}${b.kind=="url"?" ↗":""}</button>`),c=n.cols==2?2:1;
   for(let i=0;i<btns.length;i+=c)rows.push(`<div class="kbr" style="grid-template-columns:repeat(${c},1fr)">${btns.slice(i,i+c).join("")}</div>`);
   rows.push(start?(eff("support")?'<div class="kbr"><button class="kbb" data-s>💬 Связаться</button></div>':""):'<div class="kbr"><button class="kbb" data-h>⬅️ В меню</button></div>');
@@ -537,15 +618,16 @@ const dl=d=>{const[,m,dd]=d.split("-");return dd+"."+m};
 const delta=(c,p)=>p==null||p<=0?null:(c-p)/p*100;
 const chip=v=>v==null?'<span class="dl">—</span>':`<span class="dl ${v>=0?"up":"dn"}">${v>=0?"▲":"▼"} ${Math.abs(Math.round(v))}%</span>`;
 function nodeViews(rows){const m={};rows.forEach(r=>{for(const k in r.n||{})m[k]=(m[k]||0)+r.n[k]});return m}
-function emptyHtml(){return`<div class="wrap"><div class="cd hero"><div class="big">🤖</div><h3 style="justify-content:center">${S.expired?"Сессия недоступна":"Пока нет ботов"}</h3><div class="mu" style="text-transform:none;line-height:1.6">${S.expired?"Сессия истекла или не найдена. Отправьте основному боту /builder и откройте конструктор заново.":"Создайте бота у @BotFather и пришлите его токен основному боту. После этого он появится здесь."}</div></div></div>`}
 function renderStats(){
- const el=$("#v-stats"),b=S.bot;S.draw=[];if(!b){el.innerHTML=emptyHtml();return}
- const st=b.stats||{days:[],aud:{total:0,active:0,unsub:0,blocked:0},ret:{d1:{base:0,ok:0},d7:{base:0,ok:0}},posts:[]},days=st.days,R=S.range,rows=days.slice(-R),prev=days.length>=2*R?days.slice(-2*R,-R):null,last=days[days.length-1]||{};
+ const el=$("#v-stats"),src=statSrc();S.draw=[];
+ const demoCard=`<div class="cd demo-c"><div class="line"><div>🎭 Демо-данные<small>${S.demoOn?"показан пример статистики — не ваши цифры":"включите, чтобы увидеть, как выглядит статистика"}</small></div><label class="sw" style="margin:0"><input type="checkbox" id="sw-demo" ${S.demoOn?"checked":""}><i></i></label></div></div>`;
+ if(!src){el.innerHTML=`<div class="wrap">${demoCard}${emptyCard()}</div>`;return}
+ const st=src.stats||{days:[],aud:{total:0,active:0,unsub:0,blocked:0},ret:{d1:{base:0,ok:0},d7:{base:0,ok:0}},posts:[]},days=st.days,R=S.range,rows=days.slice(-R),prev=days.length>=2*R?days.slice(-2*R,-R):null,last=days[days.length-1]||{};
  const empty=!st.aud.total&&!sum(days,"views");
  const pv=k=>prev&&sum(prev,k)>0?sum(prev,k):null;
- let run=b.subs;const subSeries=rows.map(()=>0);for(let i=rows.length-1;i>=0;i--){subSeries[i]=Math.max(0,run);run-=rows[i].new}
+ let run=src.subs;const subSeries=rows.map(()=>0);for(let i=rows.length-1;i>=0;i--){subSeries[i]=Math.max(0,run);run-=rows[i].new}
  const vpu=sum(rows,"dau")?sum(rows,"views")/sum(rows,"dau"):0,vpuP=prev&&sum(prev,"dau")?sum(prev,"views")/sum(prev,"dau"):null;
- const K=[["Подписчики",b.subs,null,`+${nf(sum(rows,"new"))} за ${R} дн.`,subSeries,C.y],
+ const K=[["Подписчики",src.subs,null,`+${nf(sum(rows,"new"))} за ${R} дн.`,subSeries,C.y],
   ["Активные сегодня",last.dau||0,delta(avg(rows,"dau"),prev?avg(prev,"dau"):null),`в среднем ${avg(rows,"dau").toFixed(1)}`,rows.map(r=>r.dau),C.l],
   ["Просмотры экранов",sum(rows,"views"),delta(sum(rows,"views"),pv("views")),`за ${R} дн.`,rows.map(r=>r.views),C.o],
   ["Новые пользователи",sum(rows,"new"),delta(sum(rows,"new"),pv("new")),`за ${R} дн.`,rows.map(r=>r.new),C.g],
@@ -553,19 +635,18 @@ function renderStats(){
   ["Обращения",sum(rows,"support"),delta(sum(rows,"support"),pv("support")),`за ${R} дн.`,rows.map(r=>r.support),C.r]];
  const M={dau:["Активные",C.l,"dau"],new:["Новые",C.g,"new"],views:["Просмотры",C.o,"views"],support:["Обращения",C.r,"support"]},mm=M[S.metric];
  const labels=rows.map(r=>dl(r.d));
- // часы (локальное время)
  const off=Math.round(-new Date().getTimezoneOffset()/60),hours=Array(24).fill(0);rows.forEach(r=>(r.h||[]).forEach((v,h)=>hours[(h+off+24)%24]+=v));
  const hp=hours.indexOf(Math.max(...hours));
- // дни недели
  const wd=[0,0,0,0,0,0,0],wc=[0,0,0,0,0,0,0];rows.forEach(r=>{const k=(new Date(r.d+"T00:00:00Z").getUTCDay()+6)%7;wd[k]+=r.dau;wc[k]++});const wavg=wd.map((v,i)=>wc[i]?+(v/wc[i]).toFixed(1):0);
- // топ экранов
- const nv=nodeViews(rows),tot=Object.values(nv).reduce((a,x)=>a+x,0),top=Object.entries(nv).sort((a,b)=>b[1]-a[1]).slice(0,8),title=id=>b.flow.nodes.find(n=>n.id==id)?.title||"(удалён)";
+ const nv=nodeViews(rows),tot=Object.values(nv).reduce((a,x)=>a+x,0),top=Object.entries(nv).sort((a,b)=>b[1]-a[1]).slice(0,8),title=id=>src.nodes.find(n=>n.id==id)?.title||"(удалён)";
  const A=st.aud,r1=st.ret.d1,r7=st.ret.d7,p1=r1.base?r1.ok/r1.base*100:0,p7=r7.base?r7.ok/r7.base*100:0;
  el.innerHTML=`<div class="wrap">
- <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div><div class="m mu">Статистика</div><b style="font-size:20px">@${esc(b.username)}</b></div><div class="seg" id="rng">${[7,14,30].map(x=>`<button data-act="range" data-v="${x}" class="${R==x?"on":""}">${x} дн</button>`).join("")}</div></div>
- ${empty?`<div class="cd hero"><div class="big">📊</div><h3 style="justify-content:center">Данных пока нет</h3><div class="mu" style="text-transform:none;line-height:1.6">Откройте бота и нажмите /start — первые визиты появятся здесь в течение минуты.</div></div>`:""}
+ <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div><div class="m mu">Статистика ${src.demo?'<span class="badge y">демо</span>':""}</div><b style="font-size:20px">@${esc(src.username)}</b></div><div class="seg" id="rng">${[7,14,30].map(x=>`<button data-act="range" data-v="${x}" class="${R==x?"on":""}">${x} дн</button>`).join("")}</div></div>
+ ${demoCard}
+ ${src.demo?'<div class="banner info" style="margin:0">Это примерные данные, чтобы показать, как выглядит статистика. Выключите переключатель — вернутся настоящие цифры.</div>':""}
+ ${empty?`<div class="cd hero"><div class="big">📊</div><h3>Данных пока нет</h3><div class="note">Откройте бота и нажмите /start — первые визиты появятся здесь в течение минуты.\nИли включите демо-данные выше, чтобы посмотреть пример.</div></div>`:""}
  <div class="kpis">${K.map(k=>`<div class="kpi"><div class="mu">${k[0]}</div><div class="kv cu" data-v="${k[1]}">0</div><div class="kd">${chip(k[2])}</div><div class="ksp">${k[4].length>1?spark(k[4],k[5]):""}</div><div class="mu ks" style="text-transform:none">${k[3]}</div></div>`).join("")}</div>
- <div class="cd"><h3>Динамика <small class="mu">${S.live?"обновлено "+new Date(S.live).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"}):"демо"}</small></h3>
+ <div class="cd"><h3>Динамика <small class="mu">${src.demo?"демо":S.live?"обновлено "+new Date(S.live).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"}):""}</small></h3>
   <div class="chips" style="margin-bottom:10px">${Object.entries(M).map(([k,v])=>`<button class="chp ${S.metric==k?"on":""}" data-act="metric" data-v="${k}">${v[0]}</button>`).join("")}${prev?`<button class="chp ${S.cmp?"on":""}" data-act="cmp">vs прошлый период</button>`:""}</div>
   <div class="ch" id="c-main"></div></div>
  <div class="row2"><div class="cd"><h3>Аудитория</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">${donut([{v:A.active,c:C.g},{v:A.unsub,c:C.l},{v:A.blocked,c:C.r}],A.total,nf(A.total),"всего")}<div class="hb" style="gap:6px;font-size:12.5px"><div><i class="dot" style="display:inline-block;background:${C.g};margin-right:6px"></i>Активные <b>${nf(A.active)}</b></div><div><i class="dot" style="display:inline-block;background:${C.l};margin-right:6px"></i>Отписались <b>${nf(A.unsub)}</b></div><div><i class="dot" style="display:inline-block;background:${C.r};margin-right:6px"></i>Заблокировали <b>${nf(A.blocked)}</b></div></div></div></div>
@@ -587,38 +668,40 @@ function renderBot(){
  const el=$("#v-bot"),b=S.bot;if(!b){el.innerHTML=emptyHtml();return}
  const act=eff("active"),sup=eff("support"),fb=eff("fallback");
  el.innerHTML=`<div class="wrap">
- ${S.del?`<div class="cd" style="border-color:var(--r)"><h3>🗑 Удаление запланировано</h3><div class="mu" style="text-transform:none">Бот будет удалён после подтверждения в чате.</div><button class="ghost" data-act="undel" style="margin-top:10px;width:100%">Отменить удаление</button></div>`:""}
+ ${S.del?`<div class="cd" style="border-color:var(--r)"><h3>🗑 Удаление запланировано</h3><div class="note">Бот будет удалён после подтверждения в чате.</div><button class="ghost" data-act="undel" style="margin-top:10px;width:100%">Отменить удаление</button></div>`:""}
  <div class="cd"><div class="prof"><span class="av" style="width:52px;height:52px;font-size:22px">${esc((b.username||"?")[0].toUpperCase())}</span><div style="flex:1;min-width:0"><b style="font-size:17px">${esc(b.name||b.username)}</b><div class="mu" style="text-transform:none">@${esc(b.username)} · создан ${esc(b.created||"—")}</div><span class="badge ${b.running?"y":""}">${b.running?"● работает":"○ остановлен"}</span><span class="badge l">${nf(b.subs)} подписчиков</span></div></div>
   <div class="acts2" style="margin-top:12px"><button class="ghost" data-act="openbot">Открыть бота</button><button class="ghost" data-act="copylink">Скопировать ссылку</button></div></div>
  <div class="cd"><h3>Управление <small class="mu">применится после отправки</small></h3>
   <div class="line"><div>Бот запущен<small>${act?"принимает сообщения":"остановлен, не отвечает"}</small></div><label class="sw" style="margin:0"><input type="checkbox" id="sw-active" ${act?"checked":""}><i></i></label></div>
   <div class="line"><div>Обратная связь<small>кнопка «Связаться» на старте и /support</small></div><label class="sw" style="margin:0"><input type="checkbox" id="sw-support" ${sup?"checked":""}><i></i></label></div>
-  <label>Ответ на неизвестные сообщения <span id="fbc">${(fb||"").length}/300</span></label><input id="fb" maxlength="300" value="${esc(fb)}"></div>
+  <label>Ответ на неизвестные сообщения <span id="fbc">${(fb||"").length}/300</span></label><input id="fb" type="text" maxlength="300" autocomplete="off" value="${esc(fb)}"></div>
  <div class="cd"><h3>📣 Рассылка <small class="mu">${nf(b.subs)} получателей</small></h3>
   <textarea id="post" maxlength="4000" placeholder="Текст рассылки. Обычный текст без форматирования.">${esc(S.post)}</textarea>
   <div class="mu" id="pc" style="text-align:right;margin:4px 0">${S.post.length}/4000</div>
   <div class="kb" style="margin-bottom:8px"><div class="bub" id="pp" style="${S.post.trim()?"":"display:none"}">${esc(S.post)}</div></div>
-  <div class="mu" style="text-transform:none;line-height:1.5">Рассылка уйдёт после «Отправить боту» и подтверждения в чате. Фото и видео — командой /post в вашем боте.</div>
+  <div class="note">Рассылка уйдёт после «Отправить боту» и подтверждения в чате. Фото и видео — командой /post в вашем боте.</div>
   ${S.post?'<button class="ghost" data-act="clrpost" style="margin-top:10px;width:100%">Очистить</button>':""}</div>
- <div class="cd"><h3>🔑 Токен и безопасность</h3><div class="mu" style="text-transform:none;line-height:1.6">Токены не передаются через мини-апп. Замена токена: чат с основным ботом → «Мои боты» → ваш бот → «Заменить токен».</div></div>
+ <div class="cd"><h3>🔑 Токен и безопасность</h3><div class="note">Токены не передаются через мини-апп. Замена токена: чат с основным ботом → «Мои боты» → ваш бот → «Заменить токен».</div></div>
  <div class="cd" style="border-color:#ff5d6c55"><h3>Опасная зона</h3><button class="ghost danger" data-act="delbot" style="width:100%">Удалить бота</button></div></div>`}
 function postUi(){const p=$("#pp"),c=$("#pc");if(c)c.textContent=S.post.length+"/4000";if(p){p.textContent=S.post;p.style.display=S.post.trim()?"":"none"}}
 
 /* ============ Профиль ============ */
 function renderMe(){
- const el=$("#v-me"),u=tg?.initDataUnsafe?.user||{first_name:S.demo?"Demo":"Пользователь",id:S.sess.uid},name=[u.first_name,u.last_name].filter(Boolean).join(" "),bs=S.sess.bots||[];
+ const el=$("#v-me"),u=tg?.initDataUnsafe?.user||{first_name:"Пользователь",id:S.sess.uid},name=[u.first_name,u.last_name].filter(Boolean).join(" ")||"Пользователь",bs=S.sess.bots||[];
  const left=S.sess.exp?new Date(S.sess.exp)-Date.now():null,totalSubs=bs.reduce((a,b)=>a+b.subs,0),totalViews=bs.reduce((a,b)=>a+sum(b.stats.days.slice(-30),"views"),0);
  const nodesTot=bs.reduce((a,b)=>a+b.flow.nodes.length,0),lim=S.sess.limit||5;
+ const status=S.nosess?"не подключена":S.expired?"недоступна":"активна · данные читаются из Firestore";
  el.innerHTML=`<div class="wrap">
- <div class="cd"><div class="prof"><span class="av">${u.photo_url?`<img src="${esc(u.photo_url)}" alt="">`:esc((u.first_name||"?")[0].toUpperCase())}</span><div style="flex:1;min-width:0"><b style="font-size:19px">${esc(name)}</b><div class="mu" style="text-transform:none">${u.username?"@"+esc(u.username)+" · ":""}ID ${esc(u.id)}</div><div>${S.sess.admin?'<span class="badge y">админ</span>':'<span class="badge l">владелец</span>'}${u.is_premium?'<span class="badge">⭐ premium</span>':""}${u.language_code?`<span class="badge">${esc(u.language_code)}</span>`:""}</div></div></div>
+ <div class="cd"><div class="prof"><span class="av">${u.photo_url?`<img src="${esc(u.photo_url)}" alt="">`:esc((name||"?")[0].toUpperCase())}</span><div style="flex:1;min-width:0"><b style="font-size:19px">${esc(name)}</b><div class="mu" style="text-transform:none">${u.username?"@"+esc(u.username)+" · ":""}${u.id?"ID "+esc(u.id):""}</div><div>${S.sess.admin?'<span class="badge y">админ</span>':'<span class="badge l">владелец</span>'}${u.is_premium?'<span class="badge">⭐ premium</span>':""}${u.language_code?`<span class="badge">${esc(u.language_code)}</span>`:""}</div></div></div>
   ${S.sess.since?`<div class="mu" style="margin-top:10px">С нами с ${new Date(S.sess.since).toLocaleDateString("ru-RU")}</div>`:""}</div>
  <div class="kpis"><div class="kpi"><div class="mu">Боты</div><div class="kv">${bs.length}<span class="mu"> / ${lim}</span></div><div class="meter"><i style="width:${Math.min(100,bs.length/lim*100)}%"></i></div></div>
  <div class="kpi"><div class="mu">Подписчики</div><div class="kv">${nf(totalSubs)}</div><div class="mu ks" style="text-transform:none">во всех ботах</div></div>
  <div class="kpi"><div class="mu">Просмотры 30 дн</div><div class="kv">${nf(totalViews)}</div><div class="mu ks" style="text-transform:none">${nf(nodesTot)} экранов всего</div></div></div>
- <div class="cd"><h3>Мои боты</h3>${bs.map(b=>{const d=b.stats.days.slice(-14),a=avg(d.slice(-7),"dau"),p=avg(d.slice(0,7),"dau");return`<div class="bot-row" data-act="pickbot" data-id="${b.id}"><span class="av">${esc((b.username||"?")[0].toUpperCase())}</span><span class="bn">@${esc(b.username)}<small>${nf(b.subs)} подп. · ${b.flow.nodes.length}/${MAXN} экранов</small></span>${spark(d.map(r=>r.dau),C.l,70,26)}${chip(delta(a,p))}</div>`}).join("")||'<div class="empty">Ботов пока нет</div>'}</div>
+ <div class="cd"><h3>Мои боты</h3>${bs.map(b=>{const d=b.stats.days.slice(-14),a=avg(d.slice(-7),"dau"),p=avg(d.slice(0,7),"dau");return`<div class="bot-row ${b.id==S.bot?.id?"cur":""}" data-act="pickbot" data-id="${b.id}"><span class="av">${esc((b.username||"?")[0].toUpperCase())}</span><span class="bn">@${esc(b.username)}<small>${nf(b.subs)} подп. · ${b.flow.nodes.length}/${MAXN} экранов</small></span>${spark(d.map(r=>r.dau),C.l,70,26)}${chip(delta(a,p))}</div>`}).join("")||'<div class="empty">Ботов пока нет</div>'}
+  <button class="ghost" data-act="addbot" style="margin-top:10px;width:100%">＋ Добавить бота через чат</button></div>
  ${S.sess.platform?`<div class="cd"><h3>🛡 Платформа</h3><div class="row2" style="gap:8px">${[["Пользователи",S.sess.platform.users],["Боты",S.sess.platform.bots],["Запущено",S.sess.platform.running],["Подписки",S.sess.platform.subs]].map(x=>`<div class="pit"><span class="mu">${x[0]}</span><b>${nf(x[1])}</b></div>`).join("")}</div></div>`:""}
- <div class="cd"><h3>Сессия</h3><div class="line"><div>Статус<small>${S.demo?"демо-режим":S.expired?"недоступна":"активна · данные читаются из Firestore"}</small></div><span class="badge ${S.expired?"":"y"}">${S.demo?"demo":S.expired?"off":"live"}</span></div>
-  <div class="line"><div>Осталось<small>после — отправьте боту /builder</small></div><b id="cd">${left==null?"—":fmtLeft(left)}</b></div></div>
+ <div class="cd"><h3>Сессия</h3><div class="line"><div>Статус<small>${status}</small></div><span class="badge ${S.expired||S.nosess?"":"y"}">${S.nosess?"off":S.expired?"off":"live"}</span></div>
+  <div class="line"><div>Осталось<small>после — отправьте боту /builder</small></div><b id="left">${left==null?"—":fmtLeft(left)}</b></div></div>
  <div class="cd"><h3>Настройки интерфейса <small class="mu">только на этом устройстве</small></h3>
   ${[["haptic","Вибро-отклик","короткие тактильные сигналы"],["snap","Привязка к сетке","экраны выравниваются по 10 px"],["anim","Анимации","графики, переходы, счётчики"]].map(x=>`<div class="line"><div>${x[1]}<small>${x[2]}</small></div><label class="sw" style="margin:0"><input type="checkbox" data-pref="${x[0]}" ${PREF[x[0]]?"checked":""}><i></i></label></div>`).join("")}
   <button class="ghost" data-act="cleardrafts" style="margin-top:10px;width:100%">Очистить локальные черновики</button></div>
@@ -630,7 +713,8 @@ function renderMe(){
 const fmtLeft=ms=>{if(ms<=0)return"истекла";const s=Math.floor(ms/1000),m=Math.floor(s/60);return m>=60?Math.floor(m/60)+" ч "+m%60+" мин":m+":"+String(s%60).padStart(2,"0")}
 
 /* ============ Шапка, вкладки, UI ============ */
-function renderTop(){const b=S.bot;$("#bav").textContent=b?(b.username||"?")[0].toUpperCase():"+";$("#bname").textContent=b?"@"+b.username:(S.expired?"сессия недоступна":"нет ботов");$("#bdot").className="dot "+(b?.running?"on":"")}
+function renderTop(){const b=S.bot;$("#bav").textContent=b?(b.username||"?")[0].toUpperCase():"+";
+ $("#bname").textContent=b?"@"+b.username:(S.expired?"сессия недоступна":S.nosess?"откройте через бота":"добавить бота");$("#bdot").className="dot "+(b?.running?"on":"")}
 function renderTab(){
  $$(".view").forEach(v=>v.classList.toggle("on",v.id=="v-"+S.tab));$$(".tb").forEach(t=>t.classList.toggle("on",t.dataset.tab==S.tab));
  if(S.tab=="flow"){renderFlow();if(!S.fitted)requestAnimationFrame(fit)}else if(S.tab=="stats")renderStats();else if(S.tab=="bot")renderBot();else renderMe()}
@@ -638,7 +722,7 @@ function go(tab){S.tab=tab;hap();renderTab();ui()}
 function ui(){
  const p=pendingList(),f=$("#fab");f.hidden=!p.length;f.classList.toggle("mini",S.tab=="flow");$("b",f).textContent=p.length;
  const e=errCount();$("#err").hidden=!e;$("#err").textContent="ошибок: "+e;
- try{p.length?tg?.enableClosingConfirmation?.():tg?.disableClosingConfirmation?.()}catch{}
+ const cc=!!p.length;if(S.cc!==cc){S.cc=cc;try{cc?tg?.enableClosingConfirmation?.():tg?.disableClosingConfirmation?.()}catch{}}
  const left=S.sess.exp?new Date(S.sess.exp)-Date.now():null,ex=$("#exp");
  if(S.expired||(left!=null&&left<=0)){ex.hidden=false;ex.textContent="Сессия истекла. Отправьте боту /builder и откройте конструктор заново. Изменения всё ещё можно отправить."}
  else if(left!=null&&left<5*60000){ex.hidden=false;ex.textContent="Сессия закончится через "+fmtLeft(left)+". Отправьте изменения или откройте /builder снова."}else ex.hidden=true}
@@ -649,30 +733,34 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-act]");if(
   case"metric":S.metric=v;renderStats();break;
   case"cmp":S.cmp=!S.cmp;renderStats();break;
   case"pickbot":openBot(a.dataset.id);break;
+  case"addbot":openMaster();break;
   case"openbot":openTg("https://t.me/"+S.bot.username);break;
   case"copylink":navigator.clipboard?.writeText("https://t.me/"+S.bot.username).then(()=>toast("Ссылка скопирована"),()=>toast("Не удалось скопировать",1));break;
   case"clrpost":S.post="";saveDraftSoon();renderBot();ui();break;
   case"undel":S.del=false;saveDraftSoon();renderBot();ui();break;
   case"delbot":{const d=sheet(`${head("Удалить бота?")}<p>Будут удалены схема, фото и статистика @${esc(S.bot.username)}. Это действие нельзя отменить. Бот попросит подтверждение в чате.</p><div class="acts2"><button class="ghost" data-x>Нет</button><button class="main" style="background:var(--r);color:#fff" id="yes">Удалить</button></div>`);$("#yes",d).onclick=()=>{S.del=true;saveDraftSoon();closeSheet(d);renderBot();ui()};break}
-  case"cleardrafts":Object.keys(localStorage).filter(k=>k.startsWith("bb3:")&&k!="bb3:prefs"&&k!="bb3:last").forEach(k=>lsDel(k));toast("Черновики очищены");break}});
+  case"cleardrafts":Object.keys(localStorage).filter(k=>k.startsWith("bb3:")&&!["bb3:prefs","bb3:last","bb3:demo","bb3:master"].includes(k)).forEach(k=>lsDel(k));toast("Черновики очищены");break}});
 document.addEventListener("input",e=>{const t=e.target;
  if(t.id=="fb"){setVal("fallback",t.value.slice(0,300)||S.bot.fallback);$("#fbc").textContent=t.value.length+"/300"}
  else if(t.id=="post"){S.post=t.value;postUi();saveDraftSoon();ui()}});
 document.addEventListener("change",e=>{const t=e.target;
  if(t.id=="sw-active"){setVal("active",t.checked);renderBot()}else if(t.id=="sw-support"){setVal("support",t.checked);renderBot()}
+ else if(t.id=="sw-demo"){S.demoOn=t.checked;lsSet("bb3:demo",S.demoOn);renderStats();hap();toast(S.demoOn?"Демо-данные включены":"Демо-данные выключены")}
  else if(t.dataset?.pref){PREF[t.dataset.pref]=t.checked;lsSet("bb3:prefs",PREF);applyPrefs()}});
 $$(".tb").forEach(b=>b.onclick=()=>go(b.dataset.tab));
 $("#botbtn").onclick=()=>{hap();openBots()};
 $("#fab").onclick=()=>{hap();openReview()};
 $("#undo").onclick=undo;$("#redo").onclick=redo;$("#fit").onclick=fit;
 $("#lay").onclick=()=>{if(!S.flow)return;mutate(()=>layout(S.flow.nodes,S.flow.start));fit();hap()};
-$("#heat").onclick=()=>{S.heat=!S.heat;if(S.heat&&!Object.keys(S.heatMap).length)toast("Пока нет данных о просмотрах");renderFlow()};
+$("#heat").onclick=()=>{if(!S.flow)return;S.heat=!S.heat;if(S.heat&&!Object.keys(S.heatMap).length)toast("Пока нет данных о просмотрах");renderFlow()};
 $("#tpl").onclick=()=>S.flow&&openTemplates();
 $("#pvb").onclick=()=>S.flow&&openPreview(S.flow.start);
 $$(".zoom button").forEach(b=>b.onclick=()=>zoomTo(S.view.k*(b.dataset.z=="1"?1.2:1/1.2)));
 $("#fs").onclick=()=>{try{if(tg){tg.isFullscreen?tg.exitFullscreen():tg.requestFullscreen()}else document.documentElement.requestFullscreen?.()}catch{}};
+addEventListener("keydown",e=>{if(stack.length||S.tab!="flow"||/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||""))return;
+ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()=="z"){e.preventDefault();e.shiftKey?redo():undo()}else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()=="y"){e.preventDefault();redo()}});
 let rz;addEventListener("resize",()=>{applyView();clearTimeout(rz);rz=setTimeout(()=>{if(S.tab=="stats")drawCharts()},150)});
-setInterval(()=>{const c=$("#cd");if(c&&S.sess.exp)c.textContent=fmtLeft(new Date(S.sess.exp)-Date.now());ui()},1000);
+setInterval(()=>{const c=$("#left");if(c&&S.sess.exp)c.textContent=fmtLeft(new Date(S.sess.exp)-Date.now());ui()},1000);
 setInterval(refresh,30000);document.addEventListener("visibilitychange",()=>{if(!document.hidden)refresh()});
 if(tg){tg.ready();tg.expand();tg.disableVerticalSwipes?.();tg.setHeaderColor?.("#070708");tg.setBackgroundColor?.("#070708");try{if(tg.isVersionAtLeast?.("8.0")&&!tg.isFullscreen)tg.requestFullscreen()}catch{}}
 applyPrefs();boot();
