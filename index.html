@@ -188,10 +188,12 @@ details.cd>summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none
 .sheet.modal .sh>.acts2:last-child{position:static;margin:12px 0 0!important;padding:0;background:none}
 .sheet.modal.shown .sh{animation:pop .22s}
 .sheet:not(.modal) .sh{display:flex;flex-direction:column}.sheet:not(.modal) .sh>*{flex:none}.sheet:not(.modal) .sh>.acts2:last-child{margin-top:auto!important}
+.i{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle;flex:none}
+.big .i{width:46px;height:46px;color:var(--y)}.chip b .i{width:22px;height:22px}.hd .i{width:17px;height:17px}.row .i{width:14px;height:14px}.br .bi .i,.br button .i{width:15px;height:15px}.ic{display:grid;place-items:center}.logo .i{width:18px;height:18px;stroke:#000}.hist button,.zoom button{display:grid;place-items:center}.bph .i{width:34px;height:34px;color:#fff}
 </style></head><body>
 <div id="app">
 <header id="top">
- <i class="logo">◉</i>
+ <i class="logo" data-ic="bot"></i>
  <button class="botbtn" id="botbtn"><span class="av" id="bav">?</span><span class="bn" id="bname">загрузка…</span><i class="dot" id="bdot"></i><b class="car">▾</b></button>
  <button class="pillerr" id="err" hidden></button>
 </header>
@@ -200,10 +202,10 @@ details.cd>summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none
  <section class="view on" id="v-flow">
   <div id="cv"><div id="world"><svg id="svg"></svg><div id="nodes"></div></div></div>
   <div class="eflow" id="eflow" hidden></div>
-  <div class="hist"><button id="undo" title="Отменить">↶</button><button id="redo" title="Повторить">↷</button></div>
-  <div class="acts"><button id="tpl">✦ Шаблон</button><button id="pvb">▶ Просмотр</button></div>
-  <div class="zoom"><button data-z="1" title="Приблизить">+</button><button data-z="-1" title="Отдалить">−</button><hr><button id="fit" title="Показать всё">⌖</button><button id="lay" title="Расставить автоматически">▤</button><button id="heat" title="Тепловая карта">🔥</button></div>
-  <div id="dock"><div class="chip" data-t="screen"><b>▭</b>экран</div><div class="chip" data-t="btn"><b>◉</b>кнопка</div><div class="chip" data-t="url"><b>↗</b>ссылка</div></div>
+  <div class="hist"><button id="undo" title="Отменить" data-ic="undo"></button><button id="redo" title="Повторить" data-ic="redo"></button></div>
+  <div class="acts"><button id="tpl">Шаблон</button><button id="pvb">Просмотр</button></div>
+  <div class="zoom"><button data-z="1" title="Приблизить">+</button><button data-z="-1" title="Отдалить">−</button><hr><button id="fit" title="Показать всё" data-ic="fit"></button><button id="lay" title="Расставить автоматически" data-ic="lay"></button><button id="heat" title="Тепловая карта" data-ic="fire"></button></div>
+  <div id="dock"><div class="chip" data-t="screen"><b data-ic="screen"></b>экран</div><div class="chip" data-t="btn"><b data-ic="btn"></b>кнопка</div><div class="chip" data-t="url"><b data-ic="link"></b>ссылка</div></div>
  </section>
  <section class="view scroll" id="v-stats"></section>
  <section class="view scroll" id="v-bot"></section>
@@ -222,8 +224,12 @@ details.cd>summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none
 "use strict";
 /* ============ Публичный веб-конфиг Firebase (не секрет). Мини-апп ТОЛЬКО ЧИТАЕТ sessions/{токен}; пишет в Firestore только бот. ============ */
 const firebaseConfig={apiKey:"AIzaSyANZINM6R29i3erpEdzs60oHZsDPBXVIOI",authDomain:"manageyourbot.firebaseapp.com",projectId:"manageyourbot",storageBucket:"manageyourbot.firebasestorage.app",messagingSenderId:"919379398898",appId:"1:919379398898:web:55798b0893c24f2309c06b",measurementId:"G-ZRQF3WRGVY"};
-const VERSION="2.2";
+const VERSION="2.3";
 const tg=window.Telegram?.WebApp;
+const KB=new URLSearchParams(location.search).get("k")=="1";
+const IC={undo:'<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>',redo:'<path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/>',fit:'<path d="M4 9V5a1 1 0 0 1 1-1h4M15 4h4a1 1 0 0 1 1 1v4M20 15v4a1 1 0 0 1-1 1h-4M9 20H5a1 1 0 0 1-1-1v-4"/>',lay:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',fire:'<path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 .3 1.2 1 2 2 2 0-3-1-5 1-8z"/>',cam:'<path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/>',trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12M9 7V4h6v3"/>',edit:'<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',up:'<path d="m6 15 6-6 6 6"/>',dn:'<path d="m6 9 6 6 6-6"/>',link:'<path d="M8 16 16 8M9 8h7v7"/>',screen:'<rect x="4" y="5" width="16" height="14" rx="3"/>',btn:'<rect x="4" y="8" width="16" height="8" rx="4"/>',plus:'<path d="M12 5v14M5 12h14"/>',play:'<path d="M8 5l11 7-11 7z"/>',copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>',bot:'<rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01"/>',plug:'<path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0zM12 17v4"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',chart:'<path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>',box:'<path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',check:'<path d="m5 12.5 4.5 4.5L19 7"/>'};
+const ic=n=>`<svg class="i" viewBox="0 0 24 24">${IC[n]}</svg>`;
+const noEmo=t=>String(t).replace(/\p{Extended_Pictographic}\uFE0F?\s*/gu,"");
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
@@ -235,7 +241,8 @@ const PREF=Object.assign({haptic:true,snap:true,anim:true},lsGet("bb3:prefs")||{
 const hap=k=>{if(!PREF.haptic)return;try{const h=tg?.HapticFeedback;if(!h)return;k=="ok"?h.notificationOccurred("success"):k=="err"?h.notificationOccurred("error"):h.impactOccurred("light")}catch{}};
 function applyPrefs(){document.body.classList.toggle("noanim",!PREF.anim)}
 function toast(t,err){const e=document.createElement("div");e.className="toast"+(err?" err":"");e.textContent=t;document.body.append(e);hap(err?"err":"ok");setTimeout(()=>e.remove(),2800)}
-const openTg=u=>{try{tg?.openTelegramLink?tg.openTelegramLink(u):window.open(u,"_blank")}catch{window.open(u,"_blank")}};
+const openTg=u=>{const go=()=>{try{tg?.openTelegramLink?tg.openTelegramLink(u):window.open(u,"_blank")}catch{window.open(u,"_blank")}};
+ if(tg?.isFullscreen&&tg.exitFullscreen){let d=0;const f=()=>{if(d)return;d=1;try{tg.offEvent("fullscreenChanged",f)}catch{}setTimeout(go,150)};try{tg.onEvent("fullscreenChanged",f);tg.exitFullscreen();setTimeout(f,600)}catch{go()}}else go()};
 const b64u=u=>{let s="";for(let i=0;i<u.length;i++)s+=String.fromCharCode(u[i]);return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")};
 async function enc(o){const j=JSON.stringify(o);
  if(typeof CompressionStream=="function"){const s=new Blob([j]).stream().pipeThrough(new CompressionStream("deflate-raw"));return"BB1."+b64u(new Uint8Array(await new Response(s).arrayBuffer()))}
@@ -262,14 +269,14 @@ function pendingList(){const a=[];if(!S.bot)return a;if(S.del)return["Удале
 const masterName=()=>S.sess.master||lsGet("bb3:master")||"";
 function openMaster(){const m=masterName();
  if(m)return openTg("https://t.me/"+m+"?start=app");
- try{if(tg){toast("Закройте мини-апп и нажмите «🎛 Открыть конструктор» в основном боте");setTimeout(()=>tg.close(),900);return}}catch{}
+ try{if(tg){toast("Закройте мини-апп и нажмите «Открыть конструктор» в основном боте");setTimeout(()=>tg.close(),900);return}}catch{}
  toast("Откройте основного бота-конструктора в Telegram",1)}
 
 /* ============ Данные: Firestore (только чтение) ============ */
-async function fetchSess(token){
- const r=await fetch(`https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/sessions/${encodeURIComponent(token)}?key=${firebaseConfig.apiKey}`,{cache:"no-store"});
+async function fetchSess(token,peek){
+ const r=await fetch(`https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/sessions/${encodeURIComponent(token)}?key=${firebaseConfig.apiKey}`+(peek?"&mask.fieldPaths=exp":""),{cache:"no-store"});
  if(!r.ok)throw new Error("http "+r.status);
- const d=await r.json(),j=JSON.parse(d.fields.json.stringValue);j.exp=j.exp||d.fields.exp?.timestampValue;return j}
+ const d=await r.json();if(peek)return d.updateTime;S.ut=d.updateTime;const j=JSON.parse(d.fields.json.stringValue);j.exp=j.exp||d.fields.exp?.timestampValue;return j}
 
 /* ============ Демо-статистика (только для вкладки «Статистика») ============ */
 const mulberry=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
@@ -304,7 +311,7 @@ function openBot(id){
  lsSet("bb3:last",b.id);calcHeat();renderTop();renderTab();ui()}
 async function refresh(){
  if(!S.token||document.hidden)return;
- try{const j=await fetchSess(S.token),cur=S.bot?.id,oldRev=S.bot?.rev;S.sess=j;S.expired=false;S.live=Date.now();if(j.master)lsSet("bb3:master",j.master);
+ try{const ut=await fetchSess(S.token,true);if(ut&&ut===S.ut){S.live=Date.now();ui();return}const j=await fetchSess(S.token),cur=S.bot?.id,oldRev=S.bot?.rev;S.sess=j;S.expired=false;S.live=Date.now();if(j.master)lsSet("bb3:master",j.master);
   const had=!!S.bot;S.bot=j.bots.find(x=>x.id==cur)||j.bots[0]||null;
   if(S.bot&&(!had||oldRev!=S.bot.rev||S.bot.id!=cur)){if(!pendingList().length||!had)openBot(S.bot.id);else{S.base=S.bot.flow.nodes.map(cn);S.baseSig=JSON.stringify(S.base);toast("Схема на сервере обновилась")}}
   else if(S.bot){calcHeat()}
@@ -352,10 +359,10 @@ const TPL=[
    ["☎️ Контакты","**Контакты.**\nТелефон: +7 000 000-00-00\nПочта: hello@example.com",[],[["🌐 Сайт","https://example.com"],["✈️ Telegram","https://t.me/example"]]]
   ]}];
 function buildTpl(t){
- const nodes=[{id:"start",title:"Старт",text:t.w,x:0,y:0,cols:2,btns:[]}];
- const add=(parent,it)=>{const[title,text,kids=[],urls=[]]=it,id=uid(nodes),me={id,title:title.slice(0,40),text,x:0,y:0,cols:1,btns:[]};
+ const nodes=[{id:"start",title:"Старт",text:noEmo(t.w),x:0,y:0,cols:2,btns:[]}];
+ const add=(parent,it)=>{const[title0,text0,kids=[],urls=[]]=it,title=noEmo(title0),text=noEmo(text0),id=uid(nodes),me={id,title:title.slice(0,40),text,x:0,y:0,cols:1,btns:[]};
   nodes.push(me);parent.btns.push({id:uid(nodes),label:title.slice(0,32),kind:"go",to:id});
-  kids.forEach(k=>add(me,k));urls.forEach(([l,u])=>me.btns.push({id:uid(nodes),label:l.slice(0,32),kind:"url",value:u}))};
+  kids.forEach(k=>add(me,k));urls.forEach(([l,u])=>me.btns.push({id:uid(nodes),label:noEmo(l).slice(0,32),kind:"url",value:u}))};
  t.items.forEach(it=>add(nodes[0],it));layout(nodes,"start");return nodes}
 
 /* ============ Холст ============ */
@@ -369,9 +376,9 @@ function wires(tmp){let h=DEFS;
  svg.innerHTML=h}
 /* пустое состояние: нет ботов / нет сессии */
 function emptyCard(){
- const t=S.nosess?{i:"🔌",h:"Откройте через бота",p:"Страница открылась без ключа доступа к вашим данным. Закройте её, откройте основного бота и нажмите «🎛 Открыть конструктор».",b:"🎛 Открыть конструктор"}
- :S.expired?{i:"⏳",h:"Сессия недоступна",p:"Сессия истекла или не найдена. Откройте основного бота и нажмите «🎛 Открыть конструктор» — данные обновятся.",b:"🎛 Открыть конструктор"}
- :{i:"🤖",h:"Пока нет ботов",p:"1. Создайте бота у @BotFather (/newbot)\n2. Пришлите токен основному боту\n3. Снова нажмите «🎛 Открыть конструктор» — бот появится здесь",b:"Добавить через бота"};
+ const t=S.nosess?{i:ic("plug"),h:"Откройте через бота",p:"Страница открылась без ключа доступа к вашим данным. Закройте её, откройте основного бота и нажмите «Открыть конструктор».",b:"Открыть конструктор"}
+ :S.expired?{i:ic("clock"),h:"Сессия недоступна",p:"Сессия истекла или не найдена. Откройте основного бота и нажмите «Открыть конструктор» — данные обновятся.",b:"Открыть конструктор"}
+ :{i:ic("bot"),h:"Пока нет ботов",p:"1. Создайте бота у @BotFather (/newbot)\n2. Пришлите токен основному боту\n3. Снова нажмите «Открыть конструктор» — бот появится здесь",b:"Добавить через бота"};
  return`<div class="cd hero"><div class="big">${t.i}</div><h3>${t.h}</h3><div class="note">${esc(t.p)}</div><button class="main" data-act="addbot">${t.b}</button></div>`}
 function emptyHtml(){return`<div class="wrap">${emptyCard()}</div>`}
 function renderEmptyFlow(){const e=$("#eflow"),off=!S.bot;e.hidden=!off;$("#v-flow").classList.toggle("off",off);if(off)e.innerHTML=emptyCard()}
@@ -381,7 +388,7 @@ function renderFlow(){
  const mx=Math.max(1,...Object.values(S.heatMap));
  nodesEl.innerHTML=S.flow.nodes.map(n=>{const start=n.id==S.flow.start,v=S.heat?(S.heatMap[n.id]||0):null,r=v!=null?v/mx:0;
   const hs=v!=null?`;border-color:var(--o);box-shadow:0 0 ${Math.round(r*34)}px rgba(255,106,43,${(.12+.6*r).toFixed(2)})`:"";
-  return`<div class="node ${start?"start":""} ${S.sel==n.id?"sel":""}" data-id="${n.id}" style="left:${n.x}px;top:${n.y}px${hs}"><div class="hd"><b class="in"></b><span>${start?"▶ ":""}${esc(n.title)}</span>${v!=null?`<em class="hv">${nf(v)}</em>`:""}<i class="ph ${hasPhoto(n)?"has":""}">📷</i></div><div class="tx">${esc(n.text)}</div><div class="rows">${n.btns.map(b=>`<div class="row ${b.kind=="url"?"url":""} ${bad(b)?"bad":""}" data-b="${b.id}"><span>${esc(b.label)}<small>${b.kind=="url"?"↗":""}</small></span><u class="out"></u></div>`).join("")||'<div class="nempty">+ бросьте сюда кнопку</div>'}</div></div>`}).join("");
+  return`<div class="node ${start?"start":""} ${S.sel==n.id?"sel":""}" data-id="${n.id}" style="left:${n.x}px;top:${n.y}px${hs}"><div class="hd"><b class="in"></b><span>${esc(n.title)}</span>${v!=null?`<em class="hv">${nf(v)}</em>`:""}<i class="ph ${hasPhoto(n)?"has":""}">${ic("cam")}</i></div><div class="tx">${esc(n.text)}</div><div class="rows">${n.btns.map(b=>`<div class="row ${b.kind=="url"?"url":""} ${bad(b)?"bad":""}" data-b="${b.id}"><span>${esc(b.label)}<small>${b.kind=="url"?ic("link"):""}</small></span><u class="out"></u></div>`).join("")||'<div class="nempty">+ бросьте сюда кнопку</div>'}</div></div>`}).join("");
  wires();$("#heat").classList.toggle("on",S.heat);$("#undo").disabled=!S.hist.length;$("#redo").disabled=!S.fut.length}
 function markSel(){$$(".node").forEach(x=>x.classList.toggle("sel",x.dataset.id==S.sel))}
 function applyView(){world.style.transform=`translate(${S.view.x}px,${S.view.y}px) scale(${S.view.k})`;cv.style.backgroundSize=`${24*S.view.k}px ${24*S.view.k}px`;cv.style.backgroundPosition=`${S.view.x}px ${S.view.y}px`}
@@ -445,26 +452,26 @@ function sheet(inner,{cls="",full=false,raw=false}={}){const d=document.createEl
  requestAnimationFrame(()=>d.classList.add("shown"));return d}
 function closeSheet(d){const i=stack.indexOf(d);if(i<0)return;stack.splice(i,1);try{d._close?.()}catch(e){console.error(e)}d.classList.remove("shown");setTimeout(()=>d.remove(),200);bb()}
 try{tg?.BackButton?.onClick(()=>stack.length&&closeSheet(stack[stack.length-1]))}catch{}
-const head=(t)=>`<div class="shh"><button class="x" data-x aria-label="Назад">‹</button><h3>${t}</h3></div>`;
+const head=t=>`<div class="shh"><h3>${t}</h3></div>`;
 layerEl.addEventListener("focusin",e=>{const t=e.target;if(!/INPUT|TEXTAREA|SELECT/.test(t.tagName))return;setTimeout(()=>{try{t.scrollIntoView({block:"center",behavior:"smooth"})}catch{}},320)});
 const enterBlur=e=>{if(e.key=="Enter"&&e.target.tagName=="INPUT"){e.preventDefault();e.target.blur()}};
 
 function openNode(id){
  const n0=node(id);if(!n0)return;const start=id==S.flow.start;
- const d=sheet(`${head(start?"▶ Стартовый экран":"Экран")}
+ const d=sheet(`${head(start?"Стартовый экран":"Экран")}
  <label>Название в схеме</label><input id="nt" type="text" maxlength="40" autocomplete="off" enterkeyhint="done">
  <label>Текст сообщения <span id="cnt"></span></label>
- <div class="fmt"><button data-f="b">B</button><button data-f="i"><i>I</i></button><button data-f="c">‹›</button><button data-f="link">🔗</button></div>
+ <div class="fmt"><button data-f="b">B</button><button data-f="i"><i>I</i></button><button data-f="c">‹›</button><button data-f="link">${ic("link")}</button></div>
  <textarea id="nx" maxlength="3500"></textarea>
  <label>Раскладка кнопок</label><div class="seg" id="nc"><button data-c="1">В столбик</button><button data-c="2">По две в ряд</button></div>
  <label>Кнопки <span id="bc"></span></label><div class="bl" id="bl"></div>
- <div class="acts2" style="margin-top:8px"><button class="ghost" id="ab">＋ Кнопка</button><button class="ghost" id="au">↗ Ссылка</button></div>
- <div class="acts2" style="margin-top:8px"><button class="ghost" id="ph">📷 Фото</button><button class="ghost" id="pr">▶ Предпросмотр</button><button class="ghost" id="dp">⧉ Копия</button></div>
- <div class="acts2" style="margin-top:12px">${start?"":'<button class="ghost danger" id="dl">🗑 Удалить</button>'}<button class="main" data-x>Готово</button></div>`);
+ <div class="acts2" style="margin-top:8px"><button class="ghost" id="ab">${ic("plus")} Кнопка</button><button class="ghost" id="au">${ic("link")} Ссылка</button></div>
+ <div class="acts2" style="margin-top:8px"><button class="ghost" id="ph">${ic("cam")} Фото</button><button class="ghost" id="pr">${ic("play")} Предпросмотр</button><button class="ghost" id="dp">${ic("copy")} Копия</button></div>
+ <div class="acts2" style="margin-top:12px">${start?"":'<button class="ghost danger" id="dl">${ic("trash")} Удалить</button>'}<button class="main" data-x>Готово</button></div>`);
  const t=$("#nt",d),x=$("#nx",d);let cols=n0.cols;t.value=n0.title;x.value=n0.text;
  const cnt=()=>$("#cnt",d).textContent=x.value.length+" / 3500",setCols=()=>$$("#nc button",d).forEach(b=>b.classList.toggle("on",+b.dataset.c==cols));
  const list=()=>{const m=node(id);if(!m)return;$("#bc",d).textContent=m.btns.length+" / "+MAXB;
-  $("#bl",d).innerHTML=m.btns.map((b,i)=>`<div class="br ${bad(b)?"bad":""}" data-i="${i}"><span class="bi">${b.kind=="url"?"↗":"◉"}</span><div class="bm"><input class="bli" type="text" maxlength="32" autocomplete="off" enterkeyhint="done" placeholder="Название кнопки" value="${esc(b.label)}"><small>${b.kind=="url"?esc(b.value):(node(b.to)?"→ "+esc(node(b.to).title):"не подключена")}</small></div><button data-up ${i==0?"disabled":""}>↑</button><button data-dn ${i==m.btns.length-1?"disabled":""}>↓</button><button data-ed title="Настроить">⚙</button></div>`).join("")||'<div class="empty">Кнопок пока нет</div>'};
+  $("#bl",d).innerHTML=m.btns.map((b,i)=>`<div class="br ${bad(b)?"bad":""}" data-i="${i}"><span class="bi">${ic(b.kind=="url"?"link":"btn")}</span><div class="bm"><input class="bli" type="text" maxlength="32" autocomplete="off" enterkeyhint="done" placeholder="Название кнопки" value="${esc(b.label)}"><small>${b.kind=="url"?esc(b.value):(node(b.to)?"→ "+esc(node(b.to).title):"не подключена")}</small></div><button data-up ${i==0?"disabled":""}>${ic("up")}</button><button data-dn ${i==m.btns.length-1?"disabled":""}>${ic("dn")}</button><button data-ed title="Настроить">${ic("edit")}</button></div>`).join("")||'<div class="empty">Кнопок пока нет</div>'};
  cnt();setCols();list();x.oninput=cnt;
  $("#nc",d).onclick=e=>{const b=e.target.closest("[data-c]");if(b){cols=+b.dataset.c;setCols()}};
  $(".fmt",d).onclick=e=>{const b=e.target.closest("[data-f]");if(!b)return;const f=b.dataset.f,s=x.selectionStart,en=x.selectionEnd,v=x.value,sel=v.slice(s,en);let ins;
@@ -483,18 +490,18 @@ function openNode(id){
  $("#ph",d).onclick=()=>photoInfo(node(id));
  $("#pr",d).onclick=()=>openPreview(id);
  $("#dp",d).onclick=()=>{if(S.flow.nodes.length>=MAXN)return toast("Максимум "+MAXN+" экранов",1);const m=node(id),c=clone(m);c.id=uid();c.title=(m.title+" (копия)").slice(0,40);c.x+=40;c.y+=40;c.btns.forEach(b=>b.id=uid());mutate(()=>S.flow.nodes.push(c));toast("Копия создана");closeSheet(d)};
- let arm=0;const dl=$("#dl",d);if(dl)dl.onclick=()=>{if(!arm){arm=1;dl.textContent="Точно удалить?";setTimeout(()=>{arm=0;dl.textContent="🗑 Удалить"},3000);return}
+ let arm=0;const dl=$("#dl",d);if(dl)dl.onclick=()=>{if(!arm){arm=1;dl.textContent="Точно удалить?";setTimeout(()=>{arm=0;dl.innerHTML=ic("trash")+" Удалить"},3000);return}
   d._close=null;mutate(()=>{S.flow.nodes=S.flow.nodes.filter(m=>m.id!=id);S.flow.nodes.forEach(m=>m.btns.forEach(b=>{if(b.to==id)b.to=""}))});S.sel=null;closeSheet(d)};
  d._close=()=>{const m=node(id);if(!m)return;const title=t.value.trim().slice(0,40)||"Экран",text=x.value.trim()||"…";if(title!=m.title||text!=m.text||cols!=m.cols)mutate(()=>{m.title=title;m.text=text;m.cols=cols})}}
 function openBtn(nid,bid,after){
  const n=node(nid),b=n?.btns.find(x=>x.id==bid);if(!b)return;
- const d=sheet(`${head("Кнопка")}<label>Текст кнопки</label><input id="a" type="text" maxlength="32" autocomplete="off" autocapitalize="sentences" enterkeyhint="done" placeholder="Например: 🛍 Каталог">
+ const d=sheet(`${head("Кнопка")}<label>Текст кнопки</label><input id="a" type="text" maxlength="32" autocomplete="off" autocapitalize="sentences" enterkeyhint="done" placeholder="Например: Каталог">
  <label>Тип</label><div class="seg" id="k"><button data-k="go">Открывает экран</button><button data-k="url">Ссылка</button></div>
  <div id="g"><label>Куда ведёт</label><select id="t"></select></div>
  <div id="u"><label>Ссылка (https:// или tg://)</label><input id="v" type="text" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" enterkeyhint="done" placeholder="https://"></div>
- <div class="acts2" style="margin-top:14px"><button class="ghost danger" id="del">🗑 Удалить</button><button class="main" data-x>Готово</button></div>`);
+ <div class="acts2" style="margin-top:14px"><button class="ghost danger" id="del">${ic("trash")} Удалить</button><button class="main" data-x>Готово</button></div>`);
  const A=$("#a",d),V=$("#v",d),T=$("#t",d);let kind=b.kind;A.value=b.label;V.value=b.value||"";
- T.innerHTML='<option value="">— не выбрано —</option>'+S.flow.nodes.map(m=>`<option value="${m.id}">${esc(m.title)}${m.id==S.flow.start?" (старт)":""}</option>`).join("")+(S.flow.nodes.length<MAXN?'<option value="__new">＋ Создать новый экран</option>':"");
+ T.innerHTML='<option value="">— не выбрано —</option>'+S.flow.nodes.map(m=>`<option value="${m.id}">${esc(m.title)}${m.id==S.flow.start?" (старт)":""}</option>`).join("")+(S.flow.nodes.length<MAXN?'<option value="__new">+ Создать новый экран</option>':"");
  T.value=b.to||"";
  const snap=JSON.stringify([b.label,b.kind,b.to||"",b.value||""]);
  const sync=()=>{$$("#k button",d).forEach(x=>x.classList.toggle("on",x.dataset.k==kind));$("#g",d).hidden=kind!="go";$("#u",d).hidden=kind!="url"};sync();
@@ -507,43 +514,42 @@ function openBtn(nid,bid,after){
   mutate(()=>{b.label=label;b.kind=kind;if(kind=="url"){b.value=val;delete b.to}else{if(to=="__new"){const id=uid();S.flow.nodes.push({id,title:"Экран",text:"Текст экрана",x:snapG(n.x+W+70),y:snapG(n.y),cols:1,btns:[]});to=id}b.to=to;delete b.value}});after?.()};}
 function whyBad(b){return b.kind=="url"?(!b.value||b.value=="https://"?"не указана ссылка":"ссылка должна начинаться с https:// или tg://"):"не выбран экран, куда ведёт кнопка"}
 function openErrors(){const items=[];(S.flow?.nodes||[]).forEach(n=>n.btns.forEach(b=>{if(bad(b))items.push({n,b})}));
- const d=sheet(`${head("Ошибки в кнопках")}<p class="note">Такие кнопки подсвечены оранжевым. Нажмите на пункт — откроется кнопка, чтобы её исправить.</p><div class="bl">${items.map((x,i)=>`<div class="br bad" data-i="${i}" style="cursor:pointer"><span class="bi">${x.b.kind=="url"?"↗":"◉"}</span><div class="bm"><b>${esc(x.b.label)}</b><small style="white-space:normal">Экран «${esc(x.n.title)}» · ${whyBad(x.b)}</small></div><span class="mu">›</span></div>`).join("")||'<div class="empty">Ошибок нет</div>'}</div>`);
+ const d=sheet(`${head("Ошибки в кнопках")}<p class="note">Такие кнопки подсвечены оранжевым. Нажмите на пункт — откроется кнопка, чтобы её исправить.</p><div class="bl">${items.map((x,i)=>`<div class="br bad" data-i="${i}" style="cursor:pointer"><span class="bi">${ic(x.b.kind=="url"?"link":"btn")}</span><div class="bm"><b>${esc(x.b.label)}</b><small style="white-space:normal">Экран «${esc(x.n.title)}» · ${whyBad(x.b)}</small></div><span class="mu">›</span></div>`).join("")||'<div class="empty">Ошибок нет</div>'}</div>`);
  d.addEventListener("click",e=>{const r=e.target.closest(".br");if(!r)return;const x=items[+r.dataset.i];if(!x)return;closeSheet(d);S.sel=x.n.id;markSel();setTimeout(()=>openBtn(x.n.id,x.b.id),230)})}
 function photoInfo(n){
  const has=hasPhoto(n),onServer=S.bot?.flow.nodes.some(x=>x.id==n.id);
- const d=sheet(`${head("📷 Фото экрана")}<p>Экран: <b>${esc(n.title)}</b><br>Сейчас: <b>${has?"фото загружено ✅":"фото нет"}</b></p>
+ const d=sheet(`${head("Фото экрана")}<p>Экран: <b>${esc(n.title)}</b><br>Сейчас: <b>${has?"фото загружено":"фото нет"}</b></p>
  <p class="note">Из соображений безопасности мини-апп ничего не загружает. Фото отправляется боту в чате — откроется нужный экран.</p>
  ${onServer?"":'<div class="banner" style="margin:0 0 10px">Экран новый: сначала отправьте схему боту.</div>'}
  <div class="acts2"><button class="main" id="go" ${onServer&&masterName()?"":"disabled"}>Загрузить фото в чате</button><button class="ghost" data-x>Закрыть</button></div>`,{cls:"modal"});
  $("#go",d).onclick=()=>openTg(`https://t.me/${masterName()}?start=ph_${S.bot.id}_${n.id}`)}
 function openTemplates(){
  const cards=TPL.map(t=>{const ns=buildTpl(t),bt=ns.reduce((a,n)=>a+n.btns.length,0);
-  return`<div class="cd tplc"><div style="display:flex;gap:12px;align-items:center"><b style="font-size:32px">${t.ico}</b><div><b style="font-size:16px">${esc(t.name)}</b><div class="note">${esc(t.desc)}</div></div></div>
+  return`<div class="cd tplc"><div style="display:flex;gap:12px;align-items:center"><b style="color:var(--y)">${ic("box")}</b><div><b style="font-size:16px">${esc(t.name)}</b><div class="note">${esc(t.desc)}</div></div></div>
   <div style="margin:10px 0 4px"><span class="badge y">${ns.length} экранов</span><span class="badge l">${bt} кнопок</span><span class="badge">всё уже собрано</span></div>
-  <div class="chips" style="margin:8px 0 12px">${t.items.map(i=>`<span class="chp">${esc(i[0])}</span>`).join("")}</div>
+  <div class="chips" style="margin:8px 0 12px">${t.items.map(i=>`<span class="chp">${esc(noEmo(i[0]))}</span>`).join("")}</div>
   <button class="main" data-ap="${t.k}" style="width:100%">Применить шаблон</button></div>`}).join("");
- const d=sheet(`${head("✦ Шаблон")}<p class="note">Готовая схема целиком — не нужно собирать с нуля. Текущая схема будет заменена; это можно отменить кнопкой ↶.</p>${cards}`);
+ const d=sheet(`${head("Шаблон")}<p class="note">Готовая схема целиком — не нужно собирать с нуля. Текущая схема будет заменена; это можно отменить кнопкой ↶.</p>${cards}`);
  let arm=0;
  d.addEventListener("click",e=>{const b=e.target.closest("[data-ap]");if(!b||!S.flow)return;const t=TPL.find(x=>x.k==b.dataset.ap);
   if(S.flow.nodes.length>1&&!arm){arm=1;b.textContent="Заменить текущую схему?";setTimeout(()=>{arm=0;b.textContent="Применить шаблон"},3000);return}
   mutate(()=>{S.flow.nodes=buildTpl(t);S.flow.start="start"});S.sel=null;S.fitted=false;closeSheet(d);fit();hap("ok");toast("Шаблон применён")})}
 function openBots(){
  const bs=S.sess.bots||[],lim=S.sess.limit||5;
- const list=bs.length?bs.map(b=>`<div class="bot-row ${b.id==S.bot?.id?"cur":""}" data-id="${b.id}"><span class="av">${esc((b.username||"?")[0].toUpperCase())}</span><span class="bn">@${esc(b.username)}<small>${nf(b.subs)} подписчиков · ${b.running?"работает":"остановлен"}</small></span>${spark(b.stats.days.slice(-14).map(r=>r.dau),"#a9a8f8",70,26)}${b.id==S.bot?.id?'<b class="chk">✓</b>':'<i class="dot '+(b.running?"on":"")+'"></i>'}</div>`).join("")
+ const list=bs.length?bs.map(b=>`<div class="bot-row ${b.id==S.bot?.id?"cur":""}" data-id="${b.id}"><span class="av">${esc((b.username||"?")[0].toUpperCase())}</span><span class="bn">@${esc(b.username)}<small>${nf(b.subs)} подписчиков · ${b.running?"работает":"остановлен"}</small></span>${spark(b.stats.days.slice(-14).map(r=>r.dau),"#a9a8f8",70,26)}${b.id==S.bot?.id?'<b class="chk">'+ic("check")+'</b>':'<i class="dot '+(b.running?"on":"")+'"></i>'}</div>`).join("")
   :emptyCard();
- const add=`<div class="cd" style="margin-top:10px"><h3>＋ Добавить бота ${bs.length?`<small class="mu">${bs.length} / ${lim}</small>`:""}</h3><div class="note">1. Создайте бота у @BotFather (/newbot)\n2. Пришлите его токен основному боту\n3. Откройте конструктор снова — бот появится в списке\n\nТокен нельзя передавать через мини-апп — только через чат.</div>
+ const add=`<div class="cd" style="margin-top:10px"><h3>Добавить бота ${bs.length?`<small class="mu">${bs.length} / ${lim}</small>`:""}</h3><div class="note">1. Создайте бота у @BotFather (/newbot)\n2. Пришлите его токен основному боту\n3. Откройте конструктор снова — бот появится в списке\n\nТокен нельзя передавать через мини-апп — только через чат.</div>
   <button class="main" id="nb" style="width:100%;margin-top:12px">Перейти в чат конструктора</button></div>`;
  const d=sheet(`${head("Ваши боты")}${bs.length?`<div class="cd" style="padding:6px 10px">${list}</div>`:""}${bs.length?"":`<div style="margin-bottom:4px">${list}</div>`}${bs.length?add:""}`);
  d.addEventListener("click",e=>{const r=e.target.closest(".bot-row");if(r){if(r.dataset.id!=S.bot?.id){if(pendingList().length)toast("Черновик сохранён на этом устройстве");openBot(r.dataset.id)}closeSheet(d);return}
   if(e.target.closest("#nb")||e.target.closest('[data-act="addbot"]')){closeSheet(d);openMaster()}})}
 function openReview(){
  const p=pendingList(),e=errCount();
- const d=sheet(`${head("Отправить боту")}<div class="cd" style="margin-bottom:10px">${p.map(x=>`<div class="line"><span>${esc(x)}</span><span class="dl up">✓</span></div>`).join("")||'<div class="empty">Изменений нет</div>'}</div>
- ${e?`<div class="banner" style="margin:0 0 10px">Исправьте ошибки в кнопках: ${e} (оранжевые)</div>`:""}
- <p class="note">Мини-апп закроется и передаст изменения боту. ${S.post.trim()||S.del?"Рассылку и удаление бот попросит подтвердить.":"Бот применит их сразу и пришлёт новую кнопку конструктора."}</p>
- <div class="acts2"><button class="ghost" id="rs">Сбросить</button><button class="ghost" id="cdb">Код</button><button class="main" id="sn" ${e||!p.length?"disabled":""}>Отправить</button></div>`);
+ const d=sheet(`${head("Отправить боту")}<div class="cd" style="margin-bottom:10px">${p.map(x=>`<div class="line"><span>${esc(x)}</span><span class="dl up">${ic("check")}</span></div>`).join("")||'<div class="empty">Изменений нет</div>'}</div>
+ ${e?`<div class="banner" style="margin:0 0 10px">Исправьте ошибки в кнопках: ${e}</div>`:""}
+ <p class="note">Нажмите «Отправить»: код скопируется и откроется чат с ботом. Вставьте код и отправьте — бот применит изменения${S.post.trim()||S.del?" (рассылку и удаление попросит подтвердить)":""}.</p>
+ <div class="acts2"><button class="ghost danger" id="rs">Сбросить</button><button class="main" id="sn" ${e||!p.length?"disabled":""}>Отправить</button></div>`);
  $("#sn",d).onclick=()=>{closeSheet(d);sendNow()};
- $("#cdb",d).onclick=async()=>{closeSheet(d);codeSheet(await buildCode())};
  $("#rs",d).onclick=()=>{resetAll();closeSheet(d);toast("Изменения сброшены")}}
 function resetAll(){S.flow.nodes=clone(S.base);S.set={};S.post="";S.del=false;S.hist=[];S.fut=[];lsDel("bb3:"+S.bot.id);renderTab();ui()}
 async function buildCode(){
@@ -554,10 +560,12 @@ async function sendNow(){
  if(!S.bot)return;if(errCount()){go("flow");return toast("Исправьте ошибки в кнопках: "+errCount(),1)}
  if(!pendingList().length)return toast("Нечего отправлять");
  deliver(await buildCode())}
-function deliver(code){
- const inTg=!!(tg&&(tg.initData||(tg.platform&&tg.platform!="unknown"))),viaKb=inTg&&!tg.initDataUnsafe?.query_id;
- if(viaKb&&code.length<=3900){try{hap("ok");tg.sendData(code);setTimeout(()=>{toast("Окно не закрылось? Скопируйте код и отправьте боту");codeSheet(code)},1800);return}catch{}}
- codeSheet(code)}
+async function deliver(code){
+ if(KB&&tg?.sendData&&code.length<=3900){try{hap("ok");tg.sendData(code);return}catch{}}
+ if(code.length>3900)return codeSheet(code);
+ let ok=false;try{await navigator.clipboard.writeText(code);ok=true}catch{}
+ const m=masterName();if(!ok||!m)return codeSheet(code);
+ hap("ok");toast("Код скопирован. В чате вставьте и отправьте");setTimeout(()=>openTg("https://t.me/"+m),500)}
 async function quickSend(set){if(S.bot)deliver(await enc({v:3,bot:S.bot.id,set}))}
 function codeSheet(code){
  let parts=[code];if(code.length>3900){const body=code.slice(4),id=Math.random().toString(36).slice(2,8).padEnd(6,"x"),n=Math.ceil(body.length/3400);
@@ -571,13 +579,13 @@ function fmtHtml(t){
  const inl=s=>s.replace(/\[([^\]\n]{1,64})\]\((https:\/\/[^\s)<>"']{3,300}|tg:\/\/[^\s)<>"']{3,300})\)/g,'<span class="lk">$1</span>').replace(/\*\*(.+?)\*\*/gs,"<b>$1</b>").replace(/(^|[^\w_])__(.+?)__(?![\w_])/gs,"$1<i>$2</i>");
  return String(t||"").split(/(`[^`\n]+`)/).map(p=>/^`[^`\n]+`$/.test(p)?`<code>${esc(p.slice(1,-1))}</code>`:inl(esc(p))).join("")}
 function openPreview(from){
- const d=sheet(`<div class="pv"><div class="pvh"><span class="av">${esc((S.bot?.username||"B")[0].toUpperCase())}</span><div style="flex:1"><b>${esc(S.bot?.name||"Бот")}</b><div class="mu" style="text-transform:none">бот · предпросмотр</div></div><button class="ic" id="rst" title="Сначала">⟲</button><button class="x" data-x>✕</button></div><div class="pvb" id="pb"></div></div>`,{raw:true});
+ const d=sheet(`<div class="pv"><div class="pvh"><span class="av">${esc((S.bot?.username||"B")[0].toUpperCase())}</span><div style="flex:1"><b>${esc(S.bot?.name||"Бот")}</b><div class="mu" style="text-transform:none">бот · предпросмотр</div></div><button class="ic" id="rst" title="Сначала">${ic("undo")}</button></div><div class="pvb" id="pb"></div></div>`,{raw:true});
  const body=$("#pb",d);let cur=from||S.flow.start;
  const show=(id)=>{const n=node(id);if(!n){toast("Экран не найден",1);return}cur=id;
   const start=id==S.flow.start,rows=[],btns=n.btns.map(b=>`<button class="kbb" data-${b.kind=="url"?"u":"g"}="${esc(b.kind=="url"?b.value:b.to)}">${esc(b.label)}${b.kind=="url"?" ↗":""}</button>`),c=n.cols==2?2:1;
   for(let i=0;i<btns.length;i+=c)rows.push(`<div class="kbr" style="grid-template-columns:repeat(${c},1fr)">${btns.slice(i,i+c).join("")}</div>`);
-  rows.push(start?(eff("support")?'<div class="kbr"><button class="kbb" data-s>💬 Связаться</button></div>':""):'<div class="kbr"><button class="kbb" data-h>⬅️ В меню</button></div>');
-  body.innerHTML=`<div class="bub">${hasPhoto(n)?'<div class="bph">📷</div>':""}${fmtHtml(n.text)}</div><div class="kb">${rows.join("")}</div>`;body.scrollTop=0;hap()};
+  rows.push(start?(eff("support")?'<div class="kbr"><button class="kbb" data-s>Связаться</button></div>':""):'<div class="kbr"><button class="kbb" data-h>В меню</button></div>');
+  body.innerHTML=`<div class="bub">${hasPhoto(n)?'<div class="bph">${ic("cam")}</div>':""}${fmtHtml(n.text)}</div><div class="kb">${rows.join("")}</div>`;body.scrollTop=0;hap()};
  body.onclick=e=>{const b=e.target.closest("button");if(!b)return;
   if(b.dataset.g)show(b.dataset.g);else if(b.dataset.h!=null)show(S.flow.start);else if(b.dataset.u)toast("Откроется: "+b.dataset.u.slice(0,40));else if(b.dataset.s!=null)toast("Бот попросит написать сообщение владельцу")};
  $("#rst",d).onclick=()=>show(S.flow.start);show(cur)}
@@ -631,7 +639,7 @@ const chip=v=>v==null?'<span class="dl">—</span>':`<span class="dl ${v>=0?"up"
 function nodeViews(rows){const m={};rows.forEach(r=>{for(const k in r.n||{})m[k]=(m[k]||0)+r.n[k]});return m}
 function renderStats(){
  const el=$("#v-stats"),src=statSrc();S.draw=[];
- const demoCard=`<div class="cd demo-c"><div class="line"><div>🎭 Демо-данные<small>${S.demoOn?"показан пример статистики — не ваши цифры":"включите, чтобы увидеть, как выглядит статистика"}</small></div><label class="sw" style="margin:0"><input type="checkbox" id="sw-demo" ${S.demoOn?"checked":""}><i></i></label></div></div>`;
+ const demoCard=`<div class="cd demo-c"><div class="line"><div>Демо-данные<small>${S.demoOn?"показан пример статистики — не ваши цифры":"включите, чтобы увидеть, как выглядит статистика"}</small></div><label class="sw" style="margin:0"><input type="checkbox" id="sw-demo" ${S.demoOn?"checked":""}><i></i></label></div></div>`;
  if(!src){el.innerHTML=`<div class="wrap">${demoCard}${emptyCard()}</div>`;return}
  const st=src.stats||{days:[],aud:{total:0,active:0,unsub:0,blocked:0},ret:{d1:{base:0,ok:0},d7:{base:0,ok:0}},posts:[]},days=st.days,R=S.range,rows=days.slice(-R),prev=days.length>=2*R?days.slice(-2*R,-R):null,last=days[days.length-1]||{};
  const empty=!st.aud.total&&!sum(days,"views");
@@ -655,7 +663,7 @@ function renderStats(){
  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div><div class="m mu">Статистика ${src.demo?'<span class="badge y">демо</span>':""}</div><b style="font-size:20px">@${esc(src.username)}</b></div><div class="seg" id="rng">${[7,14,30].map(x=>`<button data-act="range" data-v="${x}" class="${R==x?"on":""}">${x} дн</button>`).join("")}</div></div>
  ${demoCard}
  ${src.demo?'<div class="banner info" style="margin:0">Это примерные данные, чтобы показать, как выглядит статистика. Выключите переключатель — вернутся настоящие цифры.</div>':""}
- ${empty?`<div class="cd hero"><div class="big">📊</div><h3>Данных пока нет</h3><div class="note">Откройте бота и нажмите /start — первые визиты появятся здесь в течение минуты.\nИли включите демо-данные выше, чтобы посмотреть пример.</div></div>`:""}
+ ${empty?`<div class="cd hero"><div class="big">${ic("chart")}</div><h3>Данных пока нет</h3><div class="note">Откройте бота и нажмите /start — первые визиты появятся здесь в течение минуты.\nИли включите демо-данные выше, чтобы посмотреть пример.</div></div>`:""}
  <div class="kpis">${K.map(k=>`<div class="kpi"><div class="mu">${k[0]}</div><div class="kv cu" data-v="${k[1]}">0</div><div class="kd">${chip(k[2])}</div><div class="ksp">${k[4].length>1?spark(k[4],k[5]):""}</div><div class="mu ks" style="text-transform:none">${k[3]}</div></div>`).join("")}</div>
  <div class="cd"><h3>Динамика <small class="mu">${src.demo?"демо":S.live?"обновлено "+new Date(S.live).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"}):""}</small></h3>
   <div class="chips" style="margin-bottom:10px">${Object.entries(M).map(([k,v])=>`<button class="chp ${S.metric==k?"on":""}" data-act="metric" data-v="${k}">${v[0]}</button>`).join("")}${prev?`<button class="chp ${S.cmp?"on":""}" data-act="cmp">vs прошлый период</button>`:""}</div>
@@ -679,14 +687,14 @@ function renderBot(){
  const el=$("#v-bot"),b=S.bot;if(!b){el.innerHTML=emptyHtml();return}
  const act=eff("active"),sup=eff("support"),fb=eff("fallback");
  el.innerHTML=`<div class="wrap">
- ${S.del?`<div class="cd" style="border-color:var(--r)"><h3>🗑 Удаление запланировано</h3><div class="note">Бот будет удалён после подтверждения в чате.</div><button class="ghost" data-act="undel" style="margin-top:10px;width:100%">Отменить удаление</button></div>`:""}
- <div class="cd"><div class="prof"><span class="av" style="width:52px;height:52px;font-size:22px">${esc((b.username||"?")[0].toUpperCase())}</span><div style="flex:1;min-width:0"><b style="font-size:17px">${esc(b.name||b.username)}</b><div class="mu" style="text-transform:none">@${esc(b.username)} · создан ${esc(b.created||"—")}</div><span class="badge ${b.running?"y":""}">${b.running?"● работает":"○ остановлен"}</span><span class="badge l">${nf(b.subs)} подписчиков</span></div></div>
+ ${S.del?`<div class="cd" style="border-color:var(--r)"><h3>Удаление запланировано</h3><div class="note">Бот будет удалён после подтверждения в чате.</div><button class="ghost" data-act="undel" style="margin-top:10px;width:100%">Отменить удаление</button></div>`:""}
+ <div class="cd"><div class="prof"><span class="av" style="width:52px;height:52px;font-size:22px">${esc((b.username||"?")[0].toUpperCase())}</span><div style="flex:1;min-width:0"><b style="font-size:17px">${esc(b.name||b.username)}</b><div class="mu" style="text-transform:none">@${esc(b.username)} · создан ${esc(b.created||"—")}</div><span class="badge ${b.running?"y":""}">${b.running?"работает":"остановлен"}</span><span class="badge l">${nf(b.subs)} подписчиков</span></div></div>
   <div style="margin-top:12px"><button class="ghost" data-act="copylink" style="width:100%">Скопировать ссылку на бота</button></div></div>
  <div class="cd"><h3>Управление <small class="mu">запуск — сразу, остальное после отправки</small></h3>
-  <div class="line"><div>Статус бота<small>${act?"работает и отвечает пользователям":"остановлен, не отвечает"}</small></div><button class="${act?"ghost danger":"main"}" data-act="toggle">${act?"■ Остановить":"▶ Запустить"}</button></div>
+  <div class="line"><div>Статус бота<small>${act?"работает и отвечает пользователям":"остановлен, не отвечает"}</small></div><button class="${act?"ghost danger":"main"}" data-act="toggle">${act?"Остановить":"Запустить"}</button></div>
   <div class="line"><div>Обратная связь<small>кнопка «Связаться» на старте и /support</small></div><label class="sw" style="margin:0"><input type="checkbox" id="sw-support" ${sup?"checked":""}><i></i></label></div>
   <label>Ответ на неизвестные сообщения <span id="fbc">${(fb||"").length}/300</span></label><input id="fb" type="text" maxlength="300" autocomplete="off" value="${esc(fb)}"></div>
- <div class="cd"><h3>📣 Рассылка <small class="mu">${nf(b.subs)} получателей</small></h3>
+ <div class="cd"><h3>Рассылка <small class="mu">${nf(b.subs)} получателей</small></h3>
   <textarea id="post" maxlength="4000" placeholder="Текст рассылки. Обычный текст без форматирования.">${esc(S.post)}</textarea>
   <div class="mu" id="pc" style="text-align:right;margin:4px 0">${S.post.length}/4000</div>
   <div class="kb" style="margin-bottom:8px"><div class="bub" id="pp" style="${S.post.trim()?"":"display:none"}">${esc(S.post)}</div></div>
@@ -704,14 +712,14 @@ function renderMe(){
  const nodesTot=bs.reduce((a,b)=>a+b.flow.nodes.length,0),lim=S.sess.limit||5;
  const status=S.nosess?"не подключена":S.expired?"недоступна"+(S.err?" ("+esc(S.err)+")":""):"активна";
  el.innerHTML=`<div class="wrap">
- <div class="cd"><div class="prof"><span class="av">${esc((name||"?")[0].toUpperCase())}${u.photo_url?`<img src="${esc(u.photo_url)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:""}</span><div style="flex:1;min-width:0"><b style="font-size:19px">${esc(name)}</b><div class="mu" style="text-transform:none">${u.username?"@"+esc(u.username)+" · ":""}${u.id?"ID "+esc(u.id):""}</div><div>${S.sess.admin?'<span class="badge y">админ</span>':'<span class="badge l">владелец</span>'}${u.is_premium?'<span class="badge">⭐ premium</span>':""}${u.language_code?`<span class="badge">${esc(u.language_code)}</span>`:""}</div></div></div>
+ <div class="cd"><div class="prof"><span class="av">${esc((name||"?")[0].toUpperCase())}${u.photo_url?`<img src="${esc(u.photo_url)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:""}</span><div style="flex:1;min-width:0"><b style="font-size:19px">${esc(name)}</b><div class="mu" style="text-transform:none">${u.username?"@"+esc(u.username)+" · ":""}${u.id?"ID "+esc(u.id):""}</div><div>${S.sess.admin?'<span class="badge y">админ</span>':'<span class="badge l">владелец</span>'}${u.is_premium?'<span class="badge">premium</span>':""}${u.language_code?`<span class="badge">${esc(u.language_code)}</span>`:""}</div></div></div>
   ${S.sess.since?`<div class="mu" style="margin-top:10px">С нами с ${new Date(S.sess.since).toLocaleDateString("ru-RU")}</div>`:""}</div>
  <div class="kpis"><div class="kpi"><div class="mu">Боты</div><div class="kv">${bs.length}<span class="mu"> / ${lim}</span></div><div class="meter"><i style="width:${Math.min(100,bs.length/lim*100)}%"></i></div></div>
  <div class="kpi"><div class="mu">Подписчики</div><div class="kv">${nf(totalSubs)}</div><div class="mu ks" style="text-transform:none">во всех ботах</div></div>
  <div class="kpi"><div class="mu">Просмотры 30 дн</div><div class="kv">${nf(totalViews)}</div><div class="mu ks" style="text-transform:none">${nf(nodesTot)} экранов всего</div></div></div>
  <div class="cd"><h3>Мои боты</h3>${bs.map(b=>{const d=b.stats.days.slice(-14),a=avg(d.slice(-7),"dau"),p=avg(d.slice(0,7),"dau");return`<div class="bot-row ${b.id==S.bot?.id?"cur":""}" data-act="pickbot" data-id="${b.id}"><span class="av">${esc((b.username||"?")[0].toUpperCase())}</span><span class="bn">@${esc(b.username)}<small>${nf(b.subs)} подп. · ${b.flow.nodes.length}/${MAXN} экранов</small></span>${spark(d.map(r=>r.dau),C.l,70,26)}${chip(delta(a,p))}</div>`}).join("")||'<div class="empty">Ботов пока нет</div>'}
-  <button class="ghost" data-act="addbot" style="margin-top:10px;width:100%">＋ Добавить бота через чат</button></div>
- ${S.sess.platform?`<div class="cd"><h3>🛡 Платформа</h3><div class="row2" style="gap:8px">${[["Пользователи",S.sess.platform.users],["Боты",S.sess.platform.bots],["Запущено",S.sess.platform.running],["Подписки",S.sess.platform.subs]].map(x=>`<div class="pit"><span class="mu">${x[0]}</span><b>${nf(x[1])}</b></div>`).join("")}</div></div>`:""}
+  <button class="ghost" data-act="addbot" style="margin-top:10px;width:100%">Добавить бота через чат</button></div>
+ ${S.sess.platform?`<div class="cd"><h3>Платформа</h3><div class="row2" style="gap:8px">${[["Пользователи",S.sess.platform.users],["Боты",S.sess.platform.bots],["Запущено",S.sess.platform.running],["Подписки",S.sess.platform.subs]].map(x=>`<div class="pit"><span class="mu">${x[0]}</span><b>${nf(x[1])}</b></div>`).join("")}</div></div>`:""}
  <details class="cd"><summary>Сессия, интерфейс и справка</summary><div class="cd"><h3>Сессия</h3><div class="line"><div>Статус<small>${status}</small></div><span class="badge ${S.expired||S.nosess?"":"y"}">${S.nosess?"off":S.expired?"off":"live"}</span></div>
   <div class="line"><div>Осталось<small>после — откройте конструктор в боте заново</small></div><b id="left">${left==null?"—":fmtLeft(left)}</b></div></div>
  <div class="cd"><h3>Настройки интерфейса <small class="mu">только на этом устройстве</small></h3>
@@ -719,8 +727,8 @@ function renderMe(){
   <button class="ghost" data-act="cleardrafts" style="margin-top:10px;width:100%">Очистить локальные черновики</button></div>
  <div class="cd"><h3>Как это работает</h3>
   <div class="step"><b>1</b><div>Вы собираете схему и настройки здесь — мини-апп <b>только читает</b> данные и ничего не пишет на сервер.</div></div>
-  <div class="step"><b>2</b><div>Кнопка «Отправить боту» передаёт изменения боту в чате; бот проверяет и применяет их.</div></div>
-  <div class="step"><b>3</b><div>Фото экранов загружаются только через бота (значок 📷 на экране).</div></div></div>
+  <div class="step"><b>2</b><div>«Отправить боту» копирует код и открывает чат с ботом: вставьте код и отправьте — бот проверит и применит изменения.</div></div>
+  <div class="step"><b>3</b><div>Фото экранов загружаются только через бота (значок камеры на экране).</div></div></div>
  </details><div class="mu" style="text-align:center;padding:6px">Bot Builder ${VERSION}</div></div>`}
 const fmtLeft=ms=>{if(ms<=0)return"истекла";const s=Math.floor(ms/1000),m=Math.floor(s/60);return m>=60?Math.floor(m/60)+" ч "+m%60+" мин":m+":"+String(s%60).padStart(2,"0")}
 
@@ -736,7 +744,7 @@ function ui(){
  const e=errCount();$("#err").hidden=!e;$("#err").textContent="ошибок: "+e;
  const cc=!!p.length;if(S.cc!==cc){S.cc=cc;try{cc?tg?.enableClosingConfirmation?.():tg?.disableClosingConfirmation?.()}catch{}}
  const left=S.sess.exp?new Date(S.sess.exp)-Date.now():null,ex=$("#exp");
- if(S.expired||(left!=null&&left<=0)){ex.hidden=false;ex.textContent="Сессия истекла. Откройте основного бота и нажмите «🎛 Открыть конструктор». Изменения всё ещё можно отправить."}
+ if(S.expired||(left!=null&&left<=0)){ex.hidden=false;ex.textContent="Сессия истекла. Откройте основного бота и нажмите «Открыть конструктор». Изменения всё ещё можно отправить."}
  else if(left!=null&&left<5*60000){ex.hidden=false;ex.textContent="Сессия закончится через "+fmtLeft(left)+". Отправьте изменения или откройте конструктор в боте заново."}else ex.hidden=true}
 
 document.addEventListener("click",e=>{const a=e.target.closest("[data-act]");if(!a)return;const v=a.dataset.v;
@@ -775,5 +783,6 @@ let rz;addEventListener("resize",()=>{applyView();clearTimeout(rz);rz=setTimeout
 setInterval(()=>{const c=$("#left");if(c&&S.sess.exp)c.textContent=fmtLeft(new Date(S.sess.exp)-Date.now());ui()},1000);
 setInterval(refresh,30000);document.addEventListener("visibilitychange",()=>{if(!document.hidden)refresh()});
 if(tg){tg.ready();tg.expand();tg.disableVerticalSwipes?.();tg.setHeaderColor?.("#070708");tg.setBackgroundColor?.("#070708");try{if(tg.isVersionAtLeast?.("8.0")&&!tg.isFullscreen)tg.requestFullscreen()}catch{}}
+$$("[data-ic]").forEach(e=>e.innerHTML=ic(e.dataset.ic));addEventListener("keydown",e=>{if(e.key=="Escape"&&stack.length)closeSheet(stack[stack.length-1])});
 applyPrefs();boot();
 </script></body></html>
