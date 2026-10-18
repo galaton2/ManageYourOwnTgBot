@@ -16,7 +16,7 @@ button{cursor:pointer}
 .m,.mu{font-family:"Space Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;font-size:10.5px}
 .mu{color:var(--mu)}
 .note{color:var(--mu);font-size:13px;line-height:1.6;white-space:pre-line}
-#app{display:flex;flex-direction:column;height:var(--tg-viewport-stable-height,100dvh)}
+#app{display:flex;flex-direction:column;height:100dvh}
 #top{display:flex;align-items:center;gap:8px;padding:calc(var(--st) + 8px) 12px 8px}
 .logo{flex:none;width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--y),var(--l));color:#000;display:grid;place-items:center;font-weight:700;font-style:normal;box-shadow:0 4px 18px #e6ff3d33}
 .botbtn{display:flex;align-items:center;gap:8px;flex:1;min-width:0;background:var(--c1);border:1px solid var(--ln);border-radius:99px;padding:5px 12px 5px 5px;text-align:left;transition:border-color .15s}
@@ -149,14 +149,14 @@ input:focus,select:focus,textarea:focus{border-color:var(--y)}textarea{min-heigh
 .eflow{position:absolute;inset:0;display:grid;place-items:center;z-index:3;padding:20px;pointer-events:none}
 .eflow .cd{pointer-events:auto;max-width:360px;width:100%;background:#101013f2;backdrop-filter:blur(10px)}
 /* sheets */
-#layer{position:fixed;top:0;left:0;right:0;height:var(--tg-viewport-height,100dvh);pointer-events:none;z-index:50}
-.sheet{position:absolute;inset:0;pointer-events:auto;background:#000a;display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .18s}
-.sheet.in{opacity:1}
-.sh{width:100%;max-width:560px;background:#111114;border:1px solid var(--ln);border-radius:26px 26px 0 0;padding:8px 16px calc(var(--sb) + 18px);max-height:92%;overflow:auto;-webkit-overflow-scrolling:touch;transform:translateY(30px);transition:transform .22s cubic-bezier(.2,.9,.3,1)}
-.sheet.in .sh{transform:none}.sh.full{height:92%}
-.grab{display:block;width:40px;height:4px;border-radius:4px;background:#ffffff33;margin:4px auto 10px}
-.shh{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}.shh h3{margin:0;font-size:17px}
-.x{width:32px;height:32px;border-radius:50%;border:1px solid var(--ln);background:none}
+#layer{position:fixed;inset:0;pointer-events:none;z-index:50}
+.sheet{position:absolute;inset:0;pointer-events:auto;display:flex;flex-direction:column;background:var(--bg);opacity:0;transform:translateY(18px);transition:opacity .2s,transform .24s cubic-bezier(.2,.9,.3,1)}
+.sheet.in{opacity:1;transform:none}
+.sh{flex:1;min-height:0;width:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 16px calc(var(--sb) + 28px);background:radial-gradient(700px 400px at 100% -10%,#a9a8f81a,transparent 60%),var(--bg)}
+.sh>.acts2:last-child{position:sticky;bottom:0;z-index:3;margin:14px -16px 0!important;padding:14px 16px calc(var(--sb) + 12px);background:linear-gradient(transparent,#070708 30%)}
+.grab{display:none}
+.shh{position:sticky;top:0;z-index:3;display:flex;align-items:center;gap:12px;margin:0 -16px 8px;padding:calc(var(--st) + 10px) 16px 10px;background:#070708f2;backdrop-filter:blur(12px);border-bottom:1px solid var(--ln)}.shh h3{margin:0;font-size:18px;font-weight:600;flex:1}
+.x{flex:none;width:40px;height:40px;border-radius:50%;border:1px solid var(--ln);background:var(--c1);font-size:20px;line-height:1}
 .fmt{display:flex;gap:6px;margin-bottom:6px}.fmt button{width:38px;height:32px;border-radius:10px;border:1px solid var(--ln);background:#0a0a0c;font-weight:700}
 .bl{display:grid;gap:6px}.br{display:flex;align-items:center;gap:6px;background:#0a0a0c;border:1px solid var(--ln);border-radius:14px;padding:6px 8px}.br.bad{border-color:var(--o)}
 .br .bm{flex:1;min-width:0}
@@ -169,17 +169,17 @@ details.cd>summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none
 .codebox{font:11px "Space Mono",monospace;min-height:80px}
 .toast{position:fixed;left:50%;bottom:calc(var(--sb) + 150px);transform:translateX(-50%);background:var(--y);color:#000;border-radius:99px;padding:10px 16px;z-index:99;max-width:90vw;text-align:center;font-weight:600;animation:pop .2s}.toast.err{background:var(--o)}
 /* preview */
-.pv{width:100%;max-width:420px;height:92%;display:flex;flex-direction:column;background:#0e1621;border:1px solid var(--ln);border-radius:26px 26px 0 0;overflow:hidden;transform:translateY(30px);transition:transform .22s}
-.sheet.in .pv{transform:none}
-.pvh{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#17212b;border-bottom:1px solid #0006}
-.pvb{flex:1;overflow:auto;padding:14px 12px;display:flex;flex-direction:column;gap:8px;background:linear-gradient(160deg,#0e1621,#101c2a)}
+.pv{flex:1;min-height:0;width:100%;display:flex;flex-direction:column;background:#0e1621;overflow:hidden}
+
+.pvh{display:flex;align-items:center;gap:10px;padding:calc(var(--st) + 10px) 14px 10px;background:#17212b;border-bottom:1px solid #0006}
+.pvb{flex:1;overflow:auto;padding:14px 12px calc(var(--sb) + 14px);display:flex;flex-direction:column;gap:8px;background:linear-gradient(160deg,#0e1621,#101c2a)}
 .bub{align-self:flex-start;max-width:92%;background:#182533;border-radius:16px 16px 16px 4px;padding:9px 12px;white-space:pre-wrap;word-break:break-word;animation:pop .2s;font-size:14px}
 .bub a,.bub .lk{color:#6ab3f3;text-decoration:underline}.bub code{background:#0003;border-radius:5px;padding:1px 5px;font-family:"Space Mono",monospace;font-size:12.5px}
 .bph{height:120px;border-radius:12px;margin:-2px 0 8px;background:linear-gradient(135deg,#2b5278,#6ab3f3);display:grid;place-items:center;font-size:30px}
 .kb{align-self:stretch;display:grid;gap:4px}.kbr{display:grid;gap:4px}
 .kbb{border:0;background:#2b5278cc;border-radius:10px;padding:10px 8px;font-size:13.5px;color:#fff;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .kbb:active{filter:brightness(1.3)}
-@media(min-width:700px){.sheet{align-items:center}.sh,.pv{border-radius:26px}.sh.full,.pv{height:86%}}
+@media(min-width:700px){.sheet{flex-direction:row;align-items:center;justify-content:center;background:#000b}.sh{flex:none;width:580px;max-width:94vw;max-height:86vh;border-radius:26px;border:1px solid var(--ln)}.shh{border-radius:26px 26px 0 0;padding-top:16px}.sh>.acts2:last-child{border-radius:0 0 26px 26px}.pv{flex:none;width:420px;height:86vh;border-radius:26px;border:1px solid var(--ln)}.pvh{padding-top:12px}}
 @media(max-width:699px){#dock .chip{width:56px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body>
@@ -188,7 +188,6 @@ details.cd>summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none
  <i class="logo">◉</i>
  <button class="botbtn" id="botbtn"><span class="av" id="bav">?</span><span class="bn" id="bname">загрузка…</span><i class="dot" id="bdot"></i><b class="car">▾</b></button>
  <button class="pillerr" id="err" hidden></button>
- <button class="ic" id="fs" title="На весь экран">⛶</button>
 </header>
 <div id="exp" class="banner" hidden></div>
 <div id="views">
@@ -440,7 +439,7 @@ function sheet(inner,{cls="",full=false,raw=false}={}){const d=document.createEl
  requestAnimationFrame(()=>d.classList.add("in"));return d}
 function closeSheet(d){const i=stack.indexOf(d);if(i<0)return;stack.splice(i,1);try{d._close?.()}catch(e){console.error(e)}d.classList.remove("in");setTimeout(()=>d.remove(),200);bb()}
 try{tg?.BackButton?.onClick(()=>stack.length&&closeSheet(stack[stack.length-1]))}catch{}
-const head=(t)=>`<div class="shh"><h3>${t}</h3><button class="x" data-x>✕</button></div>`;
+const head=(t)=>`<div class="shh"><button class="x" data-x aria-label="Назад">‹</button><h3>${t}</h3></div>`;
 layerEl.addEventListener("focusin",e=>{const t=e.target;if(!/INPUT|TEXTAREA|SELECT/.test(t.tagName))return;setTimeout(()=>{try{t.scrollIntoView({block:"center",behavior:"smooth"})}catch{}},320)});
 const enterBlur=e=>{if(e.key=="Enter"&&e.target.tagName=="INPUT"){e.preventDefault();e.target.blur()}};
 
@@ -764,12 +763,11 @@ $("#heat").onclick=()=>{if(!S.flow)return;S.heat=!S.heat;if(S.heat&&!Object.keys
 $("#tpl").onclick=()=>S.flow&&openTemplates();
 $("#pvb").onclick=()=>S.flow&&openPreview(S.flow.start);
 $$(".zoom button[data-z]").forEach(b=>b.onclick=()=>zoomTo(S.view.k*(b.dataset.z=="1"?1.2:1/1.2)));
-$("#fs").onclick=()=>{try{if(tg){tg.isFullscreen?tg.exitFullscreen():tg.requestFullscreen()}else document.documentElement.requestFullscreen?.()}catch{}};
 addEventListener("keydown",e=>{if(stack.length||S.tab!="flow"||/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||""))return;
  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()=="z"){e.preventDefault();e.shiftKey?redo():undo()}else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()=="y"){e.preventDefault();redo()}});
 let rz;addEventListener("resize",()=>{applyView();clearTimeout(rz);rz=setTimeout(()=>{if(S.tab=="stats")drawCharts()},150)});
 setInterval(()=>{const c=$("#left");if(c&&S.sess.exp)c.textContent=fmtLeft(new Date(S.sess.exp)-Date.now());ui()},1000);
 setInterval(refresh,30000);document.addEventListener("visibilitychange",()=>{if(!document.hidden)refresh()});
-if(tg){tg.ready();tg.expand();tg.disableVerticalSwipes?.();tg.setHeaderColor?.("#070708");tg.setBackgroundColor?.("#070708");}
+if(tg){tg.ready();tg.expand();tg.disableVerticalSwipes?.();tg.setHeaderColor?.("#070708");tg.setBackgroundColor?.("#070708");try{if(tg.isVersionAtLeast?.("8.0")&&!tg.isFullscreen)tg.requestFullscreen()}catch{}}
 applyPrefs();boot();
 </script></body></html>
