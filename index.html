@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ru"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no,interactive-widget=resizes-content">
 <title>Bot Builder</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono&display=swap" rel="stylesheet">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -16,7 +16,7 @@ button{cursor:pointer}
 .m,.mu{font-family:"Space Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em;font-size:10.5px}
 .mu{color:var(--mu)}
 .note{color:var(--mu);font-size:13px;line-height:1.6;white-space:pre-line}
-#app{display:flex;flex-direction:column;height:100dvh}
+#app{position:relative;display:flex;flex-direction:column;height:100dvh}
 #top{display:flex;align-items:center;gap:8px;padding:calc(var(--st) + 8px) 12px 8px}
 .logo{flex:none;width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--y),var(--l));color:#000;display:grid;place-items:center;font-weight:700;font-style:normal;box-shadow:0 4px 18px #e6ff3d33}
 .botbtn{display:flex;align-items:center;gap:8px;flex:1;min-width:0;background:var(--c1);border:1px solid var(--ln);border-radius:99px;padding:5px 12px 5px 5px;text-align:left;transition:border-color .15s}
@@ -149,7 +149,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--y)}textarea{min-heigh
 .eflow{position:absolute;inset:0;display:grid;place-items:center;z-index:3;padding:20px;pointer-events:none}
 .eflow .cd{pointer-events:auto;max-width:360px;width:100%;background:#101013f2;backdrop-filter:blur(10px)}
 /* sheets */
-#layer{position:fixed;inset:0;pointer-events:none;z-index:50}
+#layer{position:absolute;inset:0;pointer-events:none;z-index:50}
 .sheet{position:absolute;inset:0;pointer-events:auto;display:flex;flex-direction:column;background:var(--bg);opacity:0;transform:translateY(18px);transition:opacity .2s,transform .24s cubic-bezier(.2,.9,.3,1)}
 .sheet.in{opacity:1;transform:none}
 .sh{flex:1;min-height:0;width:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 16px calc(var(--sb) + 28px);background:radial-gradient(700px 400px at 100% -10%,#a9a8f81a,transparent 60%),var(--bg)}
@@ -182,6 +182,11 @@ details.cd>summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none
 @media(min-width:700px){.sheet{flex-direction:row;align-items:center;justify-content:center;background:#000b}.sh{flex:none;width:580px;max-width:94vw;max-height:86vh;border-radius:26px;border:1px solid var(--ln)}.shh{border-radius:26px 26px 0 0;padding-top:16px}.sh>.acts2:last-child{border-radius:0 0 26px 26px}.pv{flex:none;width:420px;height:86vh;border-radius:26px;border:1px solid var(--ln)}.pvh{padding-top:12px}}
 @media(max-width:699px){#dock .chip{width:56px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.sheet.modal{flex-direction:row;align-items:center;justify-content:center;background:#000b;padding:20px;transform:none}
+.sheet.modal .sh{flex:none;width:100%;max-width:420px;max-height:86%;border-radius:24px;border:1px solid var(--ln);padding:16px;background:#131318}
+.sheet.modal .shh{position:static;margin:0 0 6px;padding:0;border:0;background:none}
+.sheet.modal .sh>.acts2:last-child{position:static;margin:12px 0 0!important;padding:0;background:none}
+.sheet.modal.in .sh{animation:pop .22s}
 </style></head><body>
 <div id="app">
 <header id="top">
@@ -210,8 +215,8 @@ details.cd>summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none
  <button class="tb" data-tab="bot"><svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M2 13v2M22 13v2"/></svg><span>Бот</span></button>
  <button class="tb" data-tab="me"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Профиль</span></button>
 </nav>
-</div>
 <div id="layer"></div>
+</div>
 <script>
 "use strict";
 /* ============ Публичный веб-конфиг Firebase (не секрет). Мини-апп ТОЛЬКО ЧИТАЕТ sessions/{токен}; пишет в Firestore только бот. ============ */
@@ -508,7 +513,7 @@ function photoInfo(n){
  const d=sheet(`${head("📷 Фото экрана")}<p>Экран: <b>${esc(n.title)}</b><br>Сейчас: <b>${has?"фото загружено ✅":"фото нет"}</b></p>
  <p class="note">Из соображений безопасности мини-апп ничего не загружает. Фото отправляется боту в чате — откроется нужный экран.</p>
  ${onServer?"":'<div class="banner" style="margin:0 0 10px">Экран новый: сначала отправьте схему боту.</div>'}
- <div class="acts2"><button class="main" id="go" ${onServer&&masterName()?"":"disabled"}>Загрузить фото в чате</button><button class="ghost" data-x>Закрыть</button></div>`);
+ <div class="acts2"><button class="main" id="go" ${onServer&&masterName()?"":"disabled"}>Загрузить фото в чате</button><button class="ghost" data-x>Закрыть</button></div>`,{cls:"modal"});
  $("#go",d).onclick=()=>openTg(`https://t.me/${masterName()}?start=ph_${S.bot.id}_${n.id}`)}
 function openTemplates(){
  const cards=TPL.map(t=>{const ns=buildTpl(t),bt=ns.reduce((a,n)=>a+n.btns.length,0);
@@ -744,7 +749,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-act]");if(
   case"copylink":navigator.clipboard?.writeText("https://t.me/"+S.bot.username).then(()=>toast("Ссылка скопирована"),()=>toast("Не удалось скопировать",1));break;
   case"clrpost":S.post="";saveDraftSoon();renderBot();ui();break;
   case"undel":S.del=false;saveDraftSoon();renderBot();ui();break;
-  case"delbot":{const d=sheet(`${head("Удалить бота?")}<p>Будут удалены схема, фото и статистика @${esc(S.bot.username)}. Это действие нельзя отменить. Бот попросит подтверждение в чате.</p><div class="acts2"><button class="ghost" data-x>Нет</button><button class="main" style="background:var(--r);color:#fff" id="yes">Удалить</button></div>`);$("#yes",d).onclick=()=>{S.del=true;saveDraftSoon();closeSheet(d);renderBot();ui()};break}
+  case"delbot":{const d=sheet(`${head("Удалить бота?")}<p>Будут удалены схема, фото и статистика @${esc(S.bot.username)}. Это действие нельзя отменить. Бот попросит подтверждение в чате.</p><div class="acts2"><button class="ghost" data-x>Нет</button><button class="main" style="background:var(--r);color:#fff" id="yes">Удалить</button></div>`,{cls:"modal"});$("#yes",d).onclick=()=>{S.del=true;saveDraftSoon();closeSheet(d);renderBot();ui()};break}
   case"cleardrafts":Object.keys(localStorage).filter(k=>k.startsWith("bb3:")&&!["bb3:prefs","bb3:last","bb3:demo","bb3:master"].includes(k)).forEach(k=>lsDel(k));toast("Черновики очищены");break}});
 document.addEventListener("input",e=>{const t=e.target;
  if(t.id=="fb"){setVal("fallback",t.value.slice(0,300)||S.bot.fallback);$("#fbc").textContent=t.value.length+"/300"}
