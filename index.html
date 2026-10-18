@@ -43,7 +43,7 @@ button{cursor:pointer}
 #fab{position:fixed;right:14px;bottom:calc(var(--sb) + 78px);z-index:7;display:flex;align-items:center;gap:8px;border:0;border-radius:99px;background:var(--y);color:#000;padding:13px 18px;font-weight:700;box-shadow:0 8px 30px #e6ff3d44,0 2px 0 #fff6 inset;animation:pop .3s ease}
 #fab[hidden]{display:none}
 #fab b{background:#000;color:var(--y);border-radius:99px;min-width:22px;height:22px;display:grid;place-items:center;font-size:12px;padding:0 6px}
-#fab.mini span{display:none}#fab.mini{padding:13px 14px}
+#fab.mini{bottom:calc(var(--sb) + 160px)}
 @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
 /* cards */
 .cd{background:linear-gradient(180deg,#14141a,#101013);border:1px solid var(--ln);border-radius:20px;padding:14px}
@@ -131,18 +131,21 @@ input:focus,select:focus,textarea:focus{border-color:var(--y)}textarea{min-heigh
 .row span{display:flex;align-items:center;justify-content:space-between;height:26px;border:1px solid #fff6;border-radius:13px;padding:0 12px;font-size:12.5px;overflow:hidden;white-space:nowrap}
 .row.url span{border-color:var(--y);color:var(--y)}.row.bad span{border-color:var(--o);color:var(--o)}
 .out{position:absolute;right:-8px;top:9px;width:14px;height:14px;border-radius:50%;background:var(--l);border:2px solid #000;cursor:crosshair;touch-action:none}.row.url .out{display:none}
+.out::before{content:"";position:absolute;inset:-14px}.ph{padding:6px;margin:-6px}
 .nempty{color:#666;font-size:12px;padding:7px 14px}
-.tools,.zoom{position:absolute;top:10px;display:flex;gap:4px;background:#0c0c0fe6;border:1px solid var(--ln);border-radius:99px;padding:4px;backdrop-filter:blur(10px);z-index:4}
-.tools{left:10px;max-width:calc(100% - 100px);overflow-x:auto;scrollbar-width:none}.zoom{right:10px}
-.tools button,.zoom button{flex:none;width:34px;height:34px;border-radius:50%;border:0;background:none;font-size:16px}
-.tools button.on{background:var(--o);color:#000}.tools button:disabled{opacity:.3}
-.tools i{width:1px;background:var(--ln);margin:6px 2px;flex:none}
+.hist,.acts,.zoom{position:absolute;display:flex;gap:4px;background:#0c0c0fe6;border:1px solid var(--ln);border-radius:99px;padding:4px;backdrop-filter:blur(10px);z-index:4}
+.hist{left:10px;top:10px}.acts{right:10px;top:10px}.zoom{right:10px;top:62px;flex-direction:column;border-radius:20px}
+.hist button,.zoom button{flex:none;width:36px;height:36px;border-radius:50%;border:0;background:none;font-size:17px}
+.acts button{border:0;background:none;border-radius:99px;height:36px;padding:0 12px;font-size:12.5px;font-weight:600;white-space:nowrap}
+.acts #pvb{background:var(--y);color:#000}
+.zoom button.on{background:var(--o);color:#000}.hist button:disabled{opacity:.3}
+.zoom hr{width:20px;height:1px;border:0;background:var(--ln);margin:2px auto}
 #dock{position:absolute;left:10px;bottom:10px;display:flex;gap:8px;z-index:4;background:#0c0c0fe6;border:1px solid var(--ln);border-radius:20px;padding:8px;backdrop-filter:blur(10px)}
 .chip{touch-action:none;-webkit-user-select:none;user-select:none;cursor:grab;border:1px solid var(--ln);border-radius:12px;padding:7px 8px;width:62px;text-align:center;line-height:1.15;font-family:"Space Mono",monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.04em}
 .chip b{display:block;font-size:18px;font-weight:400}
 .chip[data-t=screen]{background:var(--l);color:#000;border-color:var(--l)}.chip[data-t=btn]{border-color:#fff}.chip[data-t=url]{border-color:var(--y);color:var(--y)}
 .gc{position:fixed;z-index:99;pointer-events:none;transform:translate(-50%,-50%) rotate(-4deg);opacity:.92}
-#v-flow.off .tools,#v-flow.off #dock,#v-flow.off .zoom{opacity:.3;pointer-events:none}
+#v-flow.off .hist,#v-flow.off .acts,#v-flow.off #dock,#v-flow.off .zoom{opacity:.3;pointer-events:none}
 .eflow{position:absolute;inset:0;display:grid;place-items:center;z-index:3;padding:20px;pointer-events:none}
 .eflow .cd{pointer-events:auto;max-width:360px;width:100%;background:#101013f2;backdrop-filter:blur(10px)}
 /* sheets */
@@ -161,6 +164,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--y)}textarea{min-heigh
 .br small{display:block;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;padding-left:2px}
 .br .bi{width:26px;height:26px;border-radius:50%;background:#ffffff14;display:grid;place-items:center;flex:none}
 .br button{flex:none;width:30px;height:30px;border-radius:10px;border:1px solid var(--ln);background:none}.br button:disabled{opacity:.25}
+details.cd>summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none;display:flex;justify-content:space-between}details.cd>summary::-webkit-details-marker{display:none}details.cd>summary::after{content:"▾";color:var(--mu)}details.cd[open]>summary::after{content:"▴"}details.cd[open]>summary{margin-bottom:10px}details.cd .cd{background:none;border:0;border-top:1px solid var(--ln);border-radius:0;padding:12px 0 0;margin-top:12px}
 .tplc{margin-bottom:10px}
 .codebox{font:11px "Space Mono",monospace;min-height:80px}
 .toast{position:fixed;left:50%;bottom:calc(var(--sb) + 150px);transform:translateX(-50%);background:var(--y);color:#000;border-radius:99px;padding:10px 16px;z-index:99;max-width:90vw;text-align:center;font-weight:600;animation:pop .2s}.toast.err{background:var(--o)}
@@ -191,8 +195,9 @@ input:focus,select:focus,textarea:focus{border-color:var(--y)}textarea{min-heigh
  <section class="view on" id="v-flow">
   <div id="cv"><div id="world"><svg id="svg"></svg><div id="nodes"></div></div></div>
   <div class="eflow" id="eflow" hidden></div>
-  <div class="tools"><button id="undo" title="Отменить">↶</button><button id="redo" title="Повторить">↷</button><i></i><button id="fit" title="Показать всё">⌖</button><button id="lay" title="Расставить автоматически">▤</button><button id="heat" title="Тепловая карта">🔥</button><i></i><button id="tpl" title="Шаблон">✦</button><button id="pvb" title="Предпросмотр">▶</button></div>
-  <div class="zoom"><button data-z="1">+</button><button data-z="-1">−</button></div>
+  <div class="hist"><button id="undo" title="Отменить">↶</button><button id="redo" title="Повторить">↷</button></div>
+  <div class="acts"><button id="tpl">✦ Шаблон</button><button id="pvb">▶ Просмотр</button></div>
+  <div class="zoom"><button data-z="1" title="Приблизить">+</button><button data-z="-1" title="Отдалить">−</button><hr><button id="fit" title="Показать всё">⌖</button><button id="lay" title="Расставить автоматически">▤</button><button id="heat" title="Тепловая карта">🔥</button></div>
   <div id="dock"><div class="chip" data-t="screen"><b>▭</b>экран</div><div class="chip" data-t="btn"><b>◉</b>кнопка</div><div class="chip" data-t="url"><b>↗</b>ссылка</div></div>
  </section>
  <section class="view scroll" id="v-stats"></section>
@@ -416,7 +421,7 @@ function drop(t,e,tapOnly){
  if(!S.flow)return toast("Сначала добавьте бота");
  if(tapOnly){const r=cv.getBoundingClientRect();
   if(t=="screen")return addScreenAt((r.width/2-S.view.x)/S.view.k-W/2,(r.height/2-S.view.y)/S.view.k-60);
-  if(!S.sel||!node(S.sel))return toast("Выберите экран или бросьте кнопку на него");const id=addBtn(S.sel,t);return id&&openBtn(S.sel,id)}
+  if(!S.sel||!node(S.sel))S.sel=S.flow.start;const id=addBtn(S.sel,t);return id&&openBtn(S.sel,id)}
  const el=document.elementFromPoint(e.clientX,e.clientY);if(!el||!el.closest("#cv"))return;const nd=el.closest(".node");
  if(t=="screen"){const p=w2(e);addScreenAt(p.x-W/2,p.y-17)}
  else if(!nd)toast("Бросьте кнопку на экран");else{S.sel=nd.dataset.id;const id=addBtn(nd.dataset.id,t);if(id)openBtn(nd.dataset.id,id)}}
@@ -681,8 +686,7 @@ function renderBot(){
   <div class="kb" style="margin-bottom:8px"><div class="bub" id="pp" style="${S.post.trim()?"":"display:none"}">${esc(S.post)}</div></div>
   <div class="note">Рассылка уйдёт после «Отправить боту» и подтверждения в чате. Фото и видео — командой /post в вашем боте.</div>
   ${S.post?'<button class="ghost" data-act="clrpost" style="margin-top:10px;width:100%">Очистить</button>':""}</div>
- <div class="cd"><h3>🔑 Токен и безопасность</h3><div class="note">Токены не передаются через мини-апп. Замена токена: чат с основным ботом → «Мои боты» → ваш бот → «Заменить токен».</div></div>
- <div class="cd" style="border-color:#ff5d6c55"><h3>Опасная зона</h3><button class="ghost danger" data-act="delbot" style="width:100%">Удалить бота</button></div></div>`}
+  <details class="cd"><summary>Дополнительно</summary><div class="note">Токены не передаются через мини-апп. Замена токена: чат с основным ботом → «Мои боты» → ваш бот → «Заменить токен».</div><button class="ghost danger" data-act="delbot" style="width:100%;margin-top:12px">Удалить бота</button></details></div>`}
 function postUi(){const p=$("#pp"),c=$("#pc");if(c)c.textContent=S.post.length+"/4000";if(p){p.textContent=S.post;p.style.display=S.post.trim()?"":"none"}}
 
 /* ============ Профиль ============ */
@@ -700,7 +704,7 @@ function renderMe(){
  <div class="cd"><h3>Мои боты</h3>${bs.map(b=>{const d=b.stats.days.slice(-14),a=avg(d.slice(-7),"dau"),p=avg(d.slice(0,7),"dau");return`<div class="bot-row ${b.id==S.bot?.id?"cur":""}" data-act="pickbot" data-id="${b.id}"><span class="av">${esc((b.username||"?")[0].toUpperCase())}</span><span class="bn">@${esc(b.username)}<small>${nf(b.subs)} подп. · ${b.flow.nodes.length}/${MAXN} экранов</small></span>${spark(d.map(r=>r.dau),C.l,70,26)}${chip(delta(a,p))}</div>`}).join("")||'<div class="empty">Ботов пока нет</div>'}
   <button class="ghost" data-act="addbot" style="margin-top:10px;width:100%">＋ Добавить бота через чат</button></div>
  ${S.sess.platform?`<div class="cd"><h3>🛡 Платформа</h3><div class="row2" style="gap:8px">${[["Пользователи",S.sess.platform.users],["Боты",S.sess.platform.bots],["Запущено",S.sess.platform.running],["Подписки",S.sess.platform.subs]].map(x=>`<div class="pit"><span class="mu">${x[0]}</span><b>${nf(x[1])}</b></div>`).join("")}</div></div>`:""}
- <div class="cd"><h3>Сессия</h3><div class="line"><div>Статус<small>${status}</small></div><span class="badge ${S.expired||S.nosess?"":"y"}">${S.nosess?"off":S.expired?"off":"live"}</span></div>
+ <details class="cd"><summary>Сессия, интерфейс и справка</summary><div class="cd"><h3>Сессия</h3><div class="line"><div>Статус<small>${status}</small></div><span class="badge ${S.expired||S.nosess?"":"y"}">${S.nosess?"off":S.expired?"off":"live"}</span></div>
   <div class="line"><div>Осталось<small>после — откройте конструктор в боте заново</small></div><b id="left">${left==null?"—":fmtLeft(left)}</b></div></div>
  <div class="cd"><h3>Настройки интерфейса <small class="mu">только на этом устройстве</small></h3>
   ${[["haptic","Вибро-отклик","короткие тактильные сигналы"],["snap","Привязка к сетке","экраны выравниваются по 10 px"],["anim","Анимации","графики, переходы, счётчики"]].map(x=>`<div class="line"><div>${x[1]}<small>${x[2]}</small></div><label class="sw" style="margin:0"><input type="checkbox" data-pref="${x[0]}" ${PREF[x[0]]?"checked":""}><i></i></label></div>`).join("")}
@@ -709,7 +713,7 @@ function renderMe(){
   <div class="step"><b>1</b><div>Вы собираете схему и настройки здесь — мини-апп <b>только читает</b> данные и ничего не пишет на сервер.</div></div>
   <div class="step"><b>2</b><div>Кнопка «Отправить боту» передаёт изменения боту в чате; бот проверяет и применяет их.</div></div>
   <div class="step"><b>3</b><div>Фото экранов загружаются только через бота (значок 📷 на экране).</div></div></div>
- <div class="mu" style="text-align:center;padding:6px">Bot Builder ${VERSION}</div></div>`}
+ </details><div class="mu" style="text-align:center;padding:6px">Bot Builder ${VERSION}</div></div>`}
 const fmtLeft=ms=>{if(ms<=0)return"истекла";const s=Math.floor(ms/1000),m=Math.floor(s/60);return m>=60?Math.floor(m/60)+" ч "+m%60+" мин":m+":"+String(s%60).padStart(2,"0")}
 
 /* ============ Шапка, вкладки, UI ============ */
@@ -754,13 +758,13 @@ $("#lay").onclick=()=>{if(!S.flow)return;mutate(()=>layout(S.flow.nodes,S.flow.s
 $("#heat").onclick=()=>{if(!S.flow)return;S.heat=!S.heat;if(S.heat&&!Object.keys(S.heatMap).length)toast("Пока нет данных о просмотрах");renderFlow()};
 $("#tpl").onclick=()=>S.flow&&openTemplates();
 $("#pvb").onclick=()=>S.flow&&openPreview(S.flow.start);
-$$(".zoom button").forEach(b=>b.onclick=()=>zoomTo(S.view.k*(b.dataset.z=="1"?1.2:1/1.2)));
+$$(".zoom button[data-z]").forEach(b=>b.onclick=()=>zoomTo(S.view.k*(b.dataset.z=="1"?1.2:1/1.2)));
 $("#fs").onclick=()=>{try{if(tg){tg.isFullscreen?tg.exitFullscreen():tg.requestFullscreen()}else document.documentElement.requestFullscreen?.()}catch{}};
 addEventListener("keydown",e=>{if(stack.length||S.tab!="flow"||/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||""))return;
  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()=="z"){e.preventDefault();e.shiftKey?redo():undo()}else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()=="y"){e.preventDefault();redo()}});
 let rz;addEventListener("resize",()=>{applyView();clearTimeout(rz);rz=setTimeout(()=>{if(S.tab=="stats")drawCharts()},150)});
 setInterval(()=>{const c=$("#left");if(c&&S.sess.exp)c.textContent=fmtLeft(new Date(S.sess.exp)-Date.now());ui()},1000);
 setInterval(refresh,30000);document.addEventListener("visibilitychange",()=>{if(!document.hidden)refresh()});
-if(tg){tg.ready();tg.expand();tg.disableVerticalSwipes?.();tg.setHeaderColor?.("#070708");tg.setBackgroundColor?.("#070708");try{if(tg.isVersionAtLeast?.("8.0")&&!tg.isFullscreen)tg.requestFullscreen()}catch{}}
+if(tg){tg.ready();tg.expand();tg.disableVerticalSwipes?.();tg.setHeaderColor?.("#070708");tg.setBackgroundColor?.("#070708");}
 applyPrefs();boot();
 </script></body></html>
