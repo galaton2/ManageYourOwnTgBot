@@ -124,7 +124,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--y)}textarea{min-heigh
 .start .hd{background:var(--y)}.hd span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hv{font:700 10px "Space Mono",monospace;font-style:normal;background:#000;color:var(--o);border-radius:99px;padding:2px 7px}
 .ph{font-style:normal;font-size:13px;opacity:.4;cursor:pointer}.ph.has{opacity:1}
-.in{position:absolute;left:-8px;top:10px;width:14px;height:14px;border-radius:50%;background:#000;border:2px solid var(--l)}.start .in{display:none}
+.node .in{position:absolute;left:-8px;top:10px;width:14px;height:14px;border-radius:50%;background:#000;border:2px solid var(--l)}.start .in{display:none}
 .tx{height:46px;overflow:hidden;padding:8px 12px;color:#bdbdc6;font-size:12.5px;cursor:pointer;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
 .rows{min-height:32px;padding-bottom:10px}
 .row{height:32px;padding:3px 10px;position:relative;cursor:pointer}
@@ -151,7 +151,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--y)}textarea{min-heigh
 /* sheets */
 #layer{position:absolute;inset:0;pointer-events:none;z-index:50}
 .sheet{position:absolute;inset:0;pointer-events:auto;display:flex;flex-direction:column;background:var(--bg);opacity:0;transform:translateY(18px);transition:opacity .2s,transform .24s cubic-bezier(.2,.9,.3,1)}
-.sheet.in{opacity:1;transform:none}
+.sheet.shown{opacity:1;transform:none}
 .sh{flex:1;min-height:0;width:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 16px calc(var(--sb) + 28px);background:radial-gradient(700px 400px at 100% -10%,#a9a8f81a,transparent 60%),var(--bg)}
 .sh>.acts2:last-child{position:sticky;bottom:0;z-index:3;margin:14px -16px 0!important;padding:14px 16px calc(var(--sb) + 12px);background:linear-gradient(transparent,#070708 30%)}
 .grab{display:none}
@@ -186,7 +186,8 @@ details.cd>summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none
 .sheet.modal .sh{flex:none;width:100%;max-width:420px;max-height:86%;border-radius:24px;border:1px solid var(--ln);padding:16px;background:#131318}
 .sheet.modal .shh{position:static;margin:0 0 6px;padding:0;border:0;background:none}
 .sheet.modal .sh>.acts2:last-child{position:static;margin:12px 0 0!important;padding:0;background:none}
-.sheet.modal.in .sh{animation:pop .22s}
+.sheet.modal.shown .sh{animation:pop .22s}
+.sheet:not(.modal) .sh{display:flex;flex-direction:column}.sheet:not(.modal) .sh>*{flex:none}.sheet:not(.modal) .sh>.acts2:last-child{margin-top:auto!important}
 </style></head><body>
 <div id="app">
 <header id="top">
@@ -441,8 +442,8 @@ function sheet(inner,{cls="",full=false,raw=false}={}){const d=document.createEl
  d.innerHTML=raw?inner:`<div class="sh ${full?"full":""}"><i class="grab"></i>${inner}</div>`;layerEl.append(d);stack.push(d);bb();
  /* защита от «фантомного» клика сразу после открытия: он закрывал лист и мешал вводу */
  d.addEventListener("click",e=>{if(e.target===d){if(Date.now()-d._t<450)return;return closeSheet(d)}if(e.target.closest("[data-x]"))closeSheet(d)});
- requestAnimationFrame(()=>d.classList.add("in"));return d}
-function closeSheet(d){const i=stack.indexOf(d);if(i<0)return;stack.splice(i,1);try{d._close?.()}catch(e){console.error(e)}d.classList.remove("in");setTimeout(()=>d.remove(),200);bb()}
+ requestAnimationFrame(()=>d.classList.add("shown"));return d}
+function closeSheet(d){const i=stack.indexOf(d);if(i<0)return;stack.splice(i,1);try{d._close?.()}catch(e){console.error(e)}d.classList.remove("shown");setTimeout(()=>d.remove(),200);bb()}
 try{tg?.BackButton?.onClick(()=>stack.length&&closeSheet(stack[stack.length-1]))}catch{}
 const head=(t)=>`<div class="shh"><button class="x" data-x aria-label="Назад">‹</button><h3>${t}</h3></div>`;
 layerEl.addEventListener("focusin",e=>{const t=e.target;if(!/INPUT|TEXTAREA|SELECT/.test(t.tagName))return;setTimeout(()=>{try{t.scrollIntoView({block:"center",behavior:"smooth"})}catch{}},320)});
