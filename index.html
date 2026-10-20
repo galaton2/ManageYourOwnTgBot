@@ -273,7 +273,7 @@ details.cd>summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none
 "use strict";
 /* ============ Публичный веб-конфиг Firebase (не секрет). Мини-апп ТОЛЬКО ЧИТАЕТ sessions/{токен}; пишет в Firestore только бот. ============ */
 const firebaseConfig={apiKey:"AIzaSyANZINM6R29i3erpEdzs60oHZsDPBXVIOI",authDomain:"manageyourbot.firebaseapp.com",projectId:"manageyourbot",storageBucket:"manageyourbot.firebasestorage.app",messagingSenderId:"919379398898",appId:"1:919379398898:web:55798b0893c24f2309c06b",measurementId:"G-ZRQF3WRGVY"};
-const VERSION="2.5";
+const VERSION="2.6";
 const tg=window.Telegram?.WebApp;
 const KB=new URLSearchParams(location.search).get("k")=="1";
 const IC={undo:'<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>',redo:'<path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/>',fit:'<path d="M4 9V5a1 1 0 0 1 1-1h4M15 4h4a1 1 0 0 1 1 1v4M20 15v4a1 1 0 0 1-1 1h-4M9 20H5a1 1 0 0 1-1-1v-4"/>',lay:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',fire:'<path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 .3 1.2 1 2 2 2 0-3-1-5 1-8z"/>',cam:'<path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/>',trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12M9 7V4h6v3"/>',edit:'<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',up:'<path d="m6 15 6-6 6 6"/>',dn:'<path d="m6 9 6 6 6-6"/>',link:'<path d="M8 16 16 8M9 8h7v7"/>',screen:'<rect x="4" y="5" width="16" height="14" rx="3"/>',btn:'<rect x="4" y="8" width="16" height="8" rx="4"/>',plus:'<path d="M12 5v14M5 12h14"/>',play:'<path d="M8 5l11 7-11 7z"/>',copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>',bot:'<rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01"/>',plug:'<path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0zM12 17v4"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',chart:'<path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>',box:'<path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',check:'<path d="m5 12.5 4.5 4.5L19 7"/>',sel:'<path d="M5 9V6a1 1 0 0 1 1-1h3M15 5h3a1 1 0 0 1 1 1v3M19 15v3a1 1 0 0 1-1 1h-3M9 19H6a1 1 0 0 1-1-1v-3"/><path d="m11 11 2 7 1.5-3 3-1.5z"/>',more:'<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>',vars:'<path d="M8 4c-2 0-3 1-3 3v2c0 1-1 3-2 3 1 0 2 2 2 3v2c0 2 1 3 3 3M16 4c2 0 3 1 3 3v2c0 1 1 3 2 3-1 0-2 2-2 3v2c0 2-1 3-3 3"/>',book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/>',msg:'<path d="M4 5h16v11H9l-5 4z"/>',pc:'<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>'};
@@ -928,7 +928,7 @@ function dupGroup(){const src=S.flow.nodes.filter(n=>S.ms.has(n.id)&&n.id!=S.flo
  cp.forEach(c=>c.btns.forEach(b=>{if(b.to&&map[b.to])b.to=map[b.to]}));
  mutate(()=>S.flow.nodes.push(...cp));S.ms=new Set(cp.map(c=>c.id));markSel();toast("Скопировано экранов: "+cp.length)}
 $("#gbar").onclick=e=>{const b=e.target.closest("[data-g]");if(!b)return;const k=b.dataset.g;if(k=="x"){S.ms.clear();markSel()}else if(k=="del")delGroup();else if(k=="dup")dupGroup()};
-$("#sel").onclick=()=>{S.selMode=!S.selMode;gbarUi();toast(S.selMode?"Выделение включено: обведите экраны рамкой":"Выделение выключено")};
+{const sb=$("#sel");if(sb)sb.onclick=()=>{S.selMode=!S.selMode;gbarUi();toast(S.selMode?"Выделение включено: обведите экраны рамкой":"Выделение выключено")}}
 addEventListener("keydown",e=>{if(stack.length||S.tab!="flow"||!S.flow||/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||""))return;
  if((e.key=="Delete"||e.key=="Backspace")&&S.ms.size>1){e.preventDefault();delGroup(true)}
  else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()=="a"){e.preventDefault();S.ms=new Set(S.flow.nodes.map(n=>n.id));markSel()}
@@ -1028,9 +1028,9 @@ function openTour(manual){
  addEventListener("keydown",key);
  d._close=()=>{lsSet("bb3:tour",TOUR_V);removeEventListener("keydown",key)};
  to(0)}
-$("#more").onclick=()=>{hap();openMore()};
+{const mb=$("#more");if(mb)mb.onclick=()=>{hap();openMore()}}
 
-applyPrefs();boot();if(lsGet("bb3:tour")!=TOUR_V)setTimeout(()=>openTour(),700);
+applyPrefs();boot().catch(e=>{console.error(e);S.expired=true;S.sess={bots:[]};renderTop();renderTab();ui()});if(lsGet("bb3:tour")!=TOUR_V)setTimeout(()=>openTour(),700);
 
 /* ============ Рефералы ============ */
 const BOT_URL="https://t.me/ManageYourOwnBot";
@@ -1061,6 +1061,3 @@ function openPlans(){
  const d=sheet(`${head("Тарифы")}<p class="note">Оплата звёздами Telegram ⭐. Выберите тариф — откроется окно оплаты.</p>${PLANS.map(p=>`<div class="cd"><div style="display:flex;justify-content:space-between;gap:8px"><b style="font-size:16px">${esc(p.n)}</b><span class="badge y">⭐ ${p.s}</span></div><div class="note">${esc(p.d)}</div><button class="main" data-pay="${p.k}" style="width:100%;margin-top:10px">Оплатить ⭐ ${p.s}</button></div>`).join("")}<div class="acts2"><button class="ghost" data-x>Закрыть</button></div>`);
  d.addEventListener("click",e=>{const b=e.target.closest("[data-pay]");if(b)payPlan(PLANS.find(x=>x.k==b.dataset.pay),b)})}
 </script></body></html>
-
-
-
