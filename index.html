@@ -246,14 +246,14 @@ details.cd>summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none
  <button class="botbtn" id="botbtn"><span class="av" id="bav">?</span><span class="bn" id="bname">загрузка…</span><i class="dot" id="bdot"></i><b class="car">▾</b></button>
  <button class="pillerr" id="err" hidden></button>
 </header>
-<div id="exp" class="banner" hidden></div>
+
 <div id="views">
  <section class="view on" id="v-flow">
   <div id="cv"><div id="world"><svg id="svg"></svg><div id="nodes"></div></div></div>
   <div class="eflow" id="eflow" hidden></div>
   <div id="marq"></div>
   <div id="gbar" hidden><b></b><button data-g="dup">Копия</button><button data-g="del" class="dn">Удалить</button><button data-g="x">✕</button></div>
-  <div class="tools" id="tools"><button id="undo" title="Отменить" data-ic="undo"></button><button id="redo" title="Повторить" data-ic="redo"></button><hr><button data-z="1" title="Приблизить">+</button><button data-z="-1" title="Отдалить">−</button><button id="fit" title="Показать всё" data-ic="fit"></button><button id="lay" title="Расставить автоматически" data-ic="lay"></button><button id="heat" title="Тепловая карта" data-ic="fire"></button><hr><button id="pvb" class="pri" title="Просмотр" data-ic="play"></button><button id="more" title="Ещё: шаблоны, выделение, справка" data-ic="more"></button></div>
+  <div class="tools" id="tools"><button id="undo" title="Отменить действие" data-ic="undo"></button><button id="redo" title="Повторить" data-ic="redo"></button><hr><button data-z="1" title="Приблизить">+</button><button data-z="-1" title="Отдалить">−</button><button id="fit" title="Показать всё" data-ic="fit"></button><button id="lay" title="Расставить автоматически" data-ic="lay"></button><button id="heat" title="Тепловая карта" data-ic="fire"></button><hr><button id="pvb" class="pri" title="Просмотр" data-ic="play"></button><button id="more" title="Шаблоны и дополнительные действия" data-ic="more"></button></div>
   <div id="dock"><div class="chip" data-t="screen"><b data-ic="screen"></b>экран</div><div class="chip" data-t="btn"><b data-ic="btn"></b>кнопка</div><div class="chip" data-t="url"><b data-ic="link"></b>ссылка</div></div>
  </section>
  <section class="view scroll" id="v-stats"></section>
@@ -455,8 +455,8 @@ function wires(tmp){let h=DEFS;
  svg.innerHTML=h}
 /* пустое состояние: нет ботов / нет сессии */
 function emptyCard(){
- const t=S.nosess?{i:ic("plug"),h:"Откройте через бота",p:"Не удалось подключить ваши данные. Закройте окно, откройте основного бота и нажмите «Открыть конструктор».",b:"Открыть конструктор"}
- :S.expired?{i:ic("clock"),h:"Нет связи с сервером",p:"Не удалось связаться с сервером. Проверьте интернет или попробуйте позже. Если не помогло, откройте конструктор из основного бота заново.",b:"Открыть конструктор"}
+ const t=S.nosess?{i:ic("plug"),h:"Откройте конструктор через Telegram",p:"Не получилось открыть конструктор. Вернитесь в Telegram и нажмите «Открыть конструктор» в основном боте.",b:"Открыть конструктор"}
+ :S.expired?{i:ic("clock"),h:"Не удалось подключиться",p:"Не удалось подключиться. Проверьте интернет или попробуйте позже. Можно также заново открыть конструктор в основном боте.",b:"Открыть конструктор"}
  :{i:ic("bot"),h:"Пока нет ботов",p:"Это займёт 1 минуту:\n1. В Telegram откройте @BotFather и отправьте /newbot\n2. Скопируйте токен и пришлите его в @ManageYourOwnBot\n3. Нажмите «Открыть конструктор» — бот появится здесь, а запускать его можно одной кнопкой",b:"Добавить через бота"};
  return`<div class="cd hero"><div class="big">${t.i}</div><h3>${t.h}</h3><div class="note">${esc(t.p)}</div><button class="main" data-act="addbot">${t.b}</button></div>`}
 function emptyHtml(){return`<div class="wrap">${emptyCard()}</div>`}
@@ -598,7 +598,7 @@ function openBtn(nid,bid,after){
   mutate(()=>{b.label=label;b.kind=kind;if(kind=="url"){b.value=val;delete b.to}else{if(to=="__new"){const id=uid();S.flow.nodes.push({id,title:"Экран",text:"Текст экрана",x:snapG(n.x+W+70),y:snapG(n.y),cols:1,btns:[]});to=id}b.to=to;delete b.value}});after?.()};}
 function whyBad(b){return b.kind=="url"?(!b.value||b.value=="https://"?"не указана ссылка":"ссылка должна начинаться с https:// или tg://"):"не выбран экран, куда ведёт кнопка"}
 function openErrors(){const items=[];(S.flow?.nodes||[]).forEach(n=>n.btns.forEach(b=>{if(bad(b))items.push({n,b})}));
- const d=sheet(`${head("Ошибки в кнопках")}<p class="note">Такие кнопки подсвечены оранжевым. Нажмите на пункт — откроется кнопка, чтобы её исправить.</p><div class="bl">${items.map((x,i)=>`<div class="br bad" data-i="${i}" style="cursor:pointer"><span class="bi">${ic(x.b.kind=="url"?"link":"btn")}</span><div class="bm"><b>${esc(x.b.label)}</b><small style="white-space:normal">Экран «${esc(x.n.title)}» · ${whyBad(x.b)}</small></div><span class="mu">›</span></div>`).join("")||'<div class="empty">Ошибок нет</div>'}</div>`);
+ const d=sheet(`${head("Проверка кнопок")}<p class="note">Такие кнопки подсвечены оранжевым. Нажмите на пункт — откроется кнопка, чтобы её исправить.</p><div class="bl">${items.map((x,i)=>`<div class="br bad" data-i="${i}" style="cursor:pointer"><span class="bi">${ic(x.b.kind=="url"?"link":"btn")}</span><div class="bm"><b>${esc(x.b.label)}</b><small style="white-space:normal">Экран «${esc(x.n.title)}» · ${whyBad(x.b)}</small></div><span class="mu">›</span></div>`).join("")||'<div class="empty">Все кнопки работают</div>'}</div>`);
  d.addEventListener("click",e=>{const r=e.target.closest(".br");if(!r)return;const x=items[+r.dataset.i];if(!x)return;closeSheet(d);S.sel=x.n.id;markSel();setTimeout(()=>openBtn(x.n.id,x.b.id),230)})}
 function photoInfo(n){
  const has=hasPhoto(n),onServer=S.bot?.flow.nodes.some(x=>x.id==n.id);
@@ -629,7 +629,7 @@ function openBots(){
 function openReview(){
  const p=pendingList(),e=errCount();
  const d=sheet(`${head("Отправить боту")}<div class="cd" style="margin-bottom:10px">${p.map(x=>`<div class="line"><span>${esc(x)}</span><span class="dl up">${ic("check")}</span></div>`).join("")||'<div class="empty">Изменений нет</div>'}</div>
- ${e?`<div class="banner" style="margin:0 0 10px">Исправьте ошибки в кнопках: ${e}</div>`:""}
+ ${e?`<div class="banner" style="margin:0 0 10px">Проверьте кнопки: ${e}</div>`:""}
  <p class="note">Нажмите «Отправить»: код скопируется и откроется чат с ботом. Вставьте код и отправьте — бот применит изменения${S.post.trim()||S.del?" (рассылку и удаление попросит подтвердить)":""}.</p>
  <div class="acts2"><button class="ghost danger" id="rs">Сбросить</button><button class="main" id="sn" ${e||!p.length?"disabled":""}>Отправить</button></div>`);
  $("#sn",d).onclick=()=>{closeSheet(d);sendNow()};
@@ -640,7 +640,7 @@ async function buildCode(){
  if(S.del)c.del=true;else{if(flowDirty())c.nodes=S.flow.nodes.map(n=>({...n,type:n.id==S.flow.start?"start":"screen"}));if(Object.keys(S.set).length)c.set=S.set;if(S.post.trim())c.post=S.post.trim()}
  return enc(c)}
 async function sendNow(){
- if(!S.bot)return;if(errCount()){go("flow");return toast("Исправьте ошибки в кнопках: "+errCount(),1)}
+ if(!S.bot)return;if(errCount()){go("flow");return toast("Проверьте кнопки: "+errCount(),1)}
  if(!pendingList().length)return toast("Нечего отправлять");
  deliver(await buildCode())}
 async function deliver(code){
@@ -787,36 +787,30 @@ function renderMe(){
   <button class="ghost" data-act="addbot" style="margin-top:10px;width:100%">Добавить бота</button></div>
  <div class="cd" style="border-color:var(--y)"><div class="bigcard"><b>${ic("fire")}</b><div><b style="font-size:16px">Тариф: ${esc(planName)}</b><div class="note">Больше ботов и возможностей. Оплата звёздами Telegram ⭐</div></div></div><button class="main bigbtn" data-act="plans">Выбрать тариф ⭐</button></div>
  <div class="cd"><div class="bigcard"><b>${ic("link")}</b><div><b style="font-size:16px">Пригласить друзей</b><div class="note">Отправьте ссылку другу — за каждого друга вы получите бонус.</div></div></div>${refN>0?`<div class="invn">Вы пригласили друзей: <b>${nf(refN)}</b>${refB>0?` · бонус: <b>${nf(refB)}</b>`:""}</div>`:""}<div class="acts2"><button class="main bigbtn" data-act="refshare">Поделиться</button><button class="ghost bigbtn" data-act="refcopy">Копировать</button></div></div>
- ${S.sess.platform?`<div class="cd"><h3>Платформа</h3><div class="row2" style="gap:8px">${[["Пользователи",S.sess.platform.users],["Боты",S.sess.platform.bots],["Запущено",S.sess.platform.running],["Подписки",S.sess.platform.subs]].map(x=>`<div class="pit"><span class="mu">${x[0]}</span><b>${nf(x[1])}</b></div>`).join("")}</div></div>`:""}
+ 
  <button class="cd menurow" data-act="settings">Настройки и справка <span>›</span></button></div>`}
 function openSettings(){
- const st=S.nosess?"не подключено":S.expired?"нет связи":"всё в порядке";
+ 
  sheet(`${head("Настройки и справка")}
  <div class="cd"><h3>Интерфейс <small class="mu">только на этом устройстве</small></h3>${[["haptic","Вибро-отклик","короткие тактильные сигналы"],["snap","Привязка к сетке","экраны выравниваются при перемещении"],["anim","Анимации","плавные графики и переходы"]].map(x=>`<div class="line"><div>${x[1]}<small>${x[2]}</small></div><label class="sw" style="margin:0"><input type="checkbox" data-pref="${x[0]}" ${PREF[x[0]]?"checked":""}><i></i></label></div>`).join("")}</div>
  <div class="cd"><h3>Справка</h3>
   <div class="step"><b>1</b><div>Схему и настройки вы собираете здесь. Запуск и остановка бота работают сразу.</div></div>
   <div class="step"><b>2</b><div>Остальные изменения применяются кнопкой «Отправить боту»: откроется чат с ботом, отправьте сообщение — бот всё применит.</div></div>
   <div class="step"><b>3</b><div>Фото для экранов добавляются в чате с ботом (значок камеры на экране).</div></div>
-  <button class="main bigbtn" data-act="tour">Открыть обучение</button></div>
- <div class="cd"><h3>Данные</h3><div class="line"><div>Связь с сервером<small>${st}</small></div></div><button class="ghost" data-act="cleardrafts" style="width:100%;margin-top:6px">Очистить неотправленные черновики</button></div>
- <div class="mu" style="text-align:center;padding:6px">Bot Builder ${VERSION}</div>
- <div class="acts2"><button class="ghost" data-x>Закрыть</button></div>`)}
-const fmtLeft=ms=>{if(ms<=0)return"истекла";const s=Math.floor(ms/1000),m=Math.floor(s/60);return m>=60?Math.floor(m/60)+" ч "+m%60+" мин":m+":"+String(s%60).padStart(2,"0")}
+  <button class="main bigbtn" data-act="tour">Открыть обучение</button></div><div class="acts2"><button class="ghost" data-x>Закрыть</button></div>`)}
 
 /* ============ Шапка, вкладки, UI ============ */
 function renderTop(){const b=S.bot;$("#bav").textContent=b?(b.username||"?")[0].toUpperCase():"+";
- $("#bname").textContent=b?"@"+b.username:(S.expired?"нет связи":S.nosess?"откройте через бота":"добавить бота");$("#bdot").className="dot "+(b?.running?"on":"")}
+ $("#bname").textContent=b?"@"+b.username:(S.expired?"проверьте подключение":S.nosess?"откройте в Telegram":"добавить бота");$("#bdot").className="dot "+(b?.running?"on":"")}
 function renderTab(){
  $$(".view").forEach(v=>v.classList.toggle("on",v.id=="v-"+S.tab));$$(".tb").forEach(t=>t.classList.toggle("on",t.dataset.tab==S.tab));
  if(S.tab=="flow"){renderFlow();if(!S.fitted)requestAnimationFrame(fit)}else if(S.tab=="stats")renderStats();else if(S.tab=="bot")renderBot();else renderMe()}
 function go(tab){S.tab=tab;hap();renderTab();ui()}
 function ui(){
  const p=pendingList(),f=$("#fab");f.hidden=!p.length;f.classList.toggle("mini",S.tab=="flow");$("b",f).textContent=p.length;
- const e=errCount();$("#err").hidden=!e;$("#err").textContent="ошибок: "+e;
+ const e=errCount();$("#err").hidden=!e;$("#err").textContent="Проверить кнопки · "+e;
  const cc=!!p.length;if(S.cc!==cc){S.cc=cc;try{cc?tg?.enableClosingConfirmation?.():tg?.disableClosingConfirmation?.()}catch{}}
- const left=S.sess.exp?new Date(S.sess.exp)-Date.now():null,ex=$("#exp");
- if(S.expired||(left!=null&&left<=0)){ex.hidden=false;ex.textContent="Данные устарели. Откройте конструктор из основного бота заново. Изменения всё ещё можно отправить."}
- else if(left!=null&&left<5*60000){ex.hidden=false;ex.textContent="Данные скоро устареют (через "+fmtLeft(left)+"). Отправьте изменения или откройте конструктор из бота заново."}else ex.hidden=true}
+  const ex=$("#exp");if(ex)ex.hidden=true}
 
 document.addEventListener("click",e=>{const a=e.target.closest("[data-act]");if(!a)return;const v=a.dataset.v;
  switch(a.dataset.act){
@@ -888,7 +882,7 @@ function openVars(){const m=varMap();
  d.addEventListener("click",e=>{const r=e.target.closest("[data-c]");if(!r)return;const t=r.dataset.c;navigator.clipboard?.writeText(t).then(()=>toast("Скопировано: "+t),()=>toast("Не удалось скопировать",1))})}
 
 /* ---- Запуск и остановка бота через Firebase ---- */
-const NOCONN="Не удалось связаться с сервером. Проверьте интернет или попробуйте позже.";
+const NOCONN="Не удалось подключиться. Проверьте интернет или попробуйте позже.";
 const START_HELP="Бот не запустился. Что проверить:\n1. Токен бота действующий: откройте @BotFather → /mybots → ваш бот → API Token.\n2. Если токен меняли, отправьте новый токен основному боту в чате.\n3. Подождите минуту и нажмите «Запустить бота» ещё раз.";
 function rerender(){renderTop();if(S.tab=="bot")renderBot();else if(S.tab=="me")renderMe();ui()}
 async function fsCmd(id,cmd){
@@ -1016,7 +1010,7 @@ function openTour(manual){
   [ART[3],"Тексты и переменные","Нажмите на экран, чтобы изменить текст: жирный, курсив, ссылки. Кнопка { } вставляет переменную — например «Привет, {first_name}!», и бот назовёт человека по имени."],
   [ART[4],"Выделение группой","Зажмите Shift и обведите экраны рамкой. На телефоне — долгое нажатие на пустое место или кнопка выделения справа. Выбранные экраны двигаются вместе, их можно копировать и удалять."],
   [ART[5],"Предпросмотр и шаблоны","«Просмотр» показывает, как бот ответит в Telegram, — кнопки можно нажимать. «Шаблон» подгружает готовую схему целиком, останется заменить тексты."],
-  [ART[6],"Запуск и отправка","Во вкладке «Бот» одной кнопкой запускайте и останавливайте бота — команда уходит через Firebase. Изменения схемы применяются кнопкой «Отправить боту». Фото экранов загружаются через бота."],
+  [ART[6],"Запуск и отправка","Во вкладке «Бот» одной кнопкой запускайте и останавливайте бота. Изменения схемы применяются кнопкой «Отправить боту». Фото экранов загружаются через бота."],
   [ART[7],"Удобнее на ПК","Откройте конструктор в Telegram Desktop: большой холст и быстрые клавиши. Это обучение всегда можно открыть снова в «Профиле».",`<div class="hk"><span><i class="kbd">Shift</i> + рамка — выбрать группу</span><span><i class="kbd">Колесо</i> — масштаб</span><span><i class="kbd">Ctrl</i> + <i class="kbd">Z</i> / <i class="kbd">Y</i> — отмена и повтор</span><span><i class="kbd">Del</i> — удалить выбранные</span></div>${!desk&&L?`<button class="ghost" data-copy="${esc(L)}" style="width:100%">Скопировать ссылку для ПК</button>`:""}`]
  ],n=SL.length;
  const d=sheet(`<div class="tv" id="tv"><div class="tt" id="tt">${SL.map(s=>`<div class="ts"><div class="art">${s[0]}</div><h3>${s[1]}</h3><p>${s[2]}</p>${s[3]||""}</div>`).join("")}</div></div><div class="td" id="td">${SL.map((_,i)=>`<i data-i="${i}"></i>`).join("")}</div><div class="tf"><button class="ghost" id="tp">Пропустить</button><button class="main" id="tn">Далее</button></div>`,{cls:"modal tourm"});
@@ -1067,3 +1061,6 @@ function openPlans(){
  const d=sheet(`${head("Тарифы")}<p class="note">Оплата звёздами Telegram ⭐. Выберите тариф — откроется окно оплаты.</p>${PLANS.map(p=>`<div class="cd"><div style="display:flex;justify-content:space-between;gap:8px"><b style="font-size:16px">${esc(p.n)}</b><span class="badge y">⭐ ${p.s}</span></div><div class="note">${esc(p.d)}</div><button class="main" data-pay="${p.k}" style="width:100%;margin-top:10px">Оплатить ⭐ ${p.s}</button></div>`).join("")}<div class="acts2"><button class="ghost" data-x>Закрыть</button></div>`);
  d.addEventListener("click",e=>{const b=e.target.closest("[data-pay]");if(b)payPlan(PLANS.find(x=>x.k==b.dataset.pay),b)})}
 </script></body></html>
+
+
+
