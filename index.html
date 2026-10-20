@@ -260,7 +260,7 @@ details.cd>summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none
  <section class="view scroll" id="v-bot"></section>
  <section class="view scroll" id="v-me"></section>
 </div>
-<button id="fab" hidden><span>Отправить боту</span><b>0</b></button>
+<button id="fab" hidden><span>Применить изменения</span><b>0</b></button>
 <nav id="bar">
  <button class="tb on" data-tab="flow"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="7" height="6" rx="2"/><rect x="14" y="14" width="7" height="6" rx="2"/><path d="M10 7h2a3 3 0 0 1 3 3v4"/></svg><span>Схема</span></button>
  <button class="tb" data-tab="stats"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg><span>Статистика</span></button>
@@ -271,11 +271,10 @@ details.cd>summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none
 </div>
 <script>
 "use strict";
-/* ============ Публичный веб-конфиг Firebase (не секрет). Мини-апп ТОЛЬКО ЧИТАЕТ sessions/{токен}; пишет в Firestore только бот. ============ */
+/* Публичный Firebase config. Mini App reads sessions and writes owner commands to cmds/{session}; Telegram bot validates and applies them. */
 const firebaseConfig={apiKey:"AIzaSyANZINM6R29i3erpEdzs60oHZsDPBXVIOI",authDomain:"manageyourbot.firebaseapp.com",projectId:"manageyourbot",storageBucket:"manageyourbot.firebasestorage.app",messagingSenderId:"919379398898",appId:"1:919379398898:web:55798b0893c24f2309c06b",measurementId:"G-ZRQF3WRGVY"};
 const VERSION="2.6";
 const tg=window.Telegram?.WebApp;
-const KB=new URLSearchParams(location.search).get("k")=="1";
 const IC={undo:'<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>',redo:'<path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/>',fit:'<path d="M4 9V5a1 1 0 0 1 1-1h4M15 4h4a1 1 0 0 1 1 1v4M20 15v4a1 1 0 0 1-1 1h-4M9 20H5a1 1 0 0 1-1-1v-4"/>',lay:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',fire:'<path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 .3 1.2 1 2 2 2 0-3-1-5 1-8z"/>',cam:'<path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/>',trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12M9 7V4h6v3"/>',edit:'<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',up:'<path d="m6 15 6-6 6 6"/>',dn:'<path d="m6 9 6 6 6-6"/>',link:'<path d="M8 16 16 8M9 8h7v7"/>',screen:'<rect x="4" y="5" width="16" height="14" rx="3"/>',btn:'<rect x="4" y="8" width="16" height="8" rx="4"/>',plus:'<path d="M12 5v14M5 12h14"/>',play:'<path d="M8 5l11 7-11 7z"/>',copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>',bot:'<rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01"/>',plug:'<path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 0 1-12 0zM12 17v4"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',chart:'<path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>',box:'<path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',check:'<path d="m5 12.5 4.5 4.5L19 7"/>',sel:'<path d="M5 9V6a1 1 0 0 1 1-1h3M15 5h3a1 1 0 0 1 1 1v3M19 15v3a1 1 0 0 1-1 1h-3M9 19H6a1 1 0 0 1-1-1v-3"/><path d="m11 11 2 7 1.5-3 3-1.5z"/>',more:'<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>',vars:'<path d="M8 4c-2 0-3 1-3 3v2c0 1-1 3-2 3 1 0 2 2 2 3v2c0 2 1 3 3 3M16 4c2 0 3 1 3 3v2c0 1 1 3 2 3-1 0-2 2-2 3v2c0 2-1 3-3 3"/>',book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/>',msg:'<path d="M4 5h16v11H9l-5 4z"/>',pc:'<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>'};
 const ic=n=>`<svg class="i" viewBox="0 0 24 24">${IC[n]}</svg>`;
 const noEmo=t=>String(t).replace(/\p{Extended_Pictographic}\uFE0F?\s*/gu,"");
@@ -292,11 +291,6 @@ function applyPrefs(){document.body.classList.toggle("noanim",!PREF.anim)}
 function toast(t,err){const e=document.createElement("div");e.className="toast"+(err?" err":"");e.textContent=t;document.body.append(e);hap(err?"err":"ok");setTimeout(()=>e.remove(),2800)}
 const openTg=u=>{const go=()=>{try{tg?.openTelegramLink?tg.openTelegramLink(u):window.open(u,"_blank")}catch{window.open(u,"_blank")}};
  if(tg?.isFullscreen&&tg.exitFullscreen){let d=0;const f=()=>{if(d)return;d=1;try{tg.offEvent("fullscreenChanged",f)}catch{}setTimeout(go,150)};try{tg.onEvent("fullscreenChanged",f);tg.exitFullscreen();setTimeout(f,600)}catch{go()}}else go()};
-const b64u=u=>{let s="";for(let i=0;i<u.length;i++)s+=String.fromCharCode(u[i]);return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")};
-async function enc(o){const j=JSON.stringify(o);
- if(typeof CompressionStream=="function"){const s=new Blob([j]).stream().pipeThrough(new CompressionStream("deflate-raw"));return"BB1."+b64u(new Uint8Array(await new Response(s).arrayBuffer()))}
- return"BB0."+b64u(new TextEncoder().encode(j))}
-
 /* ============ Состояние и модель ============ */
 const W=230,HDR=34,TXT=46,ROW=32,MAXB=12,MAXN=40;
 const S={tab:"flow",range:14,metric:"dau",cmp:false,view:{x:30,y:30,k:1},hist:[],fut:[],set:{},post:"",del:false,sel:null,heat:false,heatMap:{},draw:[],fitted:false,sess:{bots:[]},bot:null,flow:null,base:[],baseSig:"",token:null,expired:false,nosess:false,live:0,demoOn:false,cc:null,ms:new Set(),selMode:false,busy:null};
@@ -321,7 +315,7 @@ function openMaster(){const m=masterName();
  try{if(tg){toast("Закройте окно и нажмите «Открыть конструктор» в основном боте");setTimeout(()=>tg.close(),900);return}}catch{}
  toast("Откройте основного бота-конструктора в Telegram",1)}
 
-/* ============ Данные: Firestore (только чтение) ============ */
+/* ============ Данные: Firestore ============ */
 async function fetchSess(token,peek){
  const r=await fetch(`https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/sessions/${encodeURIComponent(token)}?key=${firebaseConfig.apiKey}`+(peek?"&mask.fieldPaths=exp":""),{cache:"no-store"});
  if(!r.ok)throw new Error("http "+r.status);
@@ -628,35 +622,22 @@ function openBots(){
   if(e.target.closest("#nb")||e.target.closest('[data-act="addbot"]')){closeSheet(d);openMaster()}})}
 function openReview(){
  const p=pendingList(),e=errCount();
- const d=sheet(`${head("Отправить боту")}<div class="cd" style="margin-bottom:10px">${p.map(x=>`<div class="line"><span>${esc(x)}</span><span class="dl up">${ic("check")}</span></div>`).join("")||'<div class="empty">Изменений нет</div>'}</div>
- ${e?`<div class="banner" style="margin:0 0 10px">Проверьте кнопки: ${e}</div>`:""}
- <p class="note">Нажмите «Отправить»: код скопируется и откроется чат с ботом. Вставьте код и отправьте — бот применит изменения${S.post.trim()||S.del?" (рассылку и удаление попросит подтвердить)":""}.</p>
- <div class="acts2"><button class="ghost danger" id="rs">Сбросить</button><button class="main" id="sn" ${e||!p.length?"disabled":""}>Отправить</button></div>`);
+ const extra=S.post.trim()||S.del?'<div class="banner" style="margin:0 0 10px">'+(S.del?'Бот и его данные будут удалены.':'Рассылка будет отправлена подписчикам.')+'</div>':'';
+ const d=sheet(`${head("Применить изменения")}<div class="cd" style="margin-bottom:10px">${p.map(x=>`<div class="line"><span>${esc(x)}</span><span class="dl up">${ic("check")}</span></div>`).join("")||'<div class="empty">Изменений нет</div>'}</div>${extra}${e?`<div class="banner" style="margin:0 0 10px">Проверьте кнопки: ${e}</div>`:""}<p class="note">Изменения отправятся напрямую через Firestore и применятся ботом. Открывать чат и вставлять код не нужно.</p><div class="acts2"><button class="ghost danger" id="rs">Сбросить</button><button class="main" id="sn" ${e||!p.length?"disabled":""}>Применить</button></div>`);
  $("#sn",d).onclick=()=>{closeSheet(d);sendNow()};
  $("#rs",d).onclick=()=>{resetAll();closeSheet(d);toast("Изменения сброшены")}}
 function resetAll(){S.flow.nodes=clone(S.base);S.set={};S.post="";S.del=false;S.hist=[];S.fut=[];lsDel("bb3:"+S.bot.id);renderTab();ui()}
-async function buildCode(){
- const c={v:3,bot:S.bot.id};
- if(S.del)c.del=true;else{if(flowDirty())c.nodes=S.flow.nodes.map(n=>({...n,type:n.id==S.flow.start?"start":"screen"}));if(Object.keys(S.set).length)c.set=S.set;if(S.post.trim())c.post=S.post.trim()}
- return enc(c)}
 async function sendNow(){
  if(!S.bot)return;if(errCount()){go("flow");return toast("Проверьте кнопки: "+errCount(),1)}
- if(!pendingList().length)return toast("Нечего отправлять");
- deliver(await buildCode())}
-async function deliver(code){
- if(KB&&tg?.sendData&&code.length<=3900){try{hap("ok");tg.sendData(code);return}catch{}}
- if(code.length>3900)return codeSheet(code);
- let ok=false;try{await navigator.clipboard.writeText(code);ok=true}catch{}
- const m=masterName();if(!ok||!m)return codeSheet(code);
- hap("ok");toast("Код скопирован. В чате вставьте и отправьте");setTimeout(()=>openTg("https://t.me/"+m),500)}
-async function quickSend(set,id){const i=id??S.bot?.id;if(i!=null)deliver(await enc({v:3,bot:i,set}))}
-function codeSheet(code){
- let parts=[code];if(code.length>3900){const body=code.slice(4),id=Math.random().toString(36).slice(2,8).padEnd(6,"x"),n=Math.ceil(body.length/3400);
-  if(n>40)return toast("Схема слишком большая — упростите её",1);parts=Array.from({length:n},(_,i)=>`BB2.${id}.${i+1}.${n}.`+body.slice(i*3400,(i+1)*3400))}
- const d=sheet(`${head("Код для бота")}<p class="note">${parts.length>1?`Схема большая: отправьте боту ${parts.length} сообщений по порядку (части 1…${parts.length}).`:"Отправьте этот код боту обычным сообщением."}</p>
- ${parts.map((p,i)=>`<label>${parts.length>1?"Часть "+(i+1)+" из "+parts.length:"Код"}</label><textarea class="codebox" readonly>${esc(p)}</textarea><button class="ghost" data-cp="${i}" style="width:100%;margin-top:6px">копировать</button>`).join("")}${parts.length==1?'<button class="main" id="cpgo" style="width:100%;margin-top:10px">Скопировать и открыть чат с ботом</button>':""}`,{full:true});
- d.addEventListener("click",async e=>{if(e.target.closest("#cpgo")){try{await navigator.clipboard.writeText(parts[0])}catch{}toast("Код скопирован — вставьте его в чат и отправьте");const m=masterName();if(m)setTimeout(()=>openTg("https://t.me/"+m),700);return}const b=e.target.closest("[data-cp]");if(!b)return;try{await navigator.clipboard.writeText(parts[+b.dataset.cp]);b.textContent="скопировано ✓";hap("ok")}catch{$$("textarea",d)[+b.dataset.cp].select()}})}
-
+ if(!pendingList().length)return toast("Нечего применять");
+ if(S.nosess||S.expired)return toast("Откройте конструктор через бота",1);
+ try{
+  const nodes=flowDirty()?S.flow.nodes.map(n=>({...n,type:n.id==S.flow.start?"start":"screen"})):null;
+  await fsCmd(S.bot.id,{nodes,set:Object.keys(S.set).length?S.set:null,post:S.post.trim(),del:S.del});
+  toast("Команда отправлена. Обновление появится автоматически");
+  S.set={};S.post="";S.del=false;S.hist=[];S.fut=[];lsDel("bb3:"+S.bot.id);await refresh();ui();
+ }catch(e){console.error(e);toast("Не удалось отправить изменения. Проверьте интернет",1)}
+}
 /* ============ Предпросмотр бота ============ */
 function fmtHtml(t){
  const inl=s=>s.replace(/\[([^\]\n]{1,64})\]\((https:\/\/[^\s)<>"']{3,300}|tg:\/\/[^\s)<>"']{3,300})\)/g,'<span class="lk">$1</span>').replace(/\*\*(.+?)\*\*/gs,"<b>$1</b>").replace(/(^|[^\w_])__(.+?)__(?![\w_])/gs,"$1<i>$2</i>");
@@ -753,24 +734,24 @@ function renderStats(){
 function drawCharts(){S.draw.forEach(f=>{try{f()}catch(e){console.error(e)}})}
 function animateNums(root){$$(".cu",root).forEach(e=>{const v=+e.dataset.v,f=!Number.isInteger(v);if(!PREF.anim||v==0){e.textContent=f?v.toFixed(1):nf(v);return}const t0=performance.now();const tick=t=>{const k=Math.min(1,(t-t0)/700),e1=1-Math.pow(1-k,3),x=v*e1;e.textContent=f?x.toFixed(1):nf(Math.round(x));if(k<1)requestAnimationFrame(tick)};requestAnimationFrame(tick)})}
 
-/* ============ Вкладка «Бот» (настройки в черновик, запись — только через бота) ============ */
+/* ============ Вкладка «Бот» ============ */
 function renderBot(){
  const el=$("#v-bot"),b=S.bot;if(!b){el.innerHTML=emptyHtml();return}
  const sup=eff("support"),fb=eff("fallback"),run=!!b.running,bz=!!(S.busy&&S.busy.id==b.id),shown=bz?S.busy.target:run,err=S.runErr&&S.runErr.id==b.id?S.runErr.t:"";
  el.innerHTML=`<div class="wrap">
- ${S.del?`<div class="cd" style="border-color:var(--r)"><h3>Удаление запланировано</h3><div class="note">Бот будет удалён после подтверждения в чате.</div><button class="ghost" data-act="undel" style="margin-top:10px;width:100%">Отменить удаление</button></div>`:""}
+ ${S.del?`<div class="cd" style="border-color:var(--r)"><h3>Удаление запланировано</h3><div class="note">Бот будет удалён после применения изменений.</div><button class="ghost" data-act="undel" style="margin-top:10px;width:100%">Отменить удаление</button></div>`:""}
  <div class="cd runhero"><div class="prof"><span class="av" style="width:52px;height:52px;font-size:22px">${esc((b.username||"?")[0].toUpperCase())}</span><div style="flex:1;min-width:0"><b style="font-size:17px" class="ell">${esc(b.name||b.username)}</b><div class="mu" style="text-transform:none">@${esc(b.username)} · ${nf(b.subs)} подписчиков</div><div class="rst"><i class="dot ${shown?"on":""}"></i><span>${bz?(S.busy.target?"Запускаем…":"Останавливаем…"):run?"Работает и отвечает пользователям":"Остановлен и не отвечает"}</span></div></div></div>
   <button class="runbtn ${run?"stop":"go"}" data-act="toggle" ${bz?"disabled":""}>${bz?'<i class="spin"></i>'+(S.busy.target?"Запускаем…":"Останавливаем…"):run?"Остановить бота":"Запустить бота"}</button>
   ${err?`<div class="banner" style="margin:12px 0 0;white-space:pre-line">${esc(err)}</div>`:""}
   <button class="ghost" data-act="copylink" style="width:100%;margin-top:12px">Скопировать ссылку на бота</button></div>
- <div class="cd"><h3>Настройки бота <small class="mu">применяются после «Отправить боту»</small></h3>
+ <div class="cd"><h3>Настройки бота <small class="mu">применяются сразу через сайт</small></h3>
   <div class="line"><div>Обратная связь<small>кнопка «Связаться» на старте и /support</small></div><label class="sw" style="margin:0"><input type="checkbox" id="sw-support" ${sup?"checked":""}><i></i></label></div>
   <label>Ответ на неизвестные сообщения <span id="fbc">${(fb||"").length}/300</span></label><input id="fb" type="text" maxlength="300" autocomplete="off" value="${esc(fb)}"></div>
 <div class="cd"><h3>Рассылка <small class="mu">${nf(b.subs)} получателей</small></h3>
   <textarea id="post" maxlength="4000" placeholder="Текст рассылки. Обычный текст без форматирования.">${esc(S.post)}</textarea>
   <div class="mu" id="pc" style="text-align:right;margin:4px 0">${S.post.length}/4000</div>
   <div class="kb" style="margin-bottom:8px"><div class="bub" id="pp" style="${S.post.trim()?"":"display:none"}">${esc(S.post)}</div></div>
-  <div class="note">Рассылка уйдёт после «Отправить боту» и подтверждения в чате. Фото и видео — командой /post в вашем боте.</div>
+  <div class="note">Рассылка отправится после применения изменений. Фото и видео — командой /post в вашем боте.</div>
   ${S.post?'<button class="ghost" data-act="clrpost" style="margin-top:10px;width:100%">Очистить</button>':""}</div>
   <details class="cd"><summary>Дополнительно</summary><div class="acts2" style="margin-bottom:10px"><button class="ghost" data-act="welcome">Welcome</button><button class="ghost" data-act="vars">Переменные</button></div><div class="note">Токен нельзя ввести здесь — только в чате с основным ботом. Замена токена: чат с основным ботом → «Мои боты» → ваш бот → «Заменить токен».</div><button class="ghost danger" data-act="delbot" style="width:100%;margin-top:12px">Удалить бота</button></details></div>`}
 function postUi(){const p=$("#pp"),c=$("#pc");if(c)c.textContent=S.post.length+"/4000";if(p){p.textContent=S.post;p.style.display=S.post.trim()?"":"none"}}
@@ -780,13 +761,13 @@ function tgUser(){let u=tg?.initDataUnsafe?.user;if(!u?.id&&tg?.initData){try{u=
  if(u?.id){lsSet("bb3:user",u);return u}return lsGet("bb3:user")||{first_name:"Пользователь",id:S.sess.uid}}
 function renderMe(){
  const el=$("#v-me"),u=tgUser(),name=[u.first_name,u.last_name].filter(Boolean).join(" ")||"Пользователь",bs=S.sess.bots||[],lim=S.sess.limit||5;
- const plan=S.sess.plan||"free",planName={free:"Бесплатный",pro:"Pro",biz:"Business"}[plan]||String(plan).toUpperCase(),refN=S.sess.ref?+S.sess.ref.count||0:0,refB=S.sess.ref?+S.sess.ref.bonus||0:0;
+ const plan=S.sess.plan||"free",planName={free:"Бесплатный",pro:"Pro",biz:"Business"}[plan]||String(plan).toUpperCase(),ref=S.sess.ref||{},refN=+ref.count||0,refB=+ref.bonus||0,stars=+ref.stars||0,invited=Array.isArray(ref.invited)?ref.invited:[],invitedTotal=Math.max(refN,invited.length);
  el.innerHTML=`<div class="wrap">
  <div class="cd"><div class="prof"><span class="av" style="width:52px;height:52px;font-size:22px">${esc((name||"?")[0].toUpperCase())}${u.photo_url?`<img src="${esc(u.photo_url)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:""}</span><div style="flex:1;min-width:0"><b style="font-size:18px" class="ell">${esc(name)}</b><div class="mu" style="text-transform:none;margin-top:3px">${u.id?"ID "+esc(u.id)+" · ":""}Тариф <b style="color:var(--y)">${esc(planName)}</b></div></div></div></div>
  <div class="cd"><h3>Мои боты <small class="mu">${bs.length} из ${lim}</small></h3>${bs.map(b=>{const bz=!!(S.busy&&S.busy.id==b.id),on=bz?S.busy.target:!!b.running;return`<div class="bot-row ${b.id==S.bot?.id?"cur":""}"><span class="av" data-act="pickbot" data-id="${b.id}">${esc((b.username||"?")[0].toUpperCase())}</span><span class="bn" data-act="pickbot" data-id="${b.id}">@${esc(b.username)}<small>${bz?(S.busy.target?"запускаем…":"останавливаем…"):b.running?"работает":"остановлен"} · ${nf(b.subs)} подписчиков</small></span><span class="sww">${bz?'<i class="spin" style="margin:0"></i>':""}<label class="sw" style="margin:0" title="${on?"Остановить":"Запустить"}"><input type="checkbox" data-act="tgbot" data-id="${b.id}" ${on?"checked":""} ${S.busy?"disabled":""}><i></i></label></span></div>`}).join("")||'<div class="empty">Ботов пока нет</div>'}
   <button class="ghost" data-act="addbot" style="margin-top:10px;width:100%">Добавить бота</button></div>
  <div class="cd" style="border-color:var(--y)"><div class="bigcard"><b>${ic("fire")}</b><div><b style="font-size:16px">Тариф: ${esc(planName)}</b><div class="note">Больше ботов и возможностей. Оплата звёздами Telegram ⭐</div></div></div><button class="main bigbtn" data-act="plans">Выбрать тариф ⭐</button></div>
- <div class="cd"><div class="bigcard"><b>${ic("link")}</b><div><b style="font-size:16px">Пригласить друзей</b><div class="note">Отправьте ссылку другу — за каждого друга вы получите бонус.</div></div></div>${refN>0?`<div class="invn">Вы пригласили друзей: <b>${nf(refN)}</b>${refB>0?` · бонус: <b>${nf(refB)}</b>`:""}</div>`:""}<div class="acts2"><button class="main bigbtn" data-act="refshare">Поделиться</button><button class="ghost bigbtn" data-act="refcopy">Копировать</button></div></div>
+ <div class="cd"><div class="bigcard"><b>${ic("link")}</b><div><b style="font-size:16px">Пригласить друзей</b><div class="note">Отправьте ссылку другу — за первое подключение бота вы получите Stars на внутренний баланс.</div></div></div><div class="invn">Приглашено: <b>${nf(invitedTotal)}</b> · баланс: <b>⭐ ${nf(stars)}</b>${refB>0?` · бонусных слотов: <b>${nf(refB)}</b>`:""}</div>${invited.length?`<div class="plist" style="margin:10px 0">${invited.map(x=>`<div class="pit"><span>${esc(x.name||"Пользователь")} ${x.username?`<small class="mu">@${esc(x.username)}</small>`:""}</span><span class="badge ${x.rewarded?"y":""}">${x.rewarded?"+⭐ "+nf(ref.rewardPerInvite||10):"ожидает"}</span></div>`).join("")}</div>`:`<div class="note" style="margin:8px 0">Приглашённые пользователи появятся здесь после первого запуска бота.</div>`}<div class="acts2"><button class="main bigbtn" data-act="refshare">Поделиться</button><button class="ghost bigbtn" data-act="refcopy">Копировать</button></div></div>
  
  <button class="cd menurow" data-act="settings">Настройки и справка <span>›</span></button></div>`}
 function openSettings(){
@@ -795,7 +776,7 @@ function openSettings(){
  <div class="cd"><h3>Интерфейс <small class="mu">только на этом устройстве</small></h3>${[["haptic","Вибро-отклик","короткие тактильные сигналы"],["snap","Привязка к сетке","экраны выравниваются при перемещении"],["anim","Анимации","плавные графики и переходы"]].map(x=>`<div class="line"><div>${x[1]}<small>${x[2]}</small></div><label class="sw" style="margin:0"><input type="checkbox" data-pref="${x[0]}" ${PREF[x[0]]?"checked":""}><i></i></label></div>`).join("")}</div>
  <div class="cd"><h3>Справка</h3>
   <div class="step"><b>1</b><div>Схему и настройки вы собираете здесь. Запуск и остановка бота работают сразу.</div></div>
-  <div class="step"><b>2</b><div>Остальные изменения применяются кнопкой «Отправить боту»: откроется чат с ботом, отправьте сообщение — бот всё применит.</div></div>
+  <div class="step"><b>2</b><div>Схема и настройки применяются кнопкой «Применить изменения» прямо на сайте.</div></div>
   <div class="step"><b>3</b><div>Фото для экранов добавляются в чате с ботом (значок камеры на экране).</div></div>
   <button class="main bigbtn" data-act="tour">Открыть обучение</button></div><div class="acts2"><button class="ghost" data-x>Закрыть</button></div>`)}
 
@@ -887,15 +868,19 @@ const START_HELP="Бот не запустился. Что проверить:\n
 function rerender(){renderTop();if(S.tab=="bot")renderBot();else if(S.tab=="me")renderMe();ui()}
 async function fsCmd(id,cmd){
  if(!S.token)throw new Error("no token");
- const f={bot:{stringValue:String(id)},ts:{integerValue:String(Date.now())},v:{integerValue:"1"}};
+ const f={bot:{stringValue:String(id)},ts:{integerValue:String(Date.now())},v:{integerValue:"2"},active:{nullValue:null},nodes:{stringValue:""},set:{stringValue:""},post:{stringValue:""},delete:{booleanValue:false}};
  if("active" in cmd)f.active={booleanValue:!!cmd.active};
+ if(cmd.nodes)f.nodes={stringValue:JSON.stringify(cmd.nodes)};
+ if(cmd.set)f.set={stringValue:JSON.stringify(cmd.set)};
+ if(cmd.post)f.post={stringValue:String(cmd.post)};
+ if(cmd.del)f.delete={booleanValue:true};
  const r=await fetch(`https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/cmds/${encodeURIComponent(S.token)}?key=${firebaseConfig.apiKey}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({fields:f})});
  if(!r.ok)throw new Error("http "+r.status)}
 async function toggleBot(id){
  const b=(S.sess.bots||[]).find(x=>x.id==id)||S.bot;if(!b||S.busy)return;
  if(S.nosess||S.expired){S.runErr={id:b.id,t:NOCONN};rerender();return toast(NOCONN,1)}
  const target=!b.running;S.busy={id:b.id,target};S.runErr=null;rerender();hap();
- try{await fsCmd(b.id,{active:target})}catch{S.busy=null;rerender();toast("Отправляем команду через чат с ботом");return quickSend({active:target},b.id)}
+ try{await fsCmd(b.id,{active:target})}catch{S.busy=null;rerender();toast(NOCONN,1);return}
  let ok=false;
  for(let i=0;i<15&&!ok;i++){await new Promise(r=>setTimeout(r,1800));
   try{const j=await fetchSess(S.token),nb=j.bots.find(x=>x.id==b.id);S.live=Date.now();if(nb){Object.assign((S.sess.bots||[]).find(x=>x.id==b.id)||b,{running:nb.running,active:nb.active,subs:nb.subs});ok=nb.running==target}}catch{}}
@@ -1010,7 +995,7 @@ function openTour(manual){
   [ART[3],"Тексты и переменные","Нажмите на экран, чтобы изменить текст: жирный, курсив, ссылки. Кнопка { } вставляет переменную — например «Привет, {first_name}!», и бот назовёт человека по имени."],
   [ART[4],"Выделение группой","Зажмите Shift и обведите экраны рамкой. На телефоне — долгое нажатие на пустое место или кнопка выделения справа. Выбранные экраны двигаются вместе, их можно копировать и удалять."],
   [ART[5],"Предпросмотр и шаблоны","«Просмотр» показывает, как бот ответит в Telegram, — кнопки можно нажимать. «Шаблон» подгружает готовую схему целиком, останется заменить тексты."],
-  [ART[6],"Запуск и отправка","Во вкладке «Бот» одной кнопкой запускайте и останавливайте бота. Изменения схемы применяются кнопкой «Отправить боту». Фото экранов загружаются через бота."],
+  [ART[6],"Запуск и отправка","Во вкладке «Бот» одной кнопкой запускайте и останавливайте бота. Схема и настройки применяются прямо с сайта. Фото экранов загружаются через бота."],
   [ART[7],"Удобнее на ПК","Откройте конструктор в Telegram Desktop: большой холст и быстрые клавиши. Это обучение всегда можно открыть снова в «Профиле».",`<div class="hk"><span><i class="kbd">Shift</i> + рамка — выбрать группу</span><span><i class="kbd">Колесо</i> — масштаб</span><span><i class="kbd">Ctrl</i> + <i class="kbd">Z</i> / <i class="kbd">Y</i> — отмена и повтор</span><span><i class="kbd">Del</i> — удалить выбранные</span></div>${!desk&&L?`<button class="ghost" data-copy="${esc(L)}" style="width:100%">Скопировать ссылку для ПК</button>`:""}`]
  ],n=SL.length;
  const d=sheet(`<div class="tv" id="tv"><div class="tt" id="tt">${SL.map(s=>`<div class="ts"><div class="art">${s[0]}</div><h3>${s[1]}</h3><p>${s[2]}</p>${s[3]||""}</div>`).join("")}</div></div><div class="td" id="td">${SL.map((_,i)=>`<i data-i="${i}"></i>`).join("")}</div><div class="tf"><button class="ghost" id="tp">Пропустить</button><button class="main" id="tn">Далее</button></div>`,{cls:"modal tourm"});
@@ -1037,7 +1022,7 @@ const BOT_URL="https://t.me/ManageYourOwnBot";
 const refLink=()=>BOT_URL+"?start=ref_"+(tgUser().id||"0");
 function shareRef(){const u="https://t.me/share/url?url="+encodeURIComponent(refLink())+"&text="+encodeURIComponent("Делаю Telegram-ботов без кода — попробуй!");
  try{tg?.openTelegramLink?tg.openTelegramLink(u):window.open(u,"_blank")}catch{window.open(u,"_blank")}}
-function openRef(){const d=sheet(`${head("Пригласить друзей")}<p class="note">Отправьте ссылку другу. Когда он создаст бота, вам начислится бонус.</p><div class="cd"><div class="m mu">Ваша ссылка</div><div style="word-break:break-all;margin:6px 0 10px">${esc(refLink())}</div><div class="acts2"><button class="main" data-act="refshare">Поделиться</button><button class="ghost" data-act="refcopy">Копировать</button></div></div>${S.sess.ref?`<div class="note">Приглашено: <b>${nf(S.sess.ref.count||0)}</b> · бонус: <b>${nf(S.sess.ref.bonus||0)}</b></div>`:""}<div class="acts2" style="margin-top:10px"><button class="ghost" data-x>Закрыть</button></div>`)}
+function openRef(){const d=sheet(`${head("Пригласить друзей")}<p class="note">Отправьте ссылку другу. Когда друг впервые подключит бота, вам начислят Stars на внутренний баланс.</p><div class="cd"><div class="m mu">Ваша ссылка</div><div style="word-break:break-all;margin:6px 0 10px">${esc(refLink())}</div><div class="acts2"><button class="main" data-act="refshare">Поделиться</button><button class="ghost" data-act="refcopy">Копировать</button></div></div>${S.sess.ref?`<div class="note">Приглашено: <b>${nf(S.sess.ref.invited?.length||S.sess.ref.count||0)}</b> · баланс: <b>⭐ ${nf(S.sess.ref.stars||0)}</b></div>`:""}<div class="acts2" style="margin-top:10px"><button class="ghost" data-x>Закрыть</button></div>`)}
 
 /* ============ Тарифы и оплата Telegram Stars ============ */
 const PLANS=[{k:"slot",n:"+1 слот бота",s:50,d:"Ещё один бот в вашем аккаунте"},{k:"pro",n:"Pro",s:250,d:"До 15 ботов, 40 экранов, приоритетная поддержка · 30 дней"},{k:"biz",n:"Business",s:700,d:"До 50 ботов, рассылки без лимита, без отметки конструктора · 30 дней"}];
@@ -1061,3 +1046,4 @@ function openPlans(){
  const d=sheet(`${head("Тарифы")}<p class="note">Оплата звёздами Telegram ⭐. Выберите тариф — откроется окно оплаты.</p>${PLANS.map(p=>`<div class="cd"><div style="display:flex;justify-content:space-between;gap:8px"><b style="font-size:16px">${esc(p.n)}</b><span class="badge y">⭐ ${p.s}</span></div><div class="note">${esc(p.d)}</div><button class="main" data-pay="${p.k}" style="width:100%;margin-top:10px">Оплатить ⭐ ${p.s}</button></div>`).join("")}<div class="acts2"><button class="ghost" data-x>Закрыть</button></div>`);
  d.addEventListener("click",e=>{const b=e.target.closest("[data-pay]");if(b)payPlan(PLANS.find(x=>x.k==b.dataset.pay),b)})}
 </script></body></html>
+
