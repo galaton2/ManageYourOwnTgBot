@@ -49,7 +49,6 @@ button{cursor:pointer}
 .cd{background:linear-gradient(180deg,#14141a,#101013);border:1px solid var(--ln);border-radius:20px;padding:14px}
 .cd h3{margin:0 0 10px;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .cd h3 small{font-weight:400}
-.demo-c{padding:10px 14px;border-color:#a9a8f855}.demo-c .line{padding:0}
 .row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
 .seg{display:flex;gap:4px;background:#0a0a0c;border:1px solid var(--ln);border-radius:99px;padding:3px}
 .seg button{flex:1;border:0;background:none;border-radius:99px;padding:7px 10px;color:var(--mu);font-family:"Space Mono",monospace;font-size:11px;white-space:nowrap}
@@ -254,6 +253,35 @@ details.cd>summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none
 .ax{font-size:11px}
 .bot-row .bn{flex:1;min-width:0}
 .bot-row .sww{display:flex;align-items:center;gap:6px}
+/* Цветные состояния кнопок и больше воздуха между карточками в листах. */
+.ghost{background:linear-gradient(135deg,#a9a8f81c,#6fd3ff0b);border-color:#a9a8f855;color:#d9d8ff;transition:filter .16s,transform .16s,border-color .16s}
+.ghost:hover,.ic:hover,.x:hover,.fmt button:hover,.br button:hover{filter:brightness(1.28);border-color:#a9a8f899}
+.ghost:active,.main:active,.ic:active,.x:active{transform:scale(.98)}
+.ghost.danger{background:#ff5d6c18;border-color:#ff5d6c99;color:var(--r)}
+.ic,.x{background:linear-gradient(135deg,#a9a8f824,#17171c);border-color:#a9a8f855;color:#d9d8ff}
+.chp{color:#d1d0ff;border-color:#a9a8f855;background:#a9a8f80c}
+.seg button:not(.on){color:#cbcaff;background:#a9a8f80c}
+.tb{color:#c6c5db}
+.botbtn{background:linear-gradient(110deg,#a9a8f818,#101013 70%);border-color:#a9a8f855}
+.car{color:#c7c5f6}
+.sw i{background:#413b5d}
+.tools button:not(.pri):not(.on){color:var(--l)}
+.fmt button,.br button{background:#a9a8f818;border-color:#a9a8f855;color:#d9d8ff}
+.sh{gap:12px}
+.shh{margin-bottom:0}
+.sheet.modal:not(.tourm) .sh{display:flex;flex-direction:column;gap:12px}
+.sheet.modal.tourm .sh{padding:0;gap:0}
+.sheet.modal .shh{margin-bottom:0}
+.premium-mini{box-shadow:0 8px 26px #e6ff3d0a}
+.referral-mini{border-color:#a9a8f855;background:linear-gradient(110deg,#201c36,#121216 70%)}
+.premium-arrow{color:#dad8ff}
+.bi{color:var(--l)}
+.chp:hover,.seg button:not(.on):hover{filter:brightness(1.25)}
+.menurow{color:#e3e2f2;border-color:#a9a8f855;background:linear-gradient(110deg,#a9a8f817,#17171c)}
+.hero .big{width:66px;height:66px;border-radius:21px;background:linear-gradient(135deg,var(--y),var(--l));color:#08080a;display:grid;place-items:center;box-shadow:0 8px 26px #a9a8f82a}
+.chip[data-t=btn]{background:#ff6a2b18;color:#ffb18b;border-color:var(--o)}
+#gbar button:not(.dn){color:#d8d6ff;background:#a9a8f814}
+.stats-lock .big{background:linear-gradient(135deg,var(--l),var(--b));}
 </style></head><body>
 <div id="app">
 <header id="top">
@@ -268,7 +296,7 @@ details.cd>summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none
   <div class="eflow" id="eflow" hidden></div>
   <div id="marq"></div>
   <div id="gbar" hidden><b></b><button data-g="dup">Копия</button><button data-g="del" class="dn">Удалить</button><button data-g="x">✕</button></div>
-  <div class="tools" id="tools"><button id="undo" title="Отменить действие" data-ic="undo"></button><button id="redo" title="Повторить" data-ic="redo"></button><hr><button data-z="1" title="Приблизить">+</button><button data-z="-1" title="Отдалить">−</button><button id="fit" title="Показать всё" data-ic="fit"></button><button id="lay" title="Расставить автоматически" data-ic="lay"></button><button id="heat" title="Тепловая карта" data-ic="fire"></button><hr><button id="pvb" class="pri" title="Просмотр" data-ic="play"></button><button id="more" title="Шаблоны и дополнительные действия" data-ic="more"></button></div>
+  <div class="tools" id="tools"><button id="undo" title="Отменить действие" data-ic="undo"></button><button id="redo" title="Повторить" data-ic="redo"></button><hr><button data-z="1" title="Приблизить">+</button><button data-z="-1" title="Отдалить">−</button><button id="fit" title="Показать всё" data-ic="fit"></button><button id="lay" title="Расставить автоматически" data-ic="lay"></button><button id="heat" title="Тепловая карта" data-ic="fire"></button><hr><button id="pvb" class="pri" title="Просмотр" data-ic="play"></button><button id="more" title="Шаблоны" data-ic="more"></button></div>
   <div id="dock"><div class="chip" data-t="screen"><b data-ic="screen"></b>экран</div><div class="chip" data-t="btn"><b data-ic="btn"></b>кнопка</div><div class="chip" data-t="url"><b data-ic="link"></b>ссылка</div></div>
  </section>
  <section class="view scroll" id="v-stats"></section>
@@ -308,13 +336,13 @@ const openTg=u=>{const go=()=>{try{tg?.openTelegramLink?tg.openTelegramLink(u):w
  if(tg?.isFullscreen&&tg.exitFullscreen){let d=0;const f=()=>{if(d)return;d=1;try{tg.offEvent("fullscreenChanged",f)}catch{}setTimeout(go,150)};try{tg.onEvent("fullscreenChanged",f);tg.exitFullscreen();setTimeout(f,600)}catch{go()}}else go()};
 /* ============ Состояние и модель ============ */
 const W=230,HDR=34,TXT=46,ROW=32,MAXB=12,MAXN=40;
-const S={tab:"flow",range:14,metric:"dau",cmp:false,view:{x:30,y:30,k:1},hist:[],fut:[],set:{},post:"",del:false,sel:null,heat:false,heatMap:{},draw:[],fitted:false,sess:{bots:[]},bot:null,flow:null,base:[],baseSig:"",token:null,expired:false,nosess:false,live:0,demoOn:false,cc:null,ms:new Set(),selMode:false,busy:null};
+const S={tab:"flow",range:14,metric:"dau",cmp:false,view:{x:30,y:30,k:1},hist:[],fut:[],set:{},post:"",del:false,sel:null,heat:false,heatMap:{},draw:[],fitted:false,sess:{bots:[]},bot:null,flow:null,base:[],baseSig:"",token:null,expired:false,nosess:false,live:0,cc:null,ms:new Set(),selMode:false,busy:null};
 const node=id=>S.flow.nodes.find(n=>n.id==id);
 const nh=n=>HDR+TXT+Math.max(1,n.btns.length)*ROW+10;
 const uid=(list=S.flow?.nodes||[])=>{let i;do{i=Math.random().toString(36).slice(2,7).padEnd(5,"x")}while(list.some(n=>n.id==i||(n.btns||[]).some(b=>b.id==i)));return i};
 const cn=n=>({id:n.id,title:n.title||"Экран",text:n.text||"…",x:Math.round(n.x||0),y:Math.round(n.y||0),cols:n.cols==2?2:1,btns:(n.btns||[]).map(b=>b.kind=="url"?{id:b.id,label:b.label,kind:"url",value:b.value||""}:{id:b.id,label:b.label,kind:"go",to:b.to||""})});
 const clone=o=>JSON.parse(JSON.stringify(o));
-const bad=b=>b.kind=="url"?!/^(https:\/\/|tg:\/\/)\S{3,}$/.test(b.value||""):!(b.to&&node(b.to));
+const bad=b=>!String(b.label||"").trim()||(b.kind=="url"?!/^(https:\/\/|tg:\/\/)\S{3,}$/.test(b.value||""):b.kind!="go"||!(b.to&&node(b.to)));
 const errCount=()=>S.flow?S.flow.nodes.reduce((a,n)=>a+n.btns.filter(bad).length,0):0;
 const flowDirty=()=>S.flow&&JSON.stringify(S.flow.nodes)!==S.baseSig;
 const eff=k=>k in S.set?S.set[k]:S.bot?.[k];
@@ -336,28 +364,17 @@ async function fetchSess(token,peek){
  if(!r.ok)throw new Error("http "+r.status);
  const d=await r.json();if(peek)return d.updateTime;S.ut=d.updateTime;const j=JSON.parse(d.fields.json.stringValue);j.exp=j.exp||d.fields.exp?.timestampValue;return j}
 
-/* ============ Демо-статистика (только для вкладки «Статистика») ============ */
-const mulberry=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
-function demoStats(nodes,seed,scale){
- const r=mulberry(seed),days=[],today=new Date();today.setUTCHours(0,0,0,0);
- for(let i=59;i>=0;i--){const d=new Date(+today-i*864e5),wd=d.getUTCDay(),trend=1+(60-i)/60*1.2,wk=(wd==0||wd==6)?.78:1;
-  const dau=Math.round((20+r()*14)*scale*trend*wk),nw=Math.round((3+r()*7)*scale*trend*wk*(r()<.1?3:1)),views=Math.round(dau*(2.2+r()*1.4)),n={};
-  nodes.forEach((x,k)=>{const v=Math.round(views*(k==0?.34:.62/(k+1.2))*(.7+r()*.6));if(v>0)n[x.id]=v});
-  const h=Array(24).fill(0);for(let k=0;k<views;k++)h[clamp(Math.round(14+(r()+r()+r()-1.5)*8),0,23)]++;
-  days.push({d:d.toISOString().slice(0,10),new:nw,dau,views,support:r()<.3?Math.round(r()*3):0,unsub:r()<.4?Math.round(r()*2):0,n,h})}
- const total=Math.round(sum(days,"new")*1.4+300*scale),act=Math.round(total*.86),un=Math.round(total*.09);
- return{days,aud:{total,active:act,unsub:un,blocked:total-act-un},ret:{d1:{base:Math.round(total*.8),ok:Math.round(total*.34)},d7:{base:Math.round(total*.6),ok:Math.round(total*.13)}},posts:[{at:new Date(+today-3*864e5).toISOString(),sent:Math.round(act*.97),failed:Math.round(act*.03)},{at:new Date(+today-12*864e5).toISOString(),sent:Math.round(act*.9),failed:Math.round(act*.06)}]}}
+/* Полная статистика доступна только на активных тарифах Pro и Business. */
 function statSrc(){
- if(S.demoOn){const nodes=S.bot?S.bot.flow.nodes:buildTpl(TPL[0]),st=demoStats(nodes,7,1.2);
-  return{username:S.bot?S.bot.username:"demo_bot",subs:st.aud.active,nodes,stats:st,demo:true}}
  const b=S.bot;if(!b)return null;
- return{username:b.username,subs:b.subs,nodes:b.flow.nodes,stats:b.stats,demo:false}}
+ if(!["pro","biz"].includes(S.sess.plan))return{locked:true,username:b.username};
+ return{username:b.username,subs:b.subs,nodes:b.flow.nodes,stats:b.stats||{}}}
 
 async function boot(){
  const token=new URLSearchParams(location.search).get("s");
  const requestedTab=new URLSearchParams(location.search).get("tab");
  if(["flow","stats","bot","me"].includes(requestedTab))S.tab=requestedTab;
- S.demoOn=!!lsGet("bb3:demo");
+ lsDel("bb3:demo");
  if(!token){S.nosess=true;S.sess={bots:[],limit:5}}
  else{S.token=token;try{S.sess=await fetchSess(token);S.live=Date.now();if(S.sess.master)lsSet("bb3:master",S.sess.master)}catch(e){S.expired=true;S.err=String(e&&e.message||e);S.sess={bots:[]}}}
  const last=lsGet("bb3:last");openBot((S.sess.bots.find(b=>b.id==last)||S.sess.bots[0])?.id);
@@ -607,7 +624,7 @@ function openBtn(nid,bid,after){
   if(kind=="url"&&val){if(/^http:\/\//i.test(val))val="https://"+val.slice(7);else if(!/^(https:\/\/|tg:\/\/)/i.test(val))val="https://"+val}
   if(to!="__new"&&JSON.stringify([label,kind,kind=="go"?to:"",kind=="url"?val:""])==snap){after?.();return}
   mutate(()=>{b.label=label;b.kind=kind;if(kind=="url"){b.value=val;delete b.to}else{if(to=="__new"){const id=uid();S.flow.nodes.push({id,title:"Экран",text:"Текст экрана",x:snapG(n.x+W+70),y:snapG(n.y),cols:1,btns:[]});to=id}b.to=to;delete b.value}});after?.()};}
-function whyBad(b){return b.kind=="url"?(!b.value||b.value=="https://"?"не указана ссылка":"ссылка должна начинаться с https:// или tg://"):"не выбран экран, куда ведёт кнопка"}
+function whyBad(b){if(!String(b.label||"").trim())return"добавьте текст кнопки";if(b.kind=="url")return(!b.value||b.value=="https://"?"не указана ссылка":"ссылка должна начинаться с https:// или tg://");if(b.kind!="go")return"неизвестный тип кнопки";return"выберите экран, куда ведёт кнопка"}
 function openErrors(){const items=[];(S.flow?.nodes||[]).forEach(n=>n.btns.forEach(b=>{if(bad(b))items.push({n,b})}));
  const d=sheet(`${head("Проверка кнопок")}<p class="note">Такие кнопки подсвечены оранжевым. Нажмите на пункт — откроется кнопка, чтобы её исправить.</p><div class="bl">${items.map((x,i)=>`<div class="br bad" data-i="${i}" style="cursor:pointer"><span class="bi">${ic(x.b.kind=="url"?"link":"btn")}</span><div class="bm"><b>${esc(x.b.label)}</b><small style="white-space:normal">Экран «${esc(x.n.title)}» · ${whyBad(x.b)}</small></div><span class="mu">›</span></div>`).join("")||'<div class="empty">Все кнопки работают</div>'}</div>`);
  d.addEventListener("click",e=>{const r=e.target.closest(".br");if(!r)return;const x=items[+r.dataset.i];if(!x)return;closeSheet(d);S.sel=x.n.id;markSel();setTimeout(()=>openBtn(x.n.id,x.b.id),230)})}
@@ -640,7 +657,7 @@ function openBots(){
 function openReview(){
  const p=pendingList(),e=errCount();
  const extra=S.post.trim()||S.del?'<div class="banner" style="margin:0 0 10px">'+(S.del?'Бот и его данные будут удалены.':'Рассылка будет отправлена подписчикам.')+'</div>':'';
- const d=sheet(`${head("Применить изменения")}<div class="cd" style="margin-bottom:10px">${p.map(x=>`<div class="line"><span>${esc(x)}</span><span class="dl up">${ic("check")}</span></div>`).join("")||'<div class="empty">Изменений нет</div>'}</div>${extra}${e?`<div class="banner" style="margin:0 0 10px">Проверьте кнопки: ${e}</div>`:""}<p class="note">Изменения отправятся напрямую через Firestore и применятся ботом. Открывать чат и вставлять код не нужно.</p><div class="acts2"><button class="ghost danger" id="rs">Сбросить</button><button class="main" id="sn" ${e||!p.length?"disabled":""}>Применить</button></div>`);
+  const d=sheet(`${head("Проверить и применить")}<div class="cd">${p.map(x=>`<div class="line"><span>${esc(x)}</span><span class="dl up">${ic("check")}</span></div>`).join("")||'<div class="empty">Изменений нет</div>'}</div>${extra}${e?`<div class="banner" style="margin:0">Проверьте кнопки: ${e}</div>`:""}<p class="note">Подтвердите, чтобы отправить настройки выбранному боту.</p><div class="acts2"><button class="ghost danger" id="rs">Сбросить</button><button class="main" id="sn" ${e||!p.length?"disabled":""}>Применить</button></div>`);
  $("#sn",d).onclick=()=>{closeSheet(d);sendNow()};
  $("#rs",d).onclick=()=>{resetAll();closeSheet(d);toast("Изменения сброшены")}}
 function resetAll(){S.flow.nodes=clone(S.base);S.set={};S.post="";S.del=false;S.hist=[];S.fut=[];lsDel("bb3:"+S.bot.id);renderTab();ui()}
@@ -650,10 +667,22 @@ async function sendNow(){
  if(S.nosess||S.expired)return toast("Откройте конструктор через бота",1);
  try{
   const nodes=flowDirty()?S.flow.nodes.map(n=>({...n,type:n.id==S.flow.start?"start":"screen"})):null;
-  await fsCmd(S.bot.id,{nodes,set:Object.keys(S.set).length?S.set:null,post:S.post.trim(),del:S.del});
-  toast("Команда отправлена. Обновление появится автоматически");
-  S.set={};S.post="";S.del=false;S.hist=[];S.fut=[];lsDel("bb3:"+S.bot.id);await refresh();ui();
- }catch(e){console.error(e);toast("Не удалось отправить изменения. Проверьте интернет",1)}
+  const ts=await fsCmd(S.bot.id,{nodes,set:Object.keys(S.set).length?S.set:null,post:S.post.trim(),del:S.del});
+  toast("Отправлено боту. Жду подтверждение…");
+  let result=null;
+  for(let i=0;i<12&&!result;i++){
+   await new Promise(r=>setTimeout(r,800));
+   try{const j=await fetchSess(S.token);S.sess=j;const a=j.cmd_result;if(Number(a?.ts)>=ts)result=a}catch{}
+  }
+  if(!result){showCommandResult(false,"Бот не подтвердил выполнение. Проверьте, что основной бот запущен, и повторите попытку. Черновик сохранён.");return}
+  if(!result.ok){showCommandResult(false,result.message||"Бот отклонил изменения. Проверьте схему и попробуйте снова.");return}
+  S.set={};S.post="";S.del=false;S.hist=[];S.fut=[];lsDel("bb3:"+S.bot.id);S.ut=null;await refresh();ui();showCommandResult(true,result.message||"Настройки обновлены.");
+ }catch(e){console.error(e);showCommandResult(false,"Не удалось отправить изменения: "+String(e?.message||"проверьте интернет и правила Firestore").slice(0,220))}
+}
+function showCommandResult(ok,message){
+ const canFix=!ok&&/экран|кнопк|схем/i.test(message);
+ const d=sheet(`${head(ok?"Изменения применены":"Не удалось применить изменения")}<div class="cd"><p class="note" style="white-space:pre-line">${esc(message)}</p></div><div class="acts2"><button class="ghost" data-x>Закрыть</button>${canFix?'<button class="main" id="fix-errors">Исправить схему</button>':""}</div>`,{cls:"modal"});
+ $("#fix-errors",d)?.addEventListener("click",()=>{closeSheet(d);go("flow");openErrors()})
 }
 /* ============ Предпросмотр бота ============ */
 function fmtHtml(t){
@@ -710,8 +739,8 @@ const chip=v=>v==null?'<span class="dl">—</span>':`<span class="dl ${v>=0?"up"
 function nodeViews(rows){const m={};rows.forEach(r=>{for(const k in r.n||{})m[k]=(m[k]||0)+r.n[k]});return m}
 function renderStats(){
  const el=$("#v-stats"),src=statSrc();S.draw=[];
- const demoCard=`<div class="cd demo-c"><div class="line"><div>Пример данных<small>${S.demoOn?"показаны примерные цифры — не ваши":"посмотреть, как выглядит статистика"}</small></div><label class="sw" style="margin:0"><input type="checkbox" id="sw-demo" ${S.demoOn?"checked":""}><i></i></label></div></div>`;
- if(!src){el.innerHTML=`<div class="wrap">${demoCard}${emptyCard()}</div>`;return}
+ if(!src){el.innerHTML=`<div class="wrap">${emptyCard()}</div>`;return}
+ if(src.locked){el.innerHTML=`<div class="wrap"><div class="cd hero stats-lock"><div class="big">${ic("chart")}</div><h3>Графики доступны в Pro и Business</h3><div class="note">Подключите тариф, чтобы видеть настоящие данные по активности, просмотрам экранов, аудитории и рассылкам бота @${esc(src.username)}.</div><button class="main" data-act="plans">Сравнить тарифы</button></div></div>`;return}
  const st=src.stats||{days:[],aud:{total:0,active:0,unsub:0,blocked:0},ret:{d1:{base:0,ok:0},d7:{base:0,ok:0}},posts:[]},days=st.days,R=S.range,rows=days.slice(-R),prev=days.length>=2*R?days.slice(-2*R,-R):null,last=days[days.length-1]||{};
  const empty=!st.aud.total&&!sum(days,"views");
  const pv=k=>prev&&sum(prev,k)>0?sum(prev,k):null;
@@ -730,9 +759,8 @@ function renderStats(){
  const A=st.aud,r1=st.ret.d1,r7=st.ret.d7,p1=r1.base?r1.ok/r1.base*100:0,p7=r7.base?r7.ok/r7.base*100:0;
  el.innerHTML=`<div class="wrap">
  <div class="seg wide sticky" id="rng">${[7,14,30].map(x=>`<button data-act="range" data-v="${x}" class="${R==x?"on":""}">${x} дней</button>`).join("")}</div>
-  <div><div class="m mu">Статистика ${src.demo?'<span class="badge y">пример</span>':""}</div><b style="font-size:20px">@${esc(src.username)}</b></div>
- ${src.demo?'<div class="banner info" style="margin:0">Это примерные цифры, а не ваши. Выключите пример внизу страницы — вернутся настоящие.</div>':""}
- ${empty?`<div class="cd hero"><div class="big">${ic("chart")}</div><h3>Данных пока нет</h3><div class="note">Откройте бота и нажмите /start — первые визиты появятся здесь в течение минуты.\nИли включите пример данных внизу страницы.</div></div>`:""}
+  <div><div class="m mu">Реальная статистика</div><b style="font-size:20px">@${esc(src.username)}</b></div>
+ ${empty?`<div class="cd hero"><div class="big">${ic("chart")}</div><h3>Данных пока нет</h3><div class="note">Запустите бота и нажмите /start — графики начнут заполняться по мере активности пользователей.</div></div>`:""}
  <div class="kpis">${K.map(k=>`<div class="kpi"><div class="mu">${k[0]}</div><div class="kv cu" data-v="${k[1]}">0</div><div class="kd">${chip(k[2])}</div><div class="mu ks" style="text-transform:none">${k[3]}</div></div>`).join("")}</div>
  <div class="cd"><h3>Динамика <small class="mu">за ${R} дн.</small></h3>
   <div class="chips" style="margin-bottom:10px">${Object.entries(M).map(([k,v])=>`<button class="chp ${S.metric==k?"on":""}" data-act="metric" data-v="${k}">${v[0]}</button>`).join("")}</div>
@@ -741,8 +769,8 @@ function renderStats(){
  <div class="cd"><h3>Удержание</h3><div style="display:flex;justify-content:space-around;gap:6px">${ring(p1,C.y,"День 1",`из ${nf(r1.base)}`)}${ring(p7,C.l,"День 7",`из ${nf(r7.base)}`)}</div></div></div>
  <div class="cd"><h3>Популярные экраны <small class="mu">${nf(tot)} просмотров</small></h3>${top.length?`<div class="hb">${top.map(([id,v])=>`<div class="hbr"><div class="hbt"><span>${esc(title(id))}</span><span class="mu">${nf(v)} · ${tot?Math.round(v/tot*100):0}%</span></div><div class="hbl"><i data-w="${v/top[0][1]*100}"></i></div></div>`).join("")}</div>`:'<div class="empty">Пока нет просмотров</div>'}</div>
  <div class="cd"><h3>Часы активности <small class="mu">${hours.some(Boolean)?"пик "+String(hp).padStart(2,"0")+":00":""}</small></h3><div class="ch" id="c-hours"></div></div>
+  <div class="cd"><h3>Активность по дням недели</h3><div class="ch" id="c-wd"></div></div>
  <div class="cd"><h3>Рассылки</h3>${st.posts.length?`<div class="plist">${st.posts.slice().reverse().map(p=>{const t=p.sent+p.failed;return`<div class="pit"><div><b>${nf(p.sent)}</b> доставлено<div class="mu" style="text-transform:none">${new Date(p.at).toLocaleString("ru-RU",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})}</div></div><span class="dl ${p.failed/(t||1)>.1?"dn":"up"}">${t?Math.round(p.sent/t*100):0}%</span></div>`}).join("")}</div>`:'<div class="empty">Рассылок ещё не было. Отправьте первую во вкладке «Бот».</div>'}</div>
- ${demoCard}
  </div>`;
  S.draw.push(()=>{const e=$("#c-main");if(e){const ser=[{name:mm[0],color:mm[1],vals:rows.map(r=>r[mm[2]]||0),fill:true}];if(S.cmp&&prev)ser.push({name:"Прошлый период",color:"#ffffff",vals:prev.map(r=>r[mm[2]]||0),dash:true});drawLine(e,labels,ser)}
   const h=$("#c-hours");if(h)drawBars(h,hours,hours.map((_,i)=>String(i).padStart(2,"0")),{color:C.l,hi:C.y,h:150,ticks:8,unit:"событий: "});
@@ -756,22 +784,31 @@ function renderBot(){
  const el=$("#v-bot"),b=S.bot;if(!b){el.innerHTML=emptyHtml();return}
  const sup=eff("support"),fb=eff("fallback"),run=!!b.running,bz=!!(S.busy&&S.busy.id==b.id),shown=bz?S.busy.target:run,err=S.runErr&&S.runErr.id==b.id?S.runErr.t:"";
  el.innerHTML=`<div class="wrap">
- ${S.del?`<div class="cd" style="border-color:var(--r)"><h3>Удаление запланировано</h3><div class="note">Бот будет удалён после применения изменений.</div><button class="ghost" data-act="undel" style="margin-top:10px;width:100%">Отменить удаление</button></div>`:""}
+  ${S.del?`<div class="cd" style="border-color:var(--r)"><h3>Удаление запланировано</h3><div class="note">Бот будет удалён после подтверждения.</div><button class="ghost danger" data-act="undel" style="margin-top:10px;width:100%">Отменить удаление</button></div>`:""}
  <div class="cd runhero"><div class="prof"><span class="av" style="width:52px;height:52px;font-size:22px">${esc((b.username||"?")[0].toUpperCase())}</span><div style="flex:1;min-width:0"><b style="font-size:17px" class="ell">${esc(b.name||b.username)}</b><div class="mu" style="text-transform:none">@${esc(b.username)} · ${nf(b.subs)} подписчиков</div><div class="rst"><i class="dot ${shown?"on":""}"></i><span>${bz?(S.busy.target?"Запускаем…":"Останавливаем…"):run?"Работает и отвечает пользователям":"Остановлен и не отвечает"}</span></div></div></div>
   <button class="runbtn ${run?"stop":"go"}" data-act="toggle" ${bz?"disabled":""}>${bz?'<i class="spin"></i>'+(S.busy.target?"Запускаем…":"Останавливаем…"):run?"Остановить бота":"Запустить бота"}</button>
   ${err?`<div class="banner" style="margin:12px 0 0;white-space:pre-line">${esc(err)}</div>`:""}
   <button class="ghost" data-act="copylink" style="width:100%;margin-top:12px">Скопировать ссылку на бота</button></div>
- <div class="cd"><h3>Настройки бота <small class="mu">применяются сразу через сайт</small></h3>
-  <div class="line"><div>Обратная связь<small>кнопка «Связаться» на старте и /support</small></div><label class="sw" style="margin:0"><input type="checkbox" id="sw-support" ${sup?"checked":""}><i></i></label></div>
-  <label>Ответ на неизвестные сообщения <span id="fbc">${(fb||"").length}/300</span></label><input id="fb" type="text" maxlength="300" autocomplete="off" value="${esc(fb)}"></div>
-<div class="cd"><h3>Рассылка <small class="mu">${nf(b.subs)} получателей</small></h3>
-  <textarea id="post" maxlength="4000" placeholder="Текст рассылки. Обычный текст без форматирования.">${esc(S.post)}</textarea>
-  <div class="mu" id="pc" style="text-align:right;margin:4px 0">${S.post.length}/4000</div>
-  <div class="kb" style="margin-bottom:8px"><div class="bub" id="pp" style="${S.post.trim()?"":"display:none"}">${esc(S.post)}</div></div>
-  <div class="note">Рассылка отправится после применения изменений. Фото и видео — командой /post в вашем боте.</div>
-  ${S.post?'<button class="ghost" data-act="clrpost" style="margin-top:10px;width:100%">Очистить</button>':""}</div>
-  <details class="cd"><summary>Дополнительно</summary><div class="acts2" style="margin-bottom:10px"><button class="ghost" data-act="welcome">Welcome</button><button class="ghost" data-act="vars">Переменные</button></div><div class="note">Токен нельзя ввести здесь — только в чате с основным ботом. Замена токена: чат с основным ботом → «Мои боты» → ваш бот → «Заменить токен».</div><button class="ghost danger" data-act="delbot" style="width:100%;margin-top:12px">Удалить бота</button></details></div>`}
-function postUi(){const p=$("#pp"),c=$("#pc");if(c)c.textContent=S.post.length+"/4000";if(p){p.textContent=S.post;p.style.display=S.post.trim()?"":"none"}}
+  <div class="cd"><h3>Настройки бота</h3>
+   <div class="line"><div>Обратная связь<small>Кнопка «Связаться» и команда /support</small></div><label class="sw" style="margin:0"><input type="checkbox" id="sw-support" ${sup?"checked":""}><i></i></label></div>
+   <div class="line"><div style="min-width:0;flex:1">Ответ на незнакомое сообщение<small>${esc(fb||"Используется стандартный ответ")}</small></div><button class="ghost" data-act="editfallback">Изменить</button></div>
+  </div>
+  <div class="cd"><h3>Рассылка <small class="mu">${nf(b.subs)} получателей</small></h3><div class="note">Составьте отдельное сообщение и проверьте его перед отправкой.</div><button class="main" data-act="editpost" style="width:100%;margin-top:12px">${S.post.trim()?"Открыть черновик рассылки":"Создать рассылку"}</button></div>
+  <details class="cd"><summary>Дополнительно</summary><div class="acts2" style="margin-bottom:10px"><button class="ghost" data-act="welcome">Приветствие</button><button class="ghost" data-act="vars">Переменные</button></div><div class="note">Токен бота меняется в чате с основным ботом: «Мои боты» → выберите бота → «Заменить токен».</div><button class="ghost danger" data-act="delbot" style="width:100%;margin-top:12px">Удалить бота</button></details>
+ </div>`}
+function editFallback(){
+ if(!S.bot)return;
+ const value=String(eff("fallback")||"");
+ const d=sheet(`${head("Ответ на незнакомое сообщение")}<div class="cd"><p class="note">Этот текст бот отправит, когда пользователь напишет сообщение, на которое нет кнопки или отдельного сценария.</p><label for="fallback-edit">Текст ответа</label><input id="fallback-edit" type="text" maxlength="300" value="${esc(value)}" placeholder="Например: Выберите пункт в меню ниже"></div><div class="acts2"><button class="ghost" data-x>Отмена</button><button class="main" id="fallback-save">Сохранить</button></div>`,{cls:"modal"});
+ $("#fallback-save",d).onclick=()=>{const v=$("#fallback-edit",d).value.trim().slice(0,300)||"Используйте кнопки меню или команду /menu.";setVal("fallback",v);closeSheet(d);renderBot();ui();toast("Ответ сохранён в черновик")}
+}
+function editBroadcast(){
+ if(!S.bot)return;
+ const d=sheet(`${head("Рассылка")}<div class="cd"><div class="note">Текст отправится активным подписчикам после подтверждения изменений. Для фото и видео используйте команду /post в боте.</div><label for="post-edit">Текст сообщения <span id="post-count">${S.post.length}/4000</span></label><textarea id="post-edit" maxlength="4000" placeholder="Напишите сообщение для подписчиков">${esc(S.post)}</textarea><div class="kb" style="margin-top:12px"><div class="bub" id="post-preview">${esc(S.post||"Предпросмотр рассылки")}</div></div></div><div class="acts2"><button class="ghost" data-x>Отмена</button><button class="main" id="post-save">Сохранить черновик</button></div>`,{cls:"modal"});
+ const input=$("#post-edit",d),count=$("#post-count",d),preview=$("#post-preview",d);
+ input.addEventListener("input",()=>{count.textContent=input.value.length+"/4000";preview.textContent=input.value||"Предпросмотр рассылки";preview.style.opacity=input.value?"1":".55"});
+ $("#post-save",d).onclick=()=>{S.post=input.value.trim().slice(0,4000);saveDraftSoon();closeSheet(d);renderBot();ui();toast(S.post?"Черновик рассылки сохранён":"Черновик рассылки очищен")}
+}
 
 /* ============ Профиль ============ */
 function tgUser(){let u=tg?.initDataUnsafe?.user;if(!u?.id&&tg?.initData){try{u=JSON.parse(new URLSearchParams(tg.initData).get("user")||"null")}catch{}}
@@ -793,7 +830,7 @@ function openSettings(){
  <div class="cd"><h3>Интерфейс <small class="mu">только на этом устройстве</small></h3>${[["haptic","Вибро-отклик","короткие тактильные сигналы"],["snap","Привязка к сетке","экраны выравниваются при перемещении"],["anim","Анимации","плавные графики и переходы"]].map(x=>`<div class="line"><div>${x[1]}<small>${x[2]}</small></div><label class="sw" style="margin:0"><input type="checkbox" data-pref="${x[0]}" ${PREF[x[0]]?"checked":""}><i></i></label></div>`).join("")}</div>
  <div class="cd"><h3>Справка</h3>
   <div class="step"><b>1</b><div>Схему и настройки вы собираете здесь. Запуск и остановка бота работают сразу.</div></div>
-  <div class="step"><b>2</b><div>Схема и настройки применяются кнопкой «Применить изменения» прямо на сайте.</div></div>
+  <div class="step"><b>2</b><div>После правок нажмите «Применить», чтобы отправить схему и настройки боту.</div></div>
   <div class="step"><b>3</b><div>Фото для экранов добавляются в чате с ботом (значок камеры на экране).</div></div>
   <button class="main bigbtn" data-act="tour">Открыть обучение</button></div>`)}
 
@@ -828,16 +865,14 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-act]");if(
   case"pickbot":openBot(a.dataset.id);break;
   case"addbot":openMaster();break;
   case"copylink":navigator.clipboard?.writeText("https://t.me/"+S.bot.username).then(()=>toast("Ссылка скопирована"),()=>toast("Не удалось скопировать",1));break;
+  case"editfallback":editFallback();break;
+  case"editpost":editBroadcast();break;
   case"clrpost":S.post="";saveDraftSoon();renderBot();ui();break;
   case"undel":S.del=false;saveDraftSoon();renderBot();ui();break;
   case"delbot":{const d=sheet(`${head("Удалить бота?")}<p>Будут удалены схема, фото и статистика @${esc(S.bot.username)}. Это действие нельзя отменить. Бот попросит подтверждение в чате.</p><div class="acts2"><button class="ghost" data-x>Нет</button><button class="main" style="background:var(--r);color:#fff" id="yes">Удалить</button></div>`,{cls:"modal"});$("#yes",d).onclick=()=>{S.del=true;saveDraftSoon();closeSheet(d);renderBot();ui()};break}
   case"cleardrafts":Object.keys(localStorage).filter(k=>k.startsWith("bb3:")&&!["bb3:prefs","bb3:last","bb3:demo","bb3:master"].includes(k)).forEach(k=>lsDel(k));toast("Черновики очищены");break}});
-document.addEventListener("input",e=>{const t=e.target;
- if(t.id=="fb"){setVal("fallback",t.value.slice(0,300)||S.bot.fallback);$("#fbc").textContent=t.value.length+"/300"}
- else if(t.id=="post"){S.post=t.value;postUi();saveDraftSoon();ui()}});
 document.addEventListener("change",e=>{const t=e.target;
  if(t.id=="sw-active"){setVal("active",t.checked);renderBot()}else if(t.id=="sw-support"){setVal("support",t.checked);renderBot()}
- else if(t.id=="sw-demo"){S.demoOn=t.checked;lsSet("bb3:demo",S.demoOn);renderStats();hap();toast(S.demoOn?"Демо-данные включены":"Демо-данные выключены")}
  else if(t.dataset?.pref){PREF[t.dataset.pref]=t.checked;lsSet("bb3:prefs",PREF);applyPrefs()}});
 $$(".tb").forEach(b=>b.onclick=()=>go(b.dataset.tab));
 $("#err").onclick=openErrors;
@@ -885,25 +920,25 @@ const START_HELP="Бот не запустился. Что проверить:\n
 function rerender(){renderTop();if(S.tab=="bot")renderBot();else if(S.tab=="me")renderMe();ui()}
 async function fsCmd(id,cmd){
  if(!S.token)throw new Error("no token");
- const f={bot:{stringValue:String(id)},ts:{integerValue:String(Date.now())},v:{integerValue:"2"},active:{nullValue:null},nodes:{stringValue:""},set:{stringValue:""},post:{stringValue:""},delete:{booleanValue:false}};
+ const ts=Date.now(),f={bot:{stringValue:String(id)},ts:{integerValue:String(ts)},v:{integerValue:"2"},active:{nullValue:null},nodes:{stringValue:""},set:{stringValue:""},post:{stringValue:""},delete:{booleanValue:false}};
  if("active" in cmd)f.active={booleanValue:!!cmd.active};
  if(cmd.nodes)f.nodes={stringValue:JSON.stringify(cmd.nodes)};
  if(cmd.set)f.set={stringValue:JSON.stringify(cmd.set)};
  if(cmd.post)f.post={stringValue:String(cmd.post)};
  if(cmd.del)f.delete={booleanValue:true};
  const r=await fetch(`https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents/cmds/${encodeURIComponent(S.token)}?key=${firebaseConfig.apiKey}`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({fields:f})});
- if(!r.ok)throw new Error("http "+r.status)}
+ if(!r.ok){let detail="";try{detail=(await r.json()).error?.message||""}catch{}throw new Error("Firestore "+r.status+(detail?": "+detail:""))}return ts}
 async function toggleBot(id){
  const b=(S.sess.bots||[]).find(x=>x.id==id)||S.bot;if(!b||S.busy)return;
  if(S.nosess||S.expired){S.runErr={id:b.id,t:NOCONN};rerender();return toast(NOCONN,1)}
- const target=!b.running;S.busy={id:b.id,target};S.runErr=null;rerender();hap();
- try{await fsCmd(b.id,{active:target})}catch{S.busy=null;rerender();toast(NOCONN,1);return}
- let ok=false;
+ const target=!b.running;S.busy={id:b.id,target};S.runErr=null;rerender();hap();let ts;
+ try{ts=await fsCmd(b.id,{active:target})}catch(e){S.busy=null;rerender();toast("Не удалось отправить команду: "+String(e?.message||NOCONN),1);return}
+ let ok=false,problem="";
  for(let i=0;i<15&&!ok;i++){await new Promise(r=>setTimeout(r,1800));
-  try{const j=await fetchSess(S.token),nb=j.bots.find(x=>x.id==b.id);S.live=Date.now();if(nb){Object.assign((S.sess.bots||[]).find(x=>x.id==b.id)||b,{running:nb.running,active:nb.active,subs:nb.subs});ok=nb.running==target}}catch{}}
- S.busy=null;S.ut=null;if(!ok)S.runErr={id:b.id,t:target?START_HELP:"Бот не остановился. Подождите минуту и попробуйте ещё раз. Если не помогло, проверьте интернет."};
+  try{const j=await fetchSess(S.token),nb=j.bots.find(x=>x.id==b.id),ack=j.cmd_result;S.live=Date.now();if(Number(ack?.ts)>=ts&&!ack.ok){problem=ack.message||"Бот отклонил команду.";break}if(nb){Object.assign((S.sess.bots||[]).find(x=>x.id==b.id)||b,{running:nb.running,active:nb.active,subs:nb.subs});ok=nb.running==target}}catch{}}
+ S.busy=null;S.ut=null;if(!ok)S.runErr={id:b.id,t:problem|| (target?START_HELP:"Бот не остановился. Подождите минуту и попробуйте ещё раз. Если не помогло, проверьте интернет.")};
  rerender();
- toast(ok?(target?"Бот запущен":"Бот остановлен"):(target?"Бот не запустился. Подсказка — на вкладке «Бот»":"Бот не остановился. Попробуйте ещё раз"),!ok)}
+ toast(ok?(target?"Бот запущен":"Бот остановлен"):(problem|| (target?"Бот не запустился. Подсказка — на вкладке «Бот»":"Бот не остановился. Попробуйте ещё раз")),!ok)}
 
 /* ---- Мультивыбор: Shift / долгое нажатие / режим выделения ---- */
 let lp,garm=0;const mqEl=$("#marq");
@@ -938,11 +973,9 @@ addEventListener("keydown",e=>{if(stack.length||S.tab!="flow"||!S.flow||/INPUT|T
 
 /* ---- Меню «Ещё» ---- */
 function openMore(){
- const it=[["welcome","msg","Welcome-сообщение","Приветствие бота с переменными"],["vars","vars","Переменные и теги","{first_name}, {username} и форматирование"],["tpl","box","Шаблоны","Кафе, салон, курсы, магазин, поддержка"],["plans","fire","Тарифы и Stars","Больше ботов и функций за ⭐"],["ref","link","Пригласить друзей","Ваша реферальная ссылка"],["pv","play","Предпросмотр","Как бот отвечает в Telegram"],["sel","sel","Выделение рамкой","Для телефона; на ПК — Shift"],["tour","book","Обучение","Короткий тур по конструктору"]];
+ const it=[["tpl","box","Шаблоны","Готовые схемы для быстрого старта"]];
  const d=sheet(`${head("Ещё")}<div class="bl">${it.map(x=>`<div class="br" data-m="${x[0]}" style="cursor:pointer;padding:10px"><span class="bi">${ic(x[1])}</span><div class="bm"><b>${x[2]}</b><small>${x[3]}</small></div><span class="mu">›</span></div>`).join("")}</div><div class="acts2" style="margin-top:12px"><button class="ghost" data-x>Закрыть</button></div>`,{cls:"modal"});
- d.addEventListener("click",e=>{const r=e.target.closest("[data-m]");if(!r)return;const k=r.dataset.m;closeSheet(d);
-  if(!["tour","vars","plans","ref"].includes(k)&&!S.flow)return toast("Сначала добавьте бота");
-  setTimeout(()=>({welcome:openWelcome,vars:openVars,tpl:openTemplates,pv:()=>openPreview(S.flow.start),sel:()=>{S.selMode=!S.selMode;gbarUi();toast(S.selMode?"Выделение включено: обведите экраны рамкой":"Выделение выключено")},tour:()=>openTour(true),plans:openPlans,ref:openRef})[k](),230)})}
+ d.addEventListener("click",e=>{if(!e.target.closest('[data-m="tpl"]'))return;closeSheet(d);if(!S.flow)return toast("Сначала добавьте бота");setTimeout(openTemplates,230)})}
 
 /* ---- Конструктор Welcome-сообщения ---- */
 const WEL=[["Дружелюбное","Привет, {first_name}!\nРад видеть вас в {bot_name}.\nВыберите, что вас интересует:"],["Деловое","Здравствуйте, {full_name}.\nДобро пожаловать в {bot_name}. Выберите нужный раздел:"],["Магазин","Привет, {first_name}!\nУ нас новинки и скидки — загляните в каталог.\nСегодня {date}, отличный день для покупок."],["Коротко","{first_name}, добро пожаловать! Выберите раздел ниже."],["С юмором","Привет, {first_name}! 😄\nЯ {bot_name}, и я уже ждал именно вас. Что подсказать?"],["Услуги","Здравствуйте, {first_name}! Рад помочь.\nВыберите услугу или нажмите «Связаться»."]];
@@ -1012,7 +1045,7 @@ function openTour(manual){
   [ART[3],"Тексты и переменные","Нажмите на экран, чтобы изменить текст: жирный, курсив, ссылки. Кнопка { } вставляет переменную — например «Привет, {first_name}!», и бот назовёт человека по имени."],
   [ART[4],"Выделение группой","Зажмите Shift и обведите экраны рамкой. На телефоне — долгое нажатие на пустое место или кнопка выделения справа. Выбранные экраны двигаются вместе, их можно копировать и удалять."],
   [ART[5],"Предпросмотр и шаблоны","«Просмотр» показывает, как бот ответит в Telegram, — кнопки можно нажимать. «Шаблон» подгружает готовую схему целиком, останется заменить тексты."],
-  [ART[6],"Запуск и отправка","Во вкладке «Бот» одной кнопкой запускайте и останавливайте бота. Схема и настройки применяются прямо с сайта. Фото экранов загружаются через бота."],
+  [ART[6],"Запуск и отправка","Во вкладке «Бот» запускайте и останавливайте бота. После правок нажмите «Применить», чтобы передать схему и настройки. Фото экранов загружаются через бота."],
   [ART[7],"Удобнее на ПК","Откройте конструктор в Telegram Desktop: большой холст и быстрые клавиши. Это обучение всегда можно открыть снова в «Профиле».",`<div class="hk"><span><i class="kbd">Shift</i> + рамка — выбрать группу</span><span><i class="kbd">Колесо</i> — масштаб</span><span><i class="kbd">Ctrl</i> + <i class="kbd">Z</i> / <i class="kbd">Y</i> — отмена и повтор</span><span><i class="kbd">Del</i> — удалить выбранные</span></div>${!desk&&L?`<button class="ghost" data-copy="${esc(L)}" style="width:100%">Скопировать ссылку для ПК</button>`:""}`]
  ],n=SL.length;
  const d=sheet(`<div class="tv" id="tv"><div class="tt" id="tt">${SL.map(s=>`<div class="ts"><div class="art">${s[0]}</div><h3>${s[1]}</h3><p>${s[2]}</p>${s[3]||""}</div>`).join("")}</div></div><div class="td" id="td">${SL.map((_,i)=>`<i data-i="${i}"></i>`).join("")}</div><div class="tf"><button class="ghost" id="tp">Пропустить</button><button class="main" id="tn">Далее</button></div>`,{cls:"modal tourm"});
@@ -1076,10 +1109,10 @@ async function payPlan(p,btn){
 function openPlans(){
  const current=S.sess.plan||"free",planName={free:"Бесплатный",pro:"Pro",biz:"Business"}[current]||current.toUpperCase(),until=S.sess.plan_until?new Date(S.sess.plan_until).toLocaleDateString("ru-RU"):"";
  const prices=Array.isArray(S.sess.plans)?S.sess.plans:[];
- const currentFeatures=current==="biz"?["До 50 ботов","Рассылки без лимита","Без отметки конструктора"]:current==="pro"?["До 15 ботов","До 40 экранов в схеме","Приоритетная поддержка"]:[`До ${nf(S.sess.limit||5)} ботов`,"Редактор схем и базовая статистика","Управление ботами с сайта"];
+  const currentFeatures=current==="biz"?["До 50 ботов","Рассылки без лимита","Без отметки конструктора","Полная статистика с графиками"]:current==="pro"?["До 15 ботов","До 40 экранов в схеме","Приоритетная поддержка","Графики активности, просмотров и аудитории"]:[`До ${nf(S.sess.limit||5)} ботов`,"Редактор схем и запуск ботов","Управление ботами с сайта"];
  const tiers=[
-  {k:"pro",name:"Premium Pro",term:"30 дней",features:["До 15 ботов","До 40 экранов в схеме","Приоритетная поддержка"]},
-  {k:"biz",name:"Premium Business",term:"30 дней",features:["До 50 ботов","Рассылки без лимита","Без отметки конструктора"]}
+   {k:"pro",name:"Premium Pro",term:"30 дней",features:["До 15 ботов","До 40 экранов в схеме","Приоритетная поддержка","Графики активности, просмотров и аудитории"]},
+   {k:"biz",name:"Premium Business",term:"30 дней",features:["До 50 ботов","Рассылки без лимита","Без отметки конструктора","Полная статистика с графиками"]}
  ];
  const planCard=t=>{const p=PLANS.find(x=>x.k==t.k),server=prices.find(x=>x.k==t.k),price=server?+server.stars:(p?.s||0),isCurrent=current==t.k;
   return`<div class="cd plan-card"><div class="plan-head"><div><b style="font-size:16px">${t.name}</b><div class="plan-sub">${t.term}</div></div><span class="plan-price"><svg class="star-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.5 2.92 5.92 6.53.95-4.73 4.61 1.12 6.5L12 17.41l-5.84 3.07 1.12-6.5-4.73-4.61 6.53-.95L12 2.5Z"/></svg>${nf(price)}</span></div><div class="plan-sub">${isCurrent?"Тариф активен — можно продлить":"Будет доступно после покупки"}</div><div class="plan-list">${t.features.map(x=>`<div><i>✓</i><span>${x}</span></div>`).join("")}</div><button class="${isCurrent?"ghost":"main"}" data-pay="${t.k}" style="width:100%">${isCurrent?"Продлить тариф":"Купить за "+nf(price)+" "+STAR_ICON}</button></div>`};
