@@ -282,6 +282,44 @@ details.cd>summary{cursor:pointer;font-weight:600;font-size:15px;list-style:none
 .chip[data-t=btn]{background:#ff6a2b18;color:#ffb18b;border-color:var(--o)}
 #gbar button:not(.dn){color:#d8d6ff;background:#a9a8f814}
 .stats-lock .big{background:linear-gradient(135deg,var(--l),var(--b));}
+/* Telegram Stars icon, locked stats preview, and referral alignment */
+.star-mark{width:19px;height:19px;flex:none;vertical-align:-4px;filter:drop-shadow(0 1px 4px #ffc83d55)}
+.star-mark.tiny{width:14px;height:14px;vertical-align:-2px}
+.plan-price{color:var(--y);background:#09090b;border:1px solid #e6ff3d77;box-shadow:inset 0 0 0 1px #ffffff06}
+.plan-price .star-mark{width:15px;height:15px;filter:none}
+.ref-copy small{display:flex;align-items:center;gap:4px;flex-wrap:wrap;line-height:1.35}
+.ref-earned{display:inline-flex;align-items:center;gap:3px;white-space:nowrap;color:#ffd84d}
+.referral-balance{display:flex;align-items:center;gap:8px;min-height:34px}
+.referral-balance .star-mark{width:24px;height:24px;vertical-align:0}
+.stats-account{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 2px}
+.stats-account>b,.stats-account b{font-size:18px}
+.stats-status{display:inline-flex;align-items:center;gap:7px;color:var(--mu);font-size:12px}
+.stats-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(min-width:700px){.stats-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.stats-preview-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:4px}
+.stats-preview-head h3{margin:0 0 3px;font-size:17px}
+.stats-gate{position:relative;min-height:290px;border-radius:18px}
+.stats-sample{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;filter:blur(5px);opacity:.38;pointer-events:none;user-select:none;transition:filter .2s,opacity .2s}
+.stats-gate.demo-on .stats-sample{filter:none;opacity:1;pointer-events:auto;user-select:auto}
+.demo-chart{min-width:0;overflow:hidden}
+.demo-chart-head{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.demo-chart-head b{font-size:12px;line-height:1.25}
+.demo-chart .badge{font-size:8px;color:#d4d1ff;background:#a9a8f822;border:1px solid #a9a8f844}
+.demo-chart strong{display:block;font-size:22px;margin:7px 0 0}
+.demo-spark{margin:0 -5px -4px}.demo-spark svg{display:block;width:100%;height:auto;max-height:74px}
+.stats-lock-overlay{position:absolute;inset:0;display:grid;place-items:center;padding:12px}
+.stats-lock-card{width:min(100%,360px);text-align:center;padding:18px;background:#111116f2;border-color:#a9a8f866;box-shadow:0 16px 48px #0009;backdrop-filter:blur(12px)}
+.stats-lock-card .big{width:48px;height:48px;margin:0 auto 10px;border-radius:16px;background:#a9a8f822;color:var(--l);display:grid;place-items:center}
+.stats-lock-card h3{margin:9px 0 5px}.stats-lock-card .note{margin-bottom:14px}
+.demo-note{border-color:#a9a8f855}
+.edit-section{padding:12px;background:linear-gradient(155deg,#17171c,#0d0d10);border-color:#ffffff16}
+.edit-section h3{margin:0 0 8px;font-size:15px}
+.editor-hint{font-size:11.5px;line-height:1.45;margin-top:7px}
+.editor-actions{margin-top:10px}
+.editor-actions button{min-height:42px}
+.edit-section .fmt button[data-f=var]{border-color:#a9a8f888;background:#a9a8f81b;color:#d5d2ff}
+.edit-section .bli{background:#121217;border-color:#ffffff20}
+@media(max-width:420px){.stats-sample{grid-template-columns:1fr}.stats-gate{min-height:500px}.stats-lock-card{padding:14px}}
 </style></head><body>
 <div id="app">
 <header id="top">
@@ -336,7 +374,7 @@ const openTg=u=>{const go=()=>{try{tg?.openTelegramLink?tg.openTelegramLink(u):w
  if(tg?.isFullscreen&&tg.exitFullscreen){let d=0;const f=()=>{if(d)return;d=1;try{tg.offEvent("fullscreenChanged",f)}catch{}setTimeout(go,150)};try{tg.onEvent("fullscreenChanged",f);tg.exitFullscreen();setTimeout(f,600)}catch{go()}}else go()};
 /* ============ Состояние и модель ============ */
 const W=230,HDR=34,TXT=46,ROW=32,MAXB=12,MAXN=40;
-const S={tab:"flow",range:14,metric:"dau",cmp:false,view:{x:30,y:30,k:1},hist:[],fut:[],set:{},post:"",del:false,sel:null,heat:false,heatMap:{},draw:[],fitted:false,sess:{bots:[]},bot:null,flow:null,base:[],baseSig:"",token:null,expired:false,nosess:false,live:0,cc:null,ms:new Set(),selMode:false,busy:null};
+const S={tab:"flow",range:14,metric:"dau",cmp:false,statsDemo:false,view:{x:30,y:30,k:1},hist:[],fut:[],set:{},post:"",del:false,sel:null,heat:false,heatMap:{},draw:[],fitted:false,sess:{bots:[]},bot:null,flow:null,base:[],baseSig:"",token:null,expired:false,nosess:false,live:0,cc:null,ms:new Set(),selMode:false,busy:null};
 const node=id=>S.flow.nodes.find(n=>n.id==id);
 const nh=n=>HDR+TXT+Math.max(1,n.btns.length)*ROW+10;
 const uid=(list=S.flow?.nodes||[])=>{let i;do{i=Math.random().toString(36).slice(2,7).padEnd(5,"x")}while(list.some(n=>n.id==i||(n.btns||[]).some(b=>b.id==i)));return i};
@@ -352,6 +390,7 @@ const avg=(a,k)=>a.length?sum(a,k)/a.length:0;
 function pendingList(){const a=[];if(!S.bot)return a;if(S.del)return["Удаление бота"];if(flowDirty())a.push("Схема");
  const k=Object.keys(S.set);if(k.length)a.push("Настройки: "+k.map(x=>({support:"обратная связь",active:"запуск/остановка",fallback:"ответ по умолчанию"}[x])).join(", "));
  if(S.post.trim())a.push("Рассылка");return a}
+function starIcon(extra=""){return`<svg class="star-mark ${extra}" viewBox="0 0 32 32" aria-hidden="true"><path fill="#ffc83d" d="M16 2.2 20.2 10.7 29.6 12.1 22.8 18.7 24.4 28.1 16 23.7 7.6 28.1 9.2 18.7 2.4 12.1 11.8 10.7Z"/><path fill="#fff0a8" d="M16 2.2 16 15.5 11.8 10.7Z"/><path fill="#e9a514" d="M16 2.2 20.2 10.7 16 15.5Z"/><path fill="#f4b922" d="M16 15.5 9.2 18.7 7.6 28.1 16 23.7Z"/><path fill="#ffe27b" d="M16 15.5 22.8 18.7 24.4 28.1 16 23.7Z"/></svg>`}
 const masterName=()=>S.sess.master||lsGet("bb3:master")||"";
 function openMaster(){const m=masterName();
  if(m)return openTg("https://t.me/"+m+"?start=app");
@@ -367,8 +406,7 @@ async function fetchSess(token,peek){
 /* Полная статистика доступна только на активных тарифах Pro и Business. */
 function statSrc(){
  const b=S.bot;if(!b)return null;
- if(!["pro","biz"].includes(S.sess.plan))return{locked:true,username:b.username};
- return{username:b.username,subs:b.subs,nodes:b.flow.nodes,stats:b.stats||{}}}
+ return{locked:!["pro","biz"].includes(S.sess.plan),username:b.username,subs:b.subs||0,nodes:b.flow?.nodes||[],stats:b.stats||{},running:!!b.running}}
 
 async function boot(){
  const token=new URLSearchParams(location.search).get("s");
@@ -571,15 +609,16 @@ const enterBlur=e=>{if(e.key=="Enter"&&e.target.tagName=="INPUT"){e.preventDefau
 function openNode(id){
  const n0=node(id);if(!n0)return;const start=id==S.flow.start;
  const d=sheet(`${head(start?"Стартовый экран":"Экран")}
- <label>Название в схеме</label><input id="nt" type="text" maxlength="40" autocomplete="off" enterkeyhint="done">
+ <div class="cd edit-section"><h3>Содержание экрана</h3><label>Название в схеме</label><input id="nt" type="text" maxlength="40" autocomplete="off" enterkeyhint="done" placeholder="Например: Главное меню">
  <label>Текст сообщения <span id="cnt"></span></label>
- <div class="fmt"><button data-f="b">B</button><button data-f="i"><i>I</i></button><button data-f="c">‹›</button><button data-f="link">${ic("link")}</button><button data-f="var" title="Переменная">${ic("vars")}</button></div>
- <textarea id="nx" maxlength="3500"></textarea><div class="vh" id="vh"></div>
- <label>Раскладка кнопок</label><div class="seg" id="nc"><button data-c="1">В столбик</button><button data-c="2">По две в ряд</button></div>
- <label>Кнопки <span id="bc"></span></label><div class="bl" id="bl"></div>
- <div class="acts2" style="margin-top:8px"><button class="ghost" id="ab">${ic("plus")} Кнопка</button><button class="ghost" id="au">${ic("link")} Ссылка</button></div>
- <div class="acts2" style="margin-top:8px"><button class="ghost" id="ph">${ic("cam")} Фото</button><button class="ghost" id="pr">${ic("play")} Предпросмотр</button><button class="ghost" id="dp">${ic("copy")} Копия</button></div>
- <div class="acts2" style="margin-top:12px">${start?"":`<button class="ghost danger" id="dl">${ic("trash")} Удалить</button>`}<button class="main" data-x>Готово</button></div>`);
+ <div class="fmt"><button data-f="b" title="Жирный">B</button><button data-f="i" title="Курсив"><i>I</i></button><button data-f="c" title="Моноширинный">‹›</button><button data-f="link" title="Ссылка">${ic("link")}</button><button data-f="var" title="Вставить переменную">${ic("vars")}</button></div>
+ <textarea id="nx" maxlength="3500" placeholder="Напишите сообщение, которое бот отправит пользователю"></textarea><div class="vh" id="vh"></div><div class="note editor-hint">Нажмите { } чтобы вставить имя, username, дату или другую переменную.</div></div>
+ <div class="cd edit-section"><h3>Кнопки <small class="mu" id="bc"></small></h3><div class="note editor-hint">Нажмите кнопку в списке, чтобы изменить текст и действие.</div><div class="bl" id="bl"></div>
+ <div class="acts2 editor-actions"><button class="ghost" id="ab">${ic("plus")} Открыть экран</button><button class="ghost" id="au">${ic("link")} Добавить ссылку</button></div></div>
+ <div class="cd edit-section"><h3>Раскладка и материалы</h3><label>Расположение кнопок</label><div class="seg" id="nc"><button data-c="1">В столбик</button><button data-c="2">По две в ряд</button></div>
+ <div class="acts2 editor-actions"><button class="ghost" id="ph">${ic("cam")} Фото экрана</button><button class="ghost" id="pr">${ic("play")} Предпросмотр</button></div>
+ <button class="ghost" id="dp" style="width:100%;margin-top:8px">${ic("copy")} Дублировать экран</button></div>
+ <div class="acts2" style="margin-top:12px">${start?"":`<button class="ghost danger" id="dl">${ic("trash")} Удалить</button>`}<button class="main" data-x>Готово</button></div>`,{cls:"modal"});
  const t=$("#nt",d),x=$("#nx",d);let cols=n0.cols;t.value=n0.title;x.value=n0.text;
  const cnt=()=>{$("#cnt",d).textContent=x.value.length+" / 3500";$("#vh",d).innerHTML=varHint(x.value)},setCols=()=>$$("#nc button",d).forEach(b=>b.classList.toggle("on",+b.dataset.c==cols));
  const list=()=>{const m=node(id);if(!m)return;$("#bc",d).textContent=m.btns.length+" / "+MAXB;
@@ -607,16 +646,16 @@ function openNode(id){
  d._close=()=>{const m=node(id);if(!m)return;const title=t.value.trim().slice(0,40)||"Экран",text=x.value.trim()||"…";if(title!=m.title||text!=m.text||cols!=m.cols)mutate(()=>{m.title=title;m.text=text;m.cols=cols})}}
 function openBtn(nid,bid,after){
  const n=node(nid),b=n?.btns.find(x=>x.id==bid);if(!b)return;
- const d=sheet(`${head("Кнопка")}<label>Текст кнопки</label><input id="a" type="text" maxlength="32" autocomplete="off" autocapitalize="sentences" enterkeyhint="done" placeholder="Например: Каталог">
- <label>Тип</label><div class="seg" id="k"><button data-k="go">Открывает экран</button><button data-k="url">Ссылка</button></div>
- <div id="g"><label>Куда ведёт</label><select id="t"></select></div>
- <div id="u"><label>Ссылка (https:// или tg://)</label><input id="v" type="text" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" enterkeyhint="done" placeholder="https://"></div>
- <div class="acts2" style="margin-top:14px"><button class="ghost danger" id="del">${ic("trash")} Удалить</button><button class="main" data-x>Готово</button></div>`);
+ const d=sheet(`${head("Настройка кнопки")}<div class="cd edit-section"><h3>Текст кнопки</h3><input id="a" type="text" maxlength="32" autocomplete="off" autocapitalize="sentences" enterkeyhint="done" placeholder="Например: Открыть каталог"><div class="note editor-hint">Короткая надпись, которую увидит пользователь.</div></div>
+ <div class="cd edit-section"><h3>Действие</h3><div class="seg wide" id="k"><button data-k="go">Открыть экран</button><button data-k="url">Открыть ссылку</button></div>
+ <div id="g"><label>Куда ведёт кнопка</label><select id="t"></select><div class="note editor-hint" id="action-hint"></div></div>
+ <div id="u"><label>Ссылка (https:// или tg://)</label><input id="v" type="text" inputmode="url" autocomplete="off" autocapitalize="none" spellcheck="false" enterkeyhint="done" placeholder="https://example.com"><div class="note editor-hint">Вставьте полный адрес страницы или ссылку Telegram.</div></div></div>
+ <div class="acts2" style="margin-top:14px"><button class="ghost danger" id="del">${ic("trash")} Удалить кнопку</button><button class="main" data-x>Сохранить</button></div>`);
  const A=$("#a",d),V=$("#v",d),T=$("#t",d);let kind=b.kind;A.value=b.label;V.value=b.value||"";
  T.innerHTML='<option value="">— не выбрано —</option>'+S.flow.nodes.map(m=>`<option value="${m.id}">${esc(m.title)}${m.id==S.flow.start?" (старт)":""}</option>`).join("")+(S.flow.nodes.length<MAXN?'<option value="__new">+ Создать новый экран</option>':"");
  T.value=b.to||"";
  const snap=JSON.stringify([b.label,b.kind,b.to||"",b.value||""]);
- const sync=()=>{$$("#k button",d).forEach(x=>x.classList.toggle("on",x.dataset.k==kind));$("#g",d).hidden=kind!="go";$("#u",d).hidden=kind!="url"};sync();
+ const sync=()=>{$$("#k button",d).forEach(x=>x.classList.toggle("on",x.dataset.k==kind));$("#g",d).hidden=kind!="go";$("#u",d).hidden=kind!="url";$("#action-hint",d).textContent=T.value==="__new"?"После сохранения появится новый пустой экран — его текст можно будет отредактировать.":T.value?"Пользователь перейдёт на выбранный экран.":"Выберите экран или создайте новый."};sync();T.onchange=sync;
  $("#k",d).onclick=e=>{const x=e.target.closest("[data-k]");if(x){kind=x.dataset.k;sync()}};
  A.onkeydown=enterBlur;V.onkeydown=enterBlur;
  $("#del",d).onclick=()=>{d._close=null;mutate(()=>{n.btns=n.btns.filter(x=>x!=b)});closeSheet(d);after?.()};
@@ -737,10 +776,29 @@ const dl=d=>{const[,m,dd]=d.split("-");return dd+"."+m};
 const delta=(c,p)=>p==null||p<=0?null:(c-p)/p*100;
 const chip=v=>v==null?'<span class="dl">—</span>':`<span class="dl ${v>=0?"up":"dn"}">${v>=0?"▲":"▼"} ${Math.abs(Math.round(v))}%</span>`;
 function nodeViews(rows){const m={};rows.forEach(r=>{for(const k in r.n||{})m[k]=(m[k]||0)+r.n[k]});return m}
+function renderLockedStats(el,src){
+ const summary=src.stats?.summary||{};
+ const metrics=[["Подписчики",src.subs,"сейчас"],["Активные сегодня",summary.dau||0,"сегодня"],["Просмотры",summary.views||0,"за 30 дней"],["Новые пользователи",summary.new||0,"за 30 дней"]];
+ const demo=[
+  ["Активность по дням",[8,12,10,19,16,25,22,31,27,36],C.l],
+  ["Просмотры экранов",[5,9,8,14,12,18,17,24,21,30],C.y],
+  ["Новые пользователи",[2,4,3,7,5,9,8,12,10,15],C.g],
+  ["Аудитория",[6,7,9,8,12,14,13,17,19,22],C.b]
+ ];
+ el.innerHTML=`<div class="wrap">
+  <div class="stats-account"><div><div class="m mu">Статистика бота</div><b>@${esc(src.username)}</b></div><span class="stats-status"><i class="dot ${src.running?"on":""}"></i>${src.running?"Работает":"Остановлен"}</span></div>
+  <div class="kpis stats-kpis">${metrics.map(([label,value,period])=>`<div class="kpi"><div class="mu">${label}</div><div class="kv">${nf(value)}</div><div class="mu ks">${period}</div></div>`).join("")}</div>
+  <div class="stats-preview-head"><div><h3>Графики и динамика</h3><div class="note">Пример аналитики · демонстрационные данные</div></div><span class="badge l">PRO</span></div>
+  <div class="stats-gate ${S.statsDemo?"demo-on":""}"><div class="stats-sample">${demo.map(([label,values,color])=>`<div class="cd demo-chart"><div class="demo-chart-head"><b>${label}</b><span class="badge">ДЕМО</span></div><strong>${nf(values[values.length-1])}</strong><div class="demo-spark">${spark(values,color,280,74)}</div></div>`).join("")}</div>
+   ${S.statsDemo?"":`<div class="stats-lock-overlay"><div class="cd stats-lock-card"><div class="big">${ic("chart")}</div><span class="badge l">PRO · BUSINESS</span><h3>Откройте полную статистику</h3><p class="note">Графики активности, просмотров, аудитории и рассылок доступны на тарифах Pro и Business.</p><button class="main" data-act="plans">Обновить тариф</button></div></div>`}
+  </div>
+  ${S.statsDemo?`<div class="cd demo-note"><div class="note">Это пример оформления графиков. Здесь показаны демонстрационные значения, реальные данные бота откроются после обновления тарифа.</div><button class="main" data-act="plans" style="width:100%;margin-top:12px">Обновить тариф</button></div>`:`<button class="ghost" data-act="statdemo">${ic("play")} Показать демо графиков</button>`}
+ </div>`
+}
 function renderStats(){
  const el=$("#v-stats"),src=statSrc();S.draw=[];
  if(!src){el.innerHTML=`<div class="wrap">${emptyCard()}</div>`;return}
- if(src.locked){el.innerHTML=`<div class="wrap"><div class="cd hero stats-lock"><div class="big">${ic("chart")}</div><h3>Графики доступны в Pro и Business</h3><div class="note">Подключите тариф, чтобы видеть настоящие данные по активности, просмотрам экранов, аудитории и рассылкам бота @${esc(src.username)}.</div><button class="main" data-act="plans">Сравнить тарифы</button></div></div>`;return}
+ if(src.locked){renderLockedStats(el,src);return}
  const st=src.stats||{days:[],aud:{total:0,active:0,unsub:0,blocked:0},ret:{d1:{base:0,ok:0},d7:{base:0,ok:0}},posts:[]},days=st.days,R=S.range,rows=days.slice(-R),prev=days.length>=2*R?days.slice(-2*R,-R):null,last=days[days.length-1]||{};
  const empty=!st.aud.total&&!sum(days,"views");
  const pv=k=>prev&&sum(prev,k)>0?sum(prev,k):null;
@@ -819,10 +877,10 @@ function renderMe(){
  const end=S.sess.plan_until?new Date(S.sess.plan_until):null,until=end&&!Number.isNaN(+end)?end.toLocaleDateString("ru-RU"):"";
  el.innerHTML=`<div class="wrap">
  <div class="cd"><div class="prof"><span class="av" style="width:52px;height:52px;font-size:22px">${esc((name||"?")[0].toUpperCase())}${u.photo_url?`<img src="${esc(u.photo_url)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:""}</span><div style="flex:1;min-width:0"><b style="font-size:18px" class="ell">${esc(name)}</b><div class="mu" style="text-transform:none;margin-top:3px">${u.id?"ID "+esc(u.id)+" · ":""}${esc(planName)}${until?" · до "+until:""}</div></div></div>
-  <div class="profile-metrics"><div><span class="mu">МОИ БОТЫ</span><b>${nf(bs.length)} <small>/ ${nf(lim)}</small></b></div><div><span class="mu">БАЛАНС STARS</span><b><svg class="star-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.5 2.92 5.92 6.53.95-4.73 4.61 1.12 6.5L12 17.41l-5.84 3.07 1.12-6.5-4.73-4.61 6.53-.95L12 2.5Z"/></svg>${nf(stars)}</b></div></div></div>
+  <div class="profile-metrics"><div><span class="mu">МОИ БОТЫ</span><b>${nf(bs.length)} <small>/ ${nf(lim)}</small></b></div><div><span class="mu">БАЛАНС STARS</span><b>${STAR_ICON}${nf(stars)}</b></div></div></div>
 
  <button class="cd premium-mini" data-act="plans"><span class="premium-gem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 2.7 6.1L21 11l-6.3 2.9L12 20l-2.7-6.1L3 11l6.3-2.9L12 2Z"/><path d="m19 15 1.2 2.8L23 19l-2.8 1.2L19 23l-1.2-2.8L15 19l2.8-1.2Z"/></svg></span><span class="premium-copy"><b>Купить премиум</b><small>Текущий тариф: ${esc(planName)}</small></span><span class="premium-arrow">›</span></button>
- <button class="cd referral-mini" data-act="ref"><span class="ref-gem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1.5a4.5 4.5 0 0 0-4.5-4.5h-5A4.5 4.5 0 0 0 2 18.5V20M9 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM16 11a3.5 3.5 0 1 0 0-7M17 14h.5a4.5 4.5 0 0 1 4.5 4.5V20"/></svg></span><span class="ref-copy"><b>Рефералы</b><small>Приглашено ${nf(invitedTotal)} · заработано <svg class="star-mark tiny" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.5 2.92 5.92 6.53.95-4.73 4.61 1.12 6.5L12 17.41l-5.84 3.07 1.12-6.5-4.73-4.61 6.53-.95L12 2.5Z"/></svg> ${nf(stars)}</small></span><span class="premium-arrow">›</span></button>
+ <button class="cd referral-mini" data-act="ref"><span class="ref-gem"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1.5a4.5 4.5 0 0 0-4.5-4.5h-5A4.5 4.5 0 0 0 2 18.5V20M9 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM16 11a3.5 3.5 0 1 0 0-7M17 14h.5a4.5 4.5 0 0 1 4.5 4.5V20"/></svg></span><span class="ref-copy"><b>Рефералы</b><small><span>Приглашено ${nf(invitedTotal)} · заработано</span><span class="ref-earned">${starIcon("tiny")}<b>${nf(stars)}</b></span></small></span><span class="premium-arrow">›</span></button>
  <div class="cd"><h3>Мои боты <small class="mu">${bs.length} из ${lim}</small></h3>${bs.map(b=>{const bz=!!(S.busy&&S.busy.id==b.id),on=bz?S.busy.target:!!b.running;return`<div class="bot-row ${b.id==S.bot?.id?"cur":""}"><span class="av" data-act="pickbot" data-id="${b.id}">${esc((b.username||"?")[0].toUpperCase())}</span><span class="bn" data-act="pickbot" data-id="${b.id}">@${esc(b.username)}<small>${bz?(S.busy.target?"запускаем…":"останавливаем…"):b.running?"работает":"остановлен"} · ${nf(b.subs)} подписчиков</small></span><span class="sww">${bz?'<i class="spin" style="margin:0"></i>':""}<label class="sw" style="margin:0" title="${on?"Остановить":"Запустить"}"><input type="checkbox" data-act="tgbot" data-id="${b.id}" ${on?"checked":""} ${S.busy?"disabled":""}><i></i></label></span></div>`}).join("")||'<div class="empty">Ботов пока нет</div>'}<button class="ghost" data-act="addbot" style="margin-top:10px;width:100%">Добавить бота</button></div>
  <button class="cd menurow" data-act="settings">Настройки и справка <span>›</span></button></div>`}
 function openSettings(){
@@ -842,7 +900,7 @@ function renderTab(){
  if(S.tab=="flow"){renderFlow();if(!S.fitted)requestAnimationFrame(fit)}else if(S.tab=="stats")renderStats();else if(S.tab=="bot")renderBot();else renderMe()}
 function go(tab){S.tab=tab;hap();renderTab();ui()}
 function ui(){
- const p=pendingList(),f=$("#fab");f.hidden=!p.length;f.classList.toggle("mini",S.tab=="flow");$("b",f).textContent=p.length;
+ const p=pendingList(),f=$("#fab");f.hidden=!p.length||S.tab!="flow";f.classList.toggle("mini",S.tab=="flow");$("b",f).textContent=p.length;
  const e=errCount();$("#err").hidden=!e;$("#err").textContent="Проверить кнопки · "+e;
  const cc=!!p.length;if(S.cc!==cc){S.cc=cc;try{cc?tg?.enableClosingConfirmation?.():tg?.disableClosingConfirmation?.()}catch{}}
   const ex=$("#exp");if(ex)ex.hidden=true}
@@ -862,6 +920,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-act]");if(
   case"range":S.range=+v;renderStats();break;
   case"metric":S.metric=v;renderStats();break;
   case"cmp":S.cmp=!S.cmp;renderStats();break;
+   case"statdemo":S.statsDemo=!S.statsDemo;renderStats();break;
   case"pickbot":openBot(a.dataset.id);break;
   case"addbot":openMaster();break;
   case"copylink":navigator.clipboard?.writeText("https://t.me/"+S.bot.username).then(()=>toast("Ссылка скопирована"),()=>toast("Не удалось скопировать",1));break;
@@ -898,10 +957,10 @@ function varMap(){const u=tgUser(),b=S.bot||{},d=new Date(),p=n=>String(n).padSt
  return{first_name:f,last_name:u.last_name||"",full_name:[f,u.last_name].filter(Boolean).join(" "),username:u.username?"@"+u.username:"",user_id:String(u.id||123456789),bot_name:b.name||b.username||"Бот",bot_username:b.username?"@"+b.username:"",date:p(d.getDate())+"."+p(d.getMonth()+1)+"."+d.getFullYear(),time:p(d.getHours())+":"+p(d.getMinutes())}}
 function applyVars(t){const m=varMap();return String(t||"").replace(VAR_RE,(a,k,fb)=>{k=k.toLowerCase();if(!(k in m))return a;return m[k]||fb||(k=="username"?m.first_name:"")})}
 function varHint(t){const bad=[];String(t).replace(VAR_RE,(a,k)=>{if(!VARS.some(v=>v[0]==k.toLowerCase())&&!bad.includes(a))bad.push(a)});return bad.length?`<span style="color:var(--o)">Неизвестная переменная: ${esc(bad.join(", "))}</span>`:""}
-function insAt(x,t){const s=x.selectionStart??x.value.length,en=x.selectionEnd??s;x.value=x.value.slice(0,s)+t+x.value.slice(en);x.selectionStart=x.selectionEnd=s+t.length;x.dispatchEvent(new Event("input"))}
+function insAt(x,t){const s=x.selectionStart??x.value.length,en=x.selectionEnd??s;x.value=x.value.slice(0,s)+t+x.value.slice(en);const caret=s+t.length;x.setSelectionRange(caret,caret);x.dispatchEvent(new Event("input",{bubbles:true}));requestAnimationFrame(()=>{try{x.focus({preventScroll:true});x.setSelectionRange(caret,caret)}catch{}})}
 function pickVar(cb){const m=varMap();
  const d=sheet(`${head("Переменная")}<p class="note">Нажмите — переменная вставится в текст. Бот заменит её данными человека. Запасное значение: {username|друг}.</p><div class="bl">${VARS.map(v=>`<div class="br" data-v="${v[0]}" style="cursor:pointer;padding:9px"><div class="bm"><b>{${v[0]}}</b><small>${esc(v[1])} → ${esc(m[v[0]]||v[2])}</small></div><span class="mu">вставить</span></div>`).join("")}</div><div class="acts2" style="margin-top:12px"><button class="ghost" data-x>Закрыть</button></div>`,{cls:"modal"});
- d.addEventListener("click",e=>{const r=e.target.closest("[data-v]");if(!r)return;cb("{"+r.dataset.v+"}");closeSheet(d)})}
+ d.addEventListener("click",e=>{const r=e.target.closest("[data-v]");if(!r)return;const value="{"+r.dataset.v+"}";closeSheet(d);requestAnimationFrame(()=>cb(value))})}
 const FMTROW=()=>`<div class="fmt"><button data-f="b">B</button><button data-f="i"><i>I</i></button><button data-f="c">‹›</button><button data-f="link">${ic("link")}</button><button data-f="var" title="Переменная">${ic("vars")}</button></div>`;
 function fmtBind(row,x,cb){row.onclick=e=>{const b=e.target.closest("[data-f]");if(!b)return;const f=b.dataset.f;if(f=="var"){pickVar(t=>{insAt(x,t);cb()});return}
  const s=x.selectionStart,en=x.selectionEnd,v=x.value,sel=v.slice(s,en);let ins;if(f=="link")ins="["+(sel||"текст")+"](https://)";else{const m={b:"**",i:"__",c:"`"}[f];ins=m+(sel||"текст")+m}
@@ -1065,8 +1124,6 @@ function openTour(manual){
  to(0)}
 {const mb=$("#more");if(mb)mb.onclick=()=>{hap();openMore()}}
 
-applyPrefs();boot().catch(e=>{console.error(e);S.expired=true;S.sess={bots:[]};renderTop();renderTab();ui()});if(lsGet("bb3:tour")!=TOUR_V)setTimeout(()=>openTour(),700);
-
 /* ============ Рефералы ============ */
 const BOT_URL="https://t.me/ManageYourOwnBot";
 const refLink=()=>BOT_URL+"?start=ref_"+(tgUser().id||"0");
@@ -1075,12 +1132,12 @@ function shareRef(){const u="https://t.me/share/url?url="+encodeURIComponent(ref
 function openRef(){
  const ref=S.sess.ref||{},invited=Array.isArray(ref.invited)?ref.invited:[],count=Math.max(+ref.count||0,invited.length),stars=+ref.stars||0;
  const rows=invited.length?`<div class="plist">${invited.map(x=>`<div class="pit"><span>${esc(x.name||"Пользователь")} ${x.username?`<small class="mu">@${esc(x.username)}</small>`:""}</span><span class="badge ${x.rewarded?"y":""}">${x.rewarded?"начислено":"в ожидании"}</span></div>`).join("")}</div>`:'<div class="empty">Пока нет приглашённых. Они появятся здесь после запуска бота по вашей ссылке.</div>';
- const d=sheet(`${head("Рефералы")}<div class="row2"><div class="cd"><div class="mu">ПРИГЛАШЕНО</div><div class="kv">${nf(count)}</div></div><div class="cd"><div class="mu">ЗАРАБОТАНО</div><div class="kv"><svg class="star-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.5 2.92 5.92 6.53.95-4.73 4.61 1.12 6.5L12 17.41l-5.84 3.07 1.12-6.5-4.73-4.61 6.53-.95L12 2.5Z"/></svg> ${nf(stars)}</div></div></div><div class="cd"><h3>Ваша ссылка</h3><div class="note" style="word-break:break-all">${esc(refLink())}</div><div class="acts2" style="margin-top:10px"><button class="main" data-act="refshare">Поделиться</button><button class="ghost" data-act="refcopy">Копировать</button></div></div><div class="cd"><h3>Кого пригласили</h3>${rows}<div class="note" style="margin-top:10px">Награда начисляется, когда приглашённый впервые подключит своего бота.</div></div>`);
+ const d=sheet(`${head("Рефералы")}<div class="row2"><div class="cd"><div class="mu">ПРИГЛАШЕНО</div><div class="kv">${nf(count)}</div></div><div class="cd"><div class="mu">ЗАРАБОТАНО</div><div class="kv referral-balance">${STAR_ICON}<span>${nf(stars)}</span></div></div></div><div class="cd"><h3>Ваша ссылка</h3><div class="note" style="word-break:break-all">${esc(refLink())}</div><div class="acts2" style="margin-top:10px"><button class="main" data-act="refshare">Поделиться</button><button class="ghost" data-act="refcopy">Копировать</button></div></div><div class="cd"><h3>Кого пригласили</h3>${rows}<div class="note" style="margin-top:10px">Награда начисляется, когда приглашённый впервые подключит своего бота.</div></div>`);
  }
 
 /* ============ Тарифы и оплата Telegram Stars ============ */
 const PLANS=[{k:"slot",n:"+1 слот бота",s:50,d:"Ещё один бот в вашем аккаунте"},{k:"pro",n:"Pro",s:250,d:"До 15 ботов, 40 экранов, приоритетная поддержка · 30 дней"},{k:"biz",n:"Business",s:700,d:"До 50 ботов, рассылки без лимита, без отметки конструктора · 30 дней"}];
-const STAR_ICON=`<svg class="star-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.5 2.92 5.92 6.53.95-4.73 4.61 1.12 6.5L12 17.41l-5.84 3.07 1.12-6.5-4.73-4.61 6.53-.95L12 2.5Z"/></svg>`;
+const STAR_ICON=starIcon();
 async function payPlan(p,btn){
  if(!S.token||S.nosess||S.expired)return toast("Откройте конструктор через бота, чтобы оплатить",1);
  if(!tg?.openInvoice)return toast("Оплата доступна только внутри Telegram",1);
@@ -1115,10 +1172,11 @@ function openPlans(){
    {k:"biz",name:"Premium Business",term:"30 дней",features:["До 50 ботов","Рассылки без лимита","Без отметки конструктора","Полная статистика с графиками"]}
  ];
  const planCard=t=>{const p=PLANS.find(x=>x.k==t.k),server=prices.find(x=>x.k==t.k),price=server?+server.stars:(p?.s||0),isCurrent=current==t.k;
-  return`<div class="cd plan-card"><div class="plan-head"><div><b style="font-size:16px">${t.name}</b><div class="plan-sub">${t.term}</div></div><span class="plan-price"><svg class="star-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.5 2.92 5.92 6.53.95-4.73 4.61 1.12 6.5L12 17.41l-5.84 3.07 1.12-6.5-4.73-4.61 6.53-.95L12 2.5Z"/></svg>${nf(price)}</span></div><div class="plan-sub">${isCurrent?"Тариф активен — можно продлить":"Будет доступно после покупки"}</div><div class="plan-list">${t.features.map(x=>`<div><i>✓</i><span>${x}</span></div>`).join("")}</div><button class="${isCurrent?"ghost":"main"}" data-pay="${t.k}" style="width:100%">${isCurrent?"Продлить тариф":"Купить за "+nf(price)+" "+STAR_ICON}</button></div>`};
+  return`<div class="cd plan-card"><div class="plan-head"><div><b style="font-size:16px">${t.name}</b><div class="plan-sub">${t.term}</div></div><span class="plan-price">${STAR_ICON}${nf(price)}</span></div><div class="plan-sub">${isCurrent?"Тариф активен — можно продлить":"Будет доступно после покупки"}</div><div class="plan-list">${t.features.map(x=>`<div><i>✓</i><span>${x}</span></div>`).join("")}</div><button class="${isCurrent?"ghost":"main"}" data-pay="${t.k}" style="width:100%">${isCurrent?"Продлить":"Купить"}</button></div>`};
  const slot=prices.find(x=>x.k==="slot"),slotPrice=slot?+slot.stars:(PLANS.find(x=>x.k==="slot")?.s||50);
- const d=sheet(`${head("Премиум и тарифы")}<div class="cd plan-current"><div class="mu">ВАШ ТЕКУЩИЙ ТАРИФ</div><h3 style="margin:4px 0">${esc(planName)}${until?` · до ${until}`:""}</h3><div class="plan-sub">${until?`Активен до ${until}`:"Активен сейчас"}</div><div class="plan-list">${currentFeatures.map(x=>`<div><i>✓</i><span>${x}</span></div>`).join("")}</div></div>${tiers.map(planCard).join("")}<div class="cd plan-card"><div class="plan-head"><div><b>Дополнительный слот бота</b><div class="plan-sub">Один разовый слот, без срока действия</div></div><span class="plan-price"><svg class="star-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.5 2.92 5.92 6.53.95-4.73 4.61 1.12 6.5L12 17.41l-5.84 3.07 1.12-6.5-4.73-4.61 6.53-.95L12 2.5Z"/></svg>${nf(slotPrice)}</span></div><div class="plan-list"><div><i>✓</i><span>Добавляет ещё одно место для бота</span></div></div><button class="main" data-pay="slot" style="width:100%">Купить слот за ${nf(slotPrice)} ${STAR_ICON}</button></div><p class="note">Оплата проходит в Telegram Stars. Награды рефералов отображаются на внутреннем балансе приложения.</p>`);
+ const d=sheet(`${head("Премиум и тарифы")}<div class="cd plan-current"><div class="mu">ВАШ ТЕКУЩИЙ ТАРИФ</div><h3 style="margin:4px 0">${esc(planName)}${until?` · до ${until}`:""}</h3><div class="plan-sub">${until?`Активен до ${until}`:"Активен сейчас"}</div><div class="plan-list">${currentFeatures.map(x=>`<div><i>✓</i><span>${x}</span></div>`).join("")}</div></div>${tiers.map(planCard).join("")}<div class="cd plan-card"><div class="plan-head"><div><b>Дополнительный слот бота</b><div class="plan-sub">Один разовый слот, без срока действия</div></div><span class="plan-price">${STAR_ICON}${nf(slotPrice)}</span></div><div class="plan-list"><div><i>✓</i><span>Добавляет ещё одно место для бота</span></div></div><button class="main" data-pay="slot" style="width:100%">Купить</button></div>`);
  d.addEventListener("click",e=>{const b=e.target.closest("[data-pay]");if(b){const tier=PLANS.find(x=>x.k==b.dataset.pay);if(tier)payPlan({...tier,s:+(prices.find(x=>x.k==tier.k)?.stars||tier.s)},b)}})
 }
+applyPrefs();boot().catch(e=>{console.error(e);S.expired=true;S.sess={bots:[]};renderTop();renderTab();ui()});if(lsGet("bb3:tour")!=TOUR_V)setTimeout(()=>openTour(),700);
 </script></body></html>
 
