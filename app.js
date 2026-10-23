@@ -198,8 +198,8 @@ cv.addEventListener("pointerdown",e=>{if(!S.flow)return;cv.setPointerCapture(e.p
  if(P.size==2){mode="pinch";st={d:dist(),k:S.view.k};return}
  const t=e.target,nd=t.closest(".node");st={sx:e.clientX,sy:e.clientY,moved:false,t,shift:e.shiftKey||e.ctrlKey||e.metaKey};
  if(t.closest(".out")){mode="wire";st.nid=nd.dataset.id;st.bid=t.closest(".row").dataset.b;st.pre=snapF()}
- else if(nd&&t.closest(".hd")&&!t.closest(".ph")){const id=nd.dataset.id;if(st.shift){toggleMs(id);mode="noop";return}
-  mode="drag";st.n=node(id);st.pre=snapF();st.ox=st.n.x;st.oy=st.n.y;
+ else if(nd&&!t.closest(".ph")){const id=nd.dataset.id;if(st.shift){toggleMs(id);mode="noop";return}
+  mode="drag";nd.classList.add("dragging");st.n=node(id);st.pre=snapF();st.ox=st.n.x;st.oy=st.n.y;
   if(S.ms.size>1&&S.ms.has(id))st.grp=[...S.ms].map(i=>node(i)).filter(Boolean).map(m=>({m,x:m.x,y:m.y}));
   else{S.ms.clear();S.sel=id}markSel()}
  else if(nd)mode="tap";else if(st.shift||S.selMode){mode="marq";startMarq()}else{mode="pan";st.vx=S.view.x;st.vy=S.view.y;lp=setTimeout(()=>{if(mode=="pan"&&st&&!st.moved){mode="marq";startMarq();hap()}},450)}});
@@ -221,7 +221,7 @@ function pointerEnd(e){P.delete(e.pointerId);if(mode=="pinch"){if(P.size<2){mode
  else if(mode=="drag"&&st.moved){if(st.pre!=snapF()){S.hist.push(st.pre);S.fut=[]}afterChange()}
  else if((mode=="tap"||mode=="drag")&&!st.moved&&ok)tap(st.t);
  else if(mode=="pan"&&!st.moved&&ok&&S.ms.size){S.ms.clear();markSel()}
- mode=null;st=null}
+ st.t?.closest(".node")?.classList.remove("dragging");mode=null;st=null}
 cv.addEventListener("pointerup",pointerEnd);cv.addEventListener("pointercancel",pointerEnd);
 cv.addEventListener("wheel",e=>{e.preventDefault();const r=cv.getBoundingClientRect();zoomTo(S.view.k*(e.deltaY<0?1.1:.9),e.clientX-r.left,e.clientY-r.top)},{passive:false});
 function addScreenAt(x,y){if(S.flow.nodes.length>=MAXN)return toast("Максимум "+MAXN+" экранов",1);const id=uid();mutate(()=>S.flow.nodes.push({id,title:"Экран",text:"Текст экрана",x:snapG(x),y:snapG(y),cols:1,btns:[]}));S.sel=id;markSel();hap();return id}
@@ -573,7 +573,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-act]");if(
   case"toggle":toggleBot();break;
    case"tgbot":toggleBot(a.dataset.id);break;
    case"settings":openSettings();break;
-  case"language":{const target=new URL("./indexE.html",location.href);target.search=location.search;target.hash=location.hash;location.assign(target.href);break;}
+  case"language":routeEnglish();break;
   case"tour":openTour(true);break;
    case"plans":openPlans();break;
    case"ref":openRef();break;
@@ -594,7 +594,7 @@ document.addEventListener("click",e=>{const a=e.target.closest("[data-act]");if(
   case"clrpost":S.post="";saveDraftSoon();renderBot();ui();break;
   case"undel":S.del=false;saveDraftSoon();renderBot();ui();break;
   case"delbot":{const d=sheet(`${head("Удалить бота?")}<p>Будут удалены схема, фото и статистика @${esc(S.bot.username)}. Это действие нельзя отменить. Бот попросит подтверждение в чате.</p><div class="acts2"><button class="ghost" data-x>Нет</button><button class="main" style="background:var(--r);color:#fff" id="yes">Удалить</button></div>`,{cls:"modal"});$("#yes",d).onclick=()=>{S.del=true;saveDraftSoon();closeSheet(d);renderBot();ui()};break}
-  case"cleardrafts":Object.keys(localStorage).filter(k=>k.startsWith("bb3:")&&!["bb3:prefs","bb3:last","bb3:demo","bb3:master"].includes(k)).forEach(k=>lsDel(k));toast("Черновики очищены");break}});
+  case"cleardrafts":Object.keys(localStorage).filter(k=>k.startsWith("bb3:")&&!["bb3:prefs","bb3:last","bb3:demo","bb3:master","bb3:language"].includes(k)).forEach(k=>lsDel(k));toast("Черновики очищены");break}});
 document.addEventListener("change",e=>{const t=e.target;
  if(t.id=="sw-active"){setVal("active",t.checked);renderBot()}else if(t.id=="sw-support"){setVal("support",t.checked);renderBot()}
  else if(t.dataset?.pref){PREF[t.dataset.pref]=t.checked;lsSet("bb3:prefs",PREF);applyPrefs()}});
@@ -842,4 +842,7 @@ function openPlans(){
  const d=sheet(`${head("Премиум и тарифы")}<div class="cd plan-current"><div class="mu">ВАШ ТЕКУЩИЙ ТАРИФ</div><h3 style="margin:4px 0">${esc(planName)}${until?` · до ${until}`:""}</h3><div class="plan-sub">${until?`Активен до ${until}`:"Активен сейчас"}</div><div class="plan-list">${currentFeatures.map(x=>`<div><i>✓</i><span>${x}</span></div>`).join("")}</div></div>${tiers.map(planCard).join("")}<div class="cd plan-card"><div class="plan-head"><div><b>Дополнительный слот бота</b><div class="plan-sub">Один разовый слот, без срока действия</div></div><span class="plan-price">${STAR_ICON}${nf(slotPrice)}</span></div><div class="plan-list"><div><i>✓</i><span>Добавляет ещё одно место для бота</span></div></div><button class="main" data-pay="slot" style="width:100%">Купить</button></div>`);
  d.addEventListener("click",e=>{const b=e.target.closest("[data-pay]");if(b){const tier=PLANS.find(x=>x.k==b.dataset.pay);if(tier)payPlan({...tier,s:+(prices.find(x=>x.k==tier.k)?.stars||tier.s)},b)}})
 }
-applyPrefs();boot().catch(e=>{console.error(e);S.expired=true;S.sess={bots:[]};renderTop();renderTab();ui()});if(lsGet("bb3:tour")!=TOUR_V)setTimeout(()=>openTour(),700);
+function routeEnglish(){lsSet("bb3:language","en");const target=new URL("./indexE.html",location.href);target.search=location.search;target.hash=location.hash;location.assign(target.href)}
+function launchRussian(){const gate=$("#language-gate");if(gate)gate.hidden=true;applyPrefs();boot().catch(e=>{console.error(e);S.expired=true;S.sess={bots:[]};renderTop();renderTab();ui()});if(lsGet("bb3:tour")!=TOUR_V)setTimeout(()=>openTour(),700)}
+const languageGate=$("#language-gate");languageGate?.addEventListener("click",e=>{const b=e.target.closest("[data-language-choice]");if(!b)return;const lang=b.dataset.languageChoice;lsSet("bb3:language",lang);if(lang==="en")routeEnglish();else launchRussian()});
+const savedLanguage=lsGet("bb3:language");if(savedLanguage==="en")routeEnglish();else if(savedLanguage==="ru")launchRussian();
